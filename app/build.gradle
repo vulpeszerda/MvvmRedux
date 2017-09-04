@@ -91,6 +91,11 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$constraintLayout"
     kapt "com.android.databinding:compiler:$androidPlugin"
 
+    compile "android.arch.lifecycle:runtime:$androidArch"
+    compile "android.arch.lifecycle:extensions:$androidArch"
+    annotationProcessor "android.arch.lifecycle:compiler:$androidArch"
+    kapt "android.arch.lifecycle:compiler:$androidArch"
+
     /* Room */
     compile "android.arch.persistence.room:runtime:$room"
     kapt "android.arch.persistence.room:compiler:$room"

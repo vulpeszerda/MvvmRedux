@@ -133,8 +133,10 @@ class TodoListViewModel : BaseViewModel<TodoListUiEvent, TodoListState>() {
                             .toList())
                 }
             }
+            is TodoListSideEffect.SetTodos ->
+                subState = subState.copy(todos = action.todos)
         }
-        if (subState != newState.subState) {
+        if (subState !== newState.subState) {
             newState = newState.copy(subState = subState)
         }
         return newState

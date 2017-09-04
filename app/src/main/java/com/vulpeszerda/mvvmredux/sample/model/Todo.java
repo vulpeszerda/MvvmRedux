@@ -83,6 +83,15 @@ public class Todo {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public String toString() {
+        return "Todo(uid=" + uid + ", " +
+                "title=" + title + ", " +
+                "message=" + message + ", " +
+                "completed=" + completed + ", " +
+                "createdAt=" + createdAt + ")";
+    }
+
     @NonNull
     public static Todo create(@NonNull String title, @NonNull String message, boolean completed) {
         Todo todo = new Todo();

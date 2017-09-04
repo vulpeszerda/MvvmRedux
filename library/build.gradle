@@ -98,6 +98,7 @@ dependencies {
 
     compile "android.arch.lifecycle:runtime:$androidArch"
     compile "android.arch.lifecycle:extensions:$androidArch"
+    annotationProcessor "android.arch.lifecycle:compiler:$androidArch"
     kapt "android.arch.lifecycle:compiler:$androidArch"
     kapt "com.android.databinding:compiler:$androidPlugin"
 

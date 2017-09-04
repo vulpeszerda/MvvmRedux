@@ -42,6 +42,7 @@ class TodoCreateActivity : BaseActivity(), TodoCreateViewModelDelegate {
     }
 
     override fun onError(throwable: Throwable, tag: String?, vararg otherArguments: Any) {
+        throwable.printStackTrace()
     }
 
     override fun navigate(navigation: SideEffect.Navigation) {

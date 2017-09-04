@@ -9,6 +9,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by vulpes on 2017. 8. 31..
@@ -42,6 +43,7 @@ class TodoCreateViewModel : BaseViewModel<TodoCreateUiEvent, TodoCreateState>() 
                     database?.todoDao()?.insert(todo)?.firstOrNull() ?:
                             throw IllegalAccessException("Failed to create todo")
                 }
+                .subscribeOn(Schedulers.io())
                 .toObservable()
                 .flatMap<SideEffect> {
                     Observable.fromArray(TodoCreateSideEffect.SetLoading(false),
@@ -53,5 +55,21 @@ class TodoCreateViewModel : BaseViewModel<TodoCreateUiEvent, TodoCreateState>() 
                             SideEffect.Error(throwable, "save"))
                 }
                 .startWith(TodoCreateSideEffect.SetLoading(true))
+    }
+
+    override fun reduceState(state: GlobalState<TodoCreateState>,
+                             action: SideEffect.State): GlobalState<TodoCreateState> {
+        val prevState = super.reduceState(state, action)
+        var newState = prevState
+        val prevSubState = prevState.subState
+        var newSubState = prevSubState
+        when (action) {
+            is TodoCreateSideEffect.SetLoading ->
+                newSubState = newSubState.copy(loading = action.loading)
+        }
+        if (newSubState !== prevSubState) {
+            newState = newState.copy(subState = newSubState)
+        }
+        return newState
     }
 }

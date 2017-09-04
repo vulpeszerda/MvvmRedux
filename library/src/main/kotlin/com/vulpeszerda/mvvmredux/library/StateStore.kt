@@ -1,5 +1,7 @@
 package com.vulpeszerda.mvvmredux.library
 
+import android.util.Log
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -28,19 +30,22 @@ class StateStore<T>(initialState: T, private val exceptionHandler: ExceptionHand
 
     init {
         disposable = actionSubject
-                .switchMap { action ->
+                .toFlowable(BackpressureStrategy.BUFFER)
+                .concatMap { action ->
+                    Log.d(TAG, "action: $action")
                     Maybe.fromCallable<T> {
                         val oldState = stateSubject.value
                         var newState = oldState
                         synchronized(this@StateStore) {
                             reducers.forEach { newState = it.invoke(newState, action) }
                         }
-                        if (oldState != newState) {
+                        Log.d(TAG, "state: $newState")
+                        if (oldState !== newState) {
                             return@fromCallable newState
                         } else {
                             return@fromCallable null
                         }
-                    }.subscribeOn(Schedulers.computation()).toObservable()
+                    }.subscribeOn(Schedulers.computation()).toFlowable()
                 }
                 .subscribe(stateSubject::onNext, { throwable ->
                     exceptionHandler.onError(throwable, TAG)
