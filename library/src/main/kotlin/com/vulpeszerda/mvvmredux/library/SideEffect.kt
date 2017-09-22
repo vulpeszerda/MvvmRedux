@@ -7,5 +7,5 @@ interface SideEffect {
     interface State : SideEffect
     interface Navigation : SideEffect
     interface Extra : SideEffect
-    data class Error(val throwable: Throwable, val tag: String) : SideEffect
+    data class Error(val throwable: Throwable, val tag: String? = null) : SideEffect
 }

@@ -14,16 +14,8 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by vulpes on 2017. 8. 31..
  */
-class TodoCreateViewModel : BaseViewModel<TodoCreateUiEvent, TodoCreateState>() {
-
-    private var database: TodoDatabase? = null
-
-    fun initialize(delegate: TodoCreateViewModelDelegate,
-                   initialState: GlobalState<TodoCreateState>,
-                   database: TodoDatabase) {
-        initialize(delegate, initialState)
-        this.database = database
-    }
+class TodoCreateViewModel(private val database: TodoDatabase) :
+        BaseViewModel<TodoCreateUiEvent, TodoCreateState>() {
 
     override fun toSideEffect(uiEvents: Flowable<TodoCreateUiEvent>): Observable<SideEffect> {
         return uiEvents
@@ -40,21 +32,19 @@ class TodoCreateViewModel : BaseViewModel<TodoCreateUiEvent, TodoCreateState>() 
         return Single
                 .fromCallable {
                     val todo = Todo.create(title, message, false)
-                    database?.todoDao()?.insert(todo)?.firstOrNull() ?:
+                    database.todoDao().insert(todo).firstOrNull() ?:
                             throw IllegalAccessException("Failed to create todo")
                 }
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 .flatMap<SideEffect> {
-                    Observable.fromArray(TodoCreateSideEffect.SetLoading(false),
+                    Observable.fromArray(
                             TodoCreateSideEffect.ShowFinishToast(),
                             TodoCreateSideEffect.NavigateFinish())
                 }
-                .onErrorResumeNext { throwable: Throwable ->
-                    Observable.fromArray(TodoCreateSideEffect.SetLoading(false),
-                            SideEffect.Error(throwable, "save"))
-                }
+                .onErrorReturn { SideEffect.Error(it, "save") }
                 .startWith(TodoCreateSideEffect.SetLoading(true))
+                .concatWith(Observable.just(TodoCreateSideEffect.SetLoading(false)))
     }
 
     override fun reduceState(state: GlobalState<TodoCreateState>,

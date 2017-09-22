@@ -1,90 +1,65 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.widget.Toast
-import com.jakewharton.rxbinding2.view.RxView
 import com.vulpeszerda.mvvmredux.library.BaseActivity
 import com.vulpeszerda.mvvmredux.library.GlobalState
-import com.vulpeszerda.mvvmredux.library.SideEffect
 import com.vulpeszerda.mvvmredux.sample.R
-import com.vulpeszerda.mvvmredux.sample.create.TodoCreateActivity
-import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
-import com.vulpeszerda.mvvmredux.sample.databinding.TodoListBinding
-import com.vulpeszerda.mvvmredux.sample.detail.TodoDetailActivity
 import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class TodoListActivity : BaseActivity(), TodoListViewModelDelegate {
+class TodoListActivity : BaseActivity() {
+
+    private val injection: TodoListInjection by lazy {
+        TodoListInjection(this)
+    }
 
     private val eventSubject = PublishSubject.create<TodoListUiEvent>()
 
-    private lateinit var binding: TodoListBinding
-    private lateinit var viewModel: TodoListViewModel
-
-    override val events: Flowable<TodoListUiEvent> by lazy {
-        Observable.merge(
-                RxView.clicks(binding.btnNew).map { TodoListUiEvent.ClickCreate() },
-                RxView.clicks(binding.btnClear).map { TodoListUiEvent.ClickClearAll() },
-                eventSubject)
-                .toFlowable(BackpressureStrategy.DROP)
-    }
+    private var firstLoading = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.todo_list)
+        setContentView(R.layout.todo_list)
+        setupViewModel(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(TodoListViewModel::class.java)
-        viewModel.initialize(this,
-                GlobalState(restoreStateFromBundle(savedInstanceState)),
-                TodoDatabase.getInstance(this))
+        lifecycle.addObserver(injection.stateView)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(TodoListViewModel::class.java)
-        viewModel.initialize(this,
-                GlobalState(restoreStateFromBundle(savedInstanceState)),
-                TodoDatabase.getInstance(this))
+        setupViewModel(savedInstanceState)
     }
 
-    override fun onStart() {
-        super.onStart()
-        eventSubject.onNext(TodoListUiEvent.Refresh())
+    private fun setupViewModel(savedInstanceState: Bundle?) {
+        injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
+                Observable.empty<TodoListUiEvent>()
+                        .mergeWith(eventSubject)
+                        .mergeWith(injection.stateView.events)
+                        .mergeWith(injection.navigator.events)
+                        .mergeWith(injection.errorHandler.events)
+                        .mergeWith(injection.extraHandler.events)
+                        .toFlowable(BackpressureStrategy.DROP))
     }
 
     private fun restoreStateFromBundle(bundle: Bundle?): TodoListState {
         return TodoListState()
     }
 
-    override fun navigate(navigation: SideEffect.Navigation) {
-        when (navigation) {
-            is TodoListSideEffect.NavigateDetail ->
-                startActivity(TodoDetailActivity.createIntent(this, navigation.uid))
-            is TodoListSideEffect.NavigateCreate ->
-                startActivity(TodoCreateActivity.createIntent(this))
-        }
+    override fun onStart() {
+        super.onStart()
+        eventSubject.onNext(TodoListUiEvent.Refresh(!firstLoading))
     }
 
-    override fun handleExtraSideEffect(sideEffect: SideEffect.Extra) {
-        when (sideEffect) {
-            is TodoListSideEffect.ShowClearedToast ->
-                Toast.makeText(this, "Cleared", Toast.LENGTH_SHORT).show()
-            is TodoListSideEffect.ShowClearConfirm ->
-                AlertDialog.Builder(this).setTitle("Confirm")
-                        .setMessage("Are you sure to clear all todo?")
-                        .setPositiveButton("Clear all") { _, _ ->
-                            eventSubject.onNext(TodoListUiEvent.ConfirmClearAll())
-                        }
-                        .setNegativeButton("Cancel", null)
-                        .show()
-        }
+    override fun onStop() {
+        firstLoading = false
+        super.onStop()
     }
 
-    override fun onError(throwable: Throwable, tag: String?, vararg otherArguments: Any) {
+    companion object {
+
+        fun createIntent(context: Context): Intent = Intent(context, TodoListActivity::class.java)
     }
 }

@@ -42,11 +42,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
-    }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
 
@@ -90,8 +89,9 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxbinding2"
     compile "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycle2"
     compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycle2"
-    compile "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycle2"
+    compile "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rxlifecycle2"
     compile "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxlifecycle2"
+    compile "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxlifecycle2"
     compile "com.tbruyelle.rxpermissions2:rxpermissions:$rxpermissions2"
     compile "com.f2prateek.rx.preferences2:rx-preferences:$rxpreferences2"
 
@@ -100,8 +100,8 @@ dependencies {
     compile "android.arch.lifecycle:extensions:$androidArch"
     annotationProcessor "android.arch.lifecycle:compiler:$androidArch"
     kapt "android.arch.lifecycle:compiler:$androidArch"
-    kapt "com.android.databinding:compiler:$androidPlugin"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
     testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin"
 }

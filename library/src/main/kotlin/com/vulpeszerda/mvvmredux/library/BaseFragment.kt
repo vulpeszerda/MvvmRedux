@@ -1,17 +1,15 @@
 package com.vulpeszerda.mvvmredux.library
 
 import android.arch.lifecycle.LifecycleRegistryOwner
-import com.trello.rxlifecycle2.components.support.RxFragment
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import android.support.v4.app.Fragment
+import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle
 
 /**
  * Created by vulpes on 2017. 8. 25..
  */
-open class BaseFragment(lifecycleOwner: LifecycleRegistryOwner = LifecycleOwner()) :
-        RxFragment(), LifecycleRegistryOwner by lifecycleOwner, UiSchedulerProvider {
+open class BaseFragment(lifecycleOwner: LifecycleRegistryOwner = AbsLifecycleRegistryOwner()) :
+        Fragment(), LifecycleRegistryOwner by lifecycleOwner {
 
-    override val uiScheduler: Scheduler
-        get() = AndroidSchedulers.mainThread()
+    protected val rxLifecycleProvider = AndroidLifecycle.createLifecycleProvider(lifecycleOwner)
 
 }

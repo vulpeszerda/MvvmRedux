@@ -3,8 +3,8 @@ package com.vulpeszerda.mvvmredux.library
 import android.util.Log
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -13,20 +13,15 @@ import io.reactivex.subjects.PublishSubject
  * Created by vulpes on 2017. 8. 29..
  */
 
-class StateStore<T>(initialState: T, private val exceptionHandler: ExceptionHandler) {
-
-    val latest: T
-        get() = stateSubject.value
-
-    val stateChange: Observable<StatePair<T>>
-        get() = stateSubject.scan(StatePair<T>(null, null), { prevPair, curr ->
-            StatePair(prevPair.curr, curr)
-        })
+class StateStore<T>(initialState: T, private val errorHandler: (Throwable) -> Unit) {
 
     private val stateSubject = BehaviorSubject.createDefault(initialState)
     private val actionSubject = PublishSubject.create<SideEffect.State>()
     private val reducers = ArrayList<(T, SideEffect.State) -> T>()
     private val disposable: Disposable
+
+    val state = stateSubject.hide()
+    val latest: T = stateSubject.value
 
     init {
         disposable = actionSubject
@@ -45,11 +40,12 @@ class StateStore<T>(initialState: T, private val exceptionHandler: ExceptionHand
                         } else {
                             return@fromCallable null
                         }
-                    }.subscribeOn(Schedulers.computation()).toFlowable()
+                    }.onErrorResumeNext(Function<Throwable, Maybe<T>> { throwable ->
+                        errorHandler.invoke(throwable)
+                        Maybe.empty<T>()
+                    }).subscribeOn(Schedulers.computation()).toFlowable()
                 }
-                .subscribe(stateSubject::onNext, { throwable ->
-                    exceptionHandler.onError(throwable, TAG)
-                })
+                .subscribe(stateSubject::onNext, errorHandler::invoke)
     }
 
     @Synchronized
@@ -72,8 +68,6 @@ class StateStore<T>(initialState: T, private val exceptionHandler: ExceptionHand
     fun terminate() {
         disposable.dispose()
     }
-
-    data class StatePair<out T>(val prev: T?, val curr: T?)
 
     companion object {
         private const val TAG = "StateStore"

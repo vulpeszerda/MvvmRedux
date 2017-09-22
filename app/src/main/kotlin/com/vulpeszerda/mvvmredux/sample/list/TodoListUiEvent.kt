@@ -11,6 +11,6 @@ sealed class TodoListUiEvent : UiEvent {
     class ConfirmClearAll : TodoListUiEvent()
     data class ClickDetail(val uid: Long) : TodoListUiEvent()
     class ClickCreate : TodoListUiEvent()
-    class Refresh : TodoListUiEvent()
+    data class Refresh(val silent: Boolean) : TodoListUiEvent()
     data class CheckTodo(val todo: Todo) : TodoListUiEvent()
 }

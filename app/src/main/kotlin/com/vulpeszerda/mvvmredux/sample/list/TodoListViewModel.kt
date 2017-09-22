@@ -1,10 +1,10 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
 import com.vulpeszerda.mvvmredux.library.BaseViewModel
-import com.vulpeszerda.mvvmredux.library.BaseViewModelDelegate
 import com.vulpeszerda.mvvmredux.library.GlobalState
 import com.vulpeszerda.mvvmredux.library.SideEffect
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
+import com.vulpeszerda.mvvmredux.sample.detail.TodoDetailSideEffect
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
@@ -13,17 +13,10 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 8. 30..
  */
-class TodoListViewModel : BaseViewModel<TodoListUiEvent, TodoListState>() {
+class TodoListViewModel(private val database: TodoDatabase) :
+        BaseViewModel<TodoListUiEvent, TodoListState>() {
 
     private val blockingActionSubject = PublishSubject.create<TodoListUiEvent>()
-    private var database: TodoDatabase? = null
-
-    fun initialize(delegate: BaseViewModelDelegate<TodoListUiEvent>,
-                   initialState: GlobalState<TodoListState>,
-                   database: TodoDatabase) {
-        initialize(delegate, initialState)
-        this.database = database
-    }
 
     override fun toSideEffect(uiEvents: Flowable<TodoListUiEvent>):
             Observable<SideEffect> {
@@ -36,20 +29,20 @@ class TodoListViewModel : BaseViewModel<TodoListUiEvent, TodoListState>() {
                                     blockingActionSubject.onNext(it)
                                     Observable.empty()
                                 }
-                                else -> handleNonBlockingUiEvent(it)
+                                else -> handleUiEvent(it)
                             }
                         },
                 blockingActionSubject
                         .toFlowable(BackpressureStrategy.DROP)
                         .flatMap({
-                            handleNonBlockingUiEvent(it).toFlowable(BackpressureStrategy.ERROR)
+                            handleUiEvent(it).toFlowable(BackpressureStrategy.ERROR)
                         }, 1)
                         .toObservable())
     }
 
-    private fun handleNonBlockingUiEvent(uiEvent: TodoListUiEvent): Observable<SideEffect> {
+    private fun handleUiEvent(uiEvent: TodoListUiEvent): Observable<SideEffect> {
         return Observable.just<SideEffect>(when (uiEvent) {
-            is TodoListUiEvent.Refresh -> return refresh()
+            is TodoListUiEvent.Refresh -> return refresh(uiEvent.silent)
             is TodoListUiEvent.ConfirmClearAll -> return clearAll()
             is TodoListUiEvent.CheckTodo -> return check(uiEvent.todo)
             is TodoListUiEvent.ClickClearAll -> TodoListSideEffect.ShowClearConfirm()
@@ -58,25 +51,24 @@ class TodoListViewModel : BaseViewModel<TodoListUiEvent, TodoListState>() {
         })
     }
 
-    private fun refresh(): Observable<SideEffect> {
-        return Maybe.fromCallable { database?.todoDao()?.all() }
+    private fun refresh(silent: Boolean): Observable<SideEffect> {
+        return Single.fromCallable { database.todoDao().all() }
                 .subscribeOn(Schedulers.io())
                 .flatMapObservable<SideEffect> { list ->
                     Observable.fromArray(
-                            TodoListSideEffect.SetLoading(false),
                             TodoListSideEffect.SetTodos(list),
                             TodoListSideEffect.SetError(null))
                 }
-                .onErrorResumeNext { throwable: Throwable ->
-                    Observable.fromArray(
-                            TodoListSideEffect.SetLoading(false),
-                            TodoListSideEffect.SetError(throwable))
+                .onErrorReturn { TodoListSideEffect.SetError(it) }
+                .let {
+                    if (silent) it else it
+                            .startWith(TodoListSideEffect.SetLoading(true))
+                            .concatWith(Observable.just(TodoListSideEffect.SetLoading(false)))
                 }
-                .startWith(TodoListSideEffect.SetLoading(true))
     }
 
     private fun clearAll(): Observable<SideEffect> {
-        return Completable.fromAction { database?.todoDao()?.deleteAll() }
+        return Completable.fromAction { database.todoDao().deleteAll() }
                 .subscribeOn(Schedulers.io())
                 .andThen(Observable.fromArray<SideEffect>(
                         TodoListSideEffect.SetLoading(false),
@@ -94,7 +86,7 @@ class TodoListViewModel : BaseViewModel<TodoListUiEvent, TodoListState>() {
     private fun check(todo: Todo): Observable<SideEffect> {
         return Completable
                 .fromAction {
-                    database?.todoDao()?.update(Todo().apply {
+                    database.todoDao().update(Todo().apply {
                         uid = todo.uid
                         title = todo.title
                         message = todo.message
