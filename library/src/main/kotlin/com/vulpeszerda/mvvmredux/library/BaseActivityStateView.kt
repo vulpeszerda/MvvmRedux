@@ -6,7 +6,7 @@ import android.view.View
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-abstract class BaseActivityStateView<T, E : UiEvent>(
+abstract class BaseActivityStateView<T, E : ReduxEvent>(
         private val activity: BaseActivity,
         errorHandler: (Throwable) -> Unit) :
         BaseStateView<T, E>(activity, errorHandler) {

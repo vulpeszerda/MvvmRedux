@@ -3,24 +3,24 @@ package com.vulpeszerda.mvvmredux.sample.list
 import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.vulpeszerda.mvvmredux.library.AbsExtraHandler
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 
 /**
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListExtraHandler(private val activity: TodoListActivity,
                            errorHandler: (Throwable) -> Unit) :
-        AbsExtraHandler<TodoListUiEvent>(activity, errorHandler) {
+        AbsExtraHandler<TodoListEvent>(activity, errorHandler) {
 
-    override fun onExtraSideEffect(extra: SideEffect.Extra) {
+    override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {
-            is TodoListSideEffect.ShowClearedToast ->
+            is TodoListEvent.ShowClearedToast ->
                 Toast.makeText(activity, "Cleared", Toast.LENGTH_SHORT).show()
-            is TodoListSideEffect.ShowClearConfirm ->
+            is TodoListEvent.ShowClearConfirm ->
                 AlertDialog.Builder(activity).setTitle("Confirm")
                         .setMessage("Are you sure to clear all todo?")
                         .setPositiveButton("Clear all") { _, _ ->
-                            emitUiEvent(TodoListUiEvent.ConfirmClearAll())
+                            emitAction(TodoListEvent.ConfirmClearAll())
                         }
                         .setNegativeButton("Cancel", null)
                         .show()

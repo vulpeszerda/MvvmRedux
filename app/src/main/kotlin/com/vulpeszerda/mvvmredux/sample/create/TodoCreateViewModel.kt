@@ -2,7 +2,7 @@ package com.vulpeszerda.mvvmredux.sample.create
 
 import com.vulpeszerda.mvvmredux.library.BaseViewModel
 import com.vulpeszerda.mvvmredux.library.GlobalState
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.BackpressureStrategy
@@ -15,20 +15,20 @@ import io.reactivex.schedulers.Schedulers
  * Created by vulpes on 2017. 8. 31..
  */
 class TodoCreateViewModel(private val database: TodoDatabase) :
-        BaseViewModel<TodoCreateUiEvent, TodoCreateState>() {
+        BaseViewModel<TodoCreateEvent, TodoCreateState>() {
 
-    override fun toSideEffect(uiEvents: Flowable<TodoCreateUiEvent>): Observable<SideEffect> {
-        return uiEvents
-                .onBackpressureDrop()
-                .filter { it is TodoCreateUiEvent.Save }
+    override fun eventTransformer(event: TodoCreateEvent,
+                                  getState: () -> GlobalState<TodoCreateState>):
+            Observable<ReduxEvent> {
+        return super.eventTransformer(event, getState)
+                .filter { it is TodoCreateEvent.Save }
                 .flatMap({ event ->
-                    val saveEvent = event as TodoCreateUiEvent.Save
-                    save(saveEvent.title, saveEvent.message).toFlowable(BackpressureStrategy.ERROR)
+                    val saveEvent = event as TodoCreateEvent.Save
+                    save(saveEvent.title, saveEvent.message)
                 }, 1)
-                .toObservable()
     }
 
-    private fun save(title: String, message: String): Observable<SideEffect> {
+    private fun save(title: String, message: String): Observable<ReduxEvent> {
         return Single
                 .fromCallable {
                     val todo = Todo.create(title, message, false)
@@ -37,25 +37,25 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
                 }
                 .subscribeOn(Schedulers.io())
                 .toObservable()
-                .flatMap<SideEffect> {
+                .flatMap<ReduxEvent> {
                     Observable.fromArray(
-                            TodoCreateSideEffect.ShowFinishToast(),
-                            TodoCreateSideEffect.NavigateFinish())
+                            TodoCreateEvent.ShowFinishToast(),
+                            TodoCreateEvent.NavigateFinish())
                 }
-                .onErrorReturn { SideEffect.Error(it, "save") }
-                .startWith(TodoCreateSideEffect.SetLoading(true))
-                .concatWith(Observable.just(TodoCreateSideEffect.SetLoading(false)))
+                .onErrorReturn { ReduxEvent.Error(it, "save") }
+                .startWith(TodoCreateEvent.SetLoading(true))
+                .concatWith(Observable.just(TodoCreateEvent.SetLoading(false)))
     }
 
     override fun reduceState(state: GlobalState<TodoCreateState>,
-                             action: SideEffect.State): GlobalState<TodoCreateState> {
-        val prevState = super.reduceState(state, action)
+                             event: ReduxEvent.State): GlobalState<TodoCreateState> {
+        val prevState = super.reduceState(state, event)
         var newState = prevState
         val prevSubState = prevState.subState
         var newSubState = prevSubState
-        when (action) {
-            is TodoCreateSideEffect.SetLoading ->
-                newSubState = newSubState.copy(loading = action.loading)
+        when (event) {
+            is TodoCreateEvent.SetLoading ->
+                newSubState = newSubState.copy(loading = event.loading)
         }
         if (newSubState !== prevSubState) {
             newState = newState.copy(subState = newSubState)

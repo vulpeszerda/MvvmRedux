@@ -2,7 +2,7 @@ package com.vulpeszerda.mvvmredux.sample.list
 
 import com.vulpeszerda.mvvmredux.library.AbsNavigator
 import com.vulpeszerda.mvvmredux.library.RouterFactory
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.TodoRouter
 
 /**
@@ -10,15 +10,15 @@ import com.vulpeszerda.mvvmredux.sample.TodoRouter
  */
 
 class TodoListNavigator(activity: TodoListActivity, errorHandler: (Throwable) -> Unit) :
-        AbsNavigator<TodoListUiEvent>(activity, errorHandler) {
+        AbsNavigator<TodoListEvent>(activity, errorHandler) {
 
     private val router: TodoRouter = RouterFactory.create(activity, TodoRouter::class.java)
 
-    override fun navigate(navigation: SideEffect.Navigation) {
+    override fun navigate(navigation: ReduxEvent.Navigation) {
         when (navigation) {
-            is TodoListSideEffect.NavigateDetail ->
+            is TodoListEvent.NavigateDetail ->
                 router.detail(navigation.uid)
-            is TodoListSideEffect.NavigateCreate ->
+            is TodoListEvent.NavigateCreate ->
                 router.create()
         }
     }

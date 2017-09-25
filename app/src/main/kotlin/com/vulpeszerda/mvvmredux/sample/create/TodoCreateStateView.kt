@@ -14,14 +14,14 @@ import kotlinx.android.synthetic.main.todo_create.title as viewTitle
 class TodoCreateStateView(
         private val activity: TodoCreateActivity,
         errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<TodoCreateState, TodoCreateUiEvent>(activity, errorHandler) {
+        BaseActivityStateView<TodoCreateState, TodoCreateEvent>(activity, errorHandler) {
 
-    override val events: Observable<TodoCreateUiEvent>
+    override val events: Observable<TodoCreateEvent>
         get() = super.events.mergeWith(RxView.clicks(btn_save)
                 .map { Pair(viewTitle.text?.toString(), viewMessage.text?.toString()) }
                 .filter { it.first != null && it.second != null }
-                .map<TodoCreateUiEvent> { (title, message) ->
-                    TodoCreateUiEvent.Save(title!!, message!!)
+                .map<TodoCreateEvent> { (title, message) ->
+                    TodoCreateEvent.Save(title!!, message!!)
                 })
 
     override fun onStateChanged(prev: GlobalState<TodoCreateState>?,

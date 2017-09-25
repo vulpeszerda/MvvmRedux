@@ -2,7 +2,7 @@ package com.vulpeszerda.mvvmredux.sample.detail
 
 import com.vulpeszerda.mvvmredux.library.BaseViewModel
 import com.vulpeszerda.mvvmredux.library.GlobalState
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
@@ -12,55 +12,58 @@ import io.reactivex.subjects.PublishSubject
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoDetailViewModel(private val database: TodoDatabase) :
-        BaseViewModel<TodoDetailUiEvent, TodoDetailState>() {
+        BaseViewModel<TodoDetailEvent, TodoDetailState>() {
 
-    private val blockingActionSubject = PublishSubject.create<TodoDetailUiEvent>()
+    private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
-    override fun toSideEffect(uiEvents: Flowable<TodoDetailUiEvent>): Observable<SideEffect> {
+    override fun eventTransformer(event: TodoDetailEvent,
+                                  getState: () -> GlobalState<TodoDetailState>):
+            Observable<ReduxEvent> {
         return Observable.merge(
-                uiEvents.toObservable()
+                super.eventTransformer(event, getState)
                         .flatMap {
                             when (it) {
-                                is TodoDetailUiEvent.CheckTodo,
-                                is TodoDetailUiEvent.Refresh -> {
+                                is TodoDetailEvent.CheckTodo,
+                                is TodoDetailEvent.Refresh -> {
                                     blockingActionSubject.onNext(it)
                                     Observable.empty()
                                 }
-                                else -> handleUiEvent(it)
+                                else -> handleEvent(it)
                             }
                         },
                 blockingActionSubject
                         .toFlowable(BackpressureStrategy.DROP)
                         .flatMap({
-                            handleUiEvent(it).toFlowable(BackpressureStrategy.ERROR)
+                            handleEvent(it).toFlowable(BackpressureStrategy.ERROR)
                         }, 1)
                         .toObservable())
     }
 
-    private fun handleUiEvent(uiEvent: TodoDetailUiEvent): Observable<SideEffect> =
-            when (uiEvent) {
-                is TodoDetailUiEvent.Refresh -> refresh(uiEvent.todoUid, uiEvent.silent)
-                is TodoDetailUiEvent.CheckTodo -> check(uiEvent.todoUid, uiEvent.checked)
+    private fun handleEvent(event: ReduxEvent): Observable<ReduxEvent> =
+            when (event) {
+                is TodoDetailEvent.Refresh -> refresh(event.todoUid, event.silent)
+                is TodoDetailEvent.CheckTodo -> check(event.todoUid, event.checked)
+                else -> Observable.just(event)
             }
 
-    private fun refresh(todoUid: Long, silent: Boolean): Observable<SideEffect> {
+    private fun refresh(todoUid: Long, silent: Boolean): Observable<ReduxEvent> {
         return Maybe.fromCallable { database.todoDao().findByUid(todoUid) }
                 .subscribeOn(Schedulers.io())
                 .toSingle()
-                .flatMapObservable<SideEffect> { todo ->
+                .flatMapObservable<ReduxEvent> { todo ->
                     Observable.fromArray(
-                            TodoDetailSideEffect.SetTodo(todo),
-                            TodoDetailSideEffect.SetError(null))
+                            TodoDetailEvent.SetTodo(todo),
+                            TodoDetailEvent.SetError(null))
                 }
-                .onErrorReturn { TodoDetailSideEffect.SetError(it) }
+                .onErrorReturn { TodoDetailEvent.SetError(it) }
                 .let {
                     if (silent) it else it
-                            .startWith(TodoDetailSideEffect.SetLoading(true))
-                            .concatWith(Observable.just(TodoDetailSideEffect.SetLoading(false)))
+                            .startWith(TodoDetailEvent.SetLoading(true))
+                            .concatWith(Observable.just(TodoDetailEvent.SetLoading(false)))
                 }
     }
 
-    private fun check(todoUid: Long, checked: Boolean): Observable<SideEffect> {
+    private fun check(todoUid: Long, checked: Boolean): Observable<ReduxEvent> {
         return Maybe.fromCallable { database.todoDao().findByUid(todoUid) }
                 .flatMapSingleElement { todo ->
                     val changed = todo.apply { isCompleted = checked }
@@ -69,28 +72,28 @@ class TodoDetailViewModel(private val database: TodoDatabase) :
                 }
                 .subscribeOn(Schedulers.io())
                 .toSingle()
-                .flatMapObservable<SideEffect> { todo ->
+                .flatMapObservable<ReduxEvent> { todo ->
                     Observable.fromArray(
-                            TodoDetailSideEffect.SetTodo(todo),
-                            TodoDetailSideEffect.SetError(null),
-                            TodoDetailSideEffect.ShowCheckedToast(checked))
+                            TodoDetailEvent.SetTodo(todo),
+                            TodoDetailEvent.SetError(null),
+                            TodoDetailEvent.ShowCheckedToast(checked))
                 }
-                .onErrorReturn { TodoDetailSideEffect.SetError(it) }
-                .startWith(TodoDetailSideEffect.SetLoading(true))
-                .concatWith(Observable.just(TodoDetailSideEffect.SetLoading(false)))
+                .onErrorReturn { TodoDetailEvent.SetError(it) }
+                .startWith(TodoDetailEvent.SetLoading(true))
+                .concatWith(Observable.just(TodoDetailEvent.SetLoading(false)))
     }
 
     override fun reduceState(state: GlobalState<TodoDetailState>,
-                             action: SideEffect.State): GlobalState<TodoDetailState> {
-        var newState = super.reduceState(state, action)
+                             event: ReduxEvent.State): GlobalState<TodoDetailState> {
+        var newState = super.reduceState(state, event)
         var subState = newState.subState
-        when (action) {
-            is TodoDetailSideEffect.SetLoading ->
-                subState = subState.copy(loading = action.loading)
-            is TodoDetailSideEffect.SetError ->
-                subState = subState.copy(error = action.error)
-            is TodoDetailSideEffect.SetTodo -> {
-                subState = subState.copy(todo = action.todo)
+        when (event) {
+            is TodoDetailEvent.SetLoading ->
+                subState = subState.copy(loading = event.loading)
+            is TodoDetailEvent.SetError ->
+                subState = subState.copy(error = event.error)
+            is TodoDetailEvent.SetTodo -> {
+                subState = subState.copy(todo = event.todo)
             }
         }
         if (subState !== newState.subState) {

@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
 import android.arch.lifecycle.ViewModelProviders
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
@@ -16,19 +16,19 @@ class TodoListInjection(private val activity: TodoListActivity) {
 
     val stateView: TodoListStateView by lazy {
         TodoListStateView(activity) {
-            errorHandler.onError(SideEffect.Error(it))
+            errorHandler.onError(ReduxEvent.Error(it))
         }
     }
 
     val navigator: TodoListNavigator by lazy {
         TodoListNavigator(activity) {
-            errorHandler.onError(SideEffect.Error(it))
+            errorHandler.onError(ReduxEvent.Error(it))
         }
     }
 
     val extraHandler: TodoListExtraHandler by lazy {
         TodoListExtraHandler(activity) {
-            errorHandler.onError(SideEffect.Error(it))
+            errorHandler.onError(ReduxEvent.Error(it))
         }
     }
 

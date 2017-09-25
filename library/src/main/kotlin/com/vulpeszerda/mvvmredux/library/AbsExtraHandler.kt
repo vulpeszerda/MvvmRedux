@@ -8,7 +8,7 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-abstract class AbsExtraHandler<E : UiEvent>(
+abstract class AbsExtraHandler<E : ReduxEvent>(
         private val owner: LifecycleOwner,
         private val errorHandler: (Throwable) -> Unit) : ExtraHandler {
 
@@ -16,11 +16,11 @@ abstract class AbsExtraHandler<E : UiEvent>(
 
     val events = eventSubject.hide()!!
 
-    protected fun emitUiEvent(uiEvent: E) {
-        eventSubject.onNext(uiEvent)
+    protected fun emitAction(action: E) {
+        eventSubject.onNext(action)
     }
 
-    override fun subscribe(source: Observable<SideEffect.Extra>) {
-        source.filterOnResumed(owner).subscribe(this::onExtraSideEffect, errorHandler)
+    override fun subscribe(source: Observable<ReduxEvent.Extra>) {
+        source.filterOnResumed(owner).subscribe(this::onExtraEvent, errorHandler)
     }
 }

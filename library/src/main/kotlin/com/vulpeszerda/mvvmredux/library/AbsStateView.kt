@@ -11,7 +11,7 @@ import kotlinx.android.extensions.LayoutContainer
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-abstract class AbsStateView<T, E : UiEvent>(
+abstract class AbsStateView<T, E : ReduxEvent>(
         private val owner: LifecycleOwner,
         private val errorHandler: (Throwable) -> Unit) : LayoutContainer, LifecycleObserver {
 

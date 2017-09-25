@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
 class TodoDetailStateView(
         private val activity: TodoDetailActivity,
         errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<TodoDetailState, TodoDetailUiEvent>(activity, errorHandler) {
+        BaseActivityStateView<TodoDetailState, TodoDetailEvent>(activity, errorHandler) {
 
     override fun onStateChanged(prev: GlobalState<TodoDetailState>?,
                                 curr: GlobalState<TodoDetailState>?) {

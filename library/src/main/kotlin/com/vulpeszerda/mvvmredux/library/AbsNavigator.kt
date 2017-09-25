@@ -9,7 +9,7 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-abstract class AbsNavigator<E : UiEvent>(
+abstract class AbsNavigator<E : ReduxEvent>(
         private val owner: LifecycleOwner,
         private val errorHandler: (Throwable) -> Unit) : Navigator {
 
@@ -17,10 +17,10 @@ abstract class AbsNavigator<E : UiEvent>(
 
     val events = eventSubject.hide()!!
 
-    protected fun emitUiEvent(uiEvent: E) {
-        eventSubject.onNext(uiEvent)
+    protected fun emitAction(action: E) {
+        eventSubject.onNext(action)
     }
 
-    override fun subscribe(source: Observable<SideEffect.Navigation>): Disposable =
+    override fun subscribe(source: Observable<ReduxEvent.Navigation>): Disposable =
             source.filterOnResumed(owner).subscribe(this::navigate, errorHandler)
 }

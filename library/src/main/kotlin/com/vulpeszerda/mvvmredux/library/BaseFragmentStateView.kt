@@ -6,7 +6,7 @@ import android.view.View
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-abstract class BaseFragmentStateView<T, E : UiEvent>(
+abstract class BaseFragmentStateView<T, E : ReduxEvent>(
         private val fragment: BaseFragment,
         errorHandler: (Throwable) -> Unit) :
         BaseStateView<T, E>(fragment, errorHandler) {

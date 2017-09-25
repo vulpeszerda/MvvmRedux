@@ -19,7 +19,7 @@ class TodoDetailActivity : BaseActivity() {
         TodoDetailInjection(this)
     }
 
-    private val eventSubject = PublishSubject.create<TodoDetailUiEvent>()
+    private val eventSubject = PublishSubject.create<TodoDetailEvent>()
     private var firstLoading = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +37,11 @@ class TodoDetailActivity : BaseActivity() {
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
         injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
-                Observable.empty<TodoDetailUiEvent>()
+                Observable.empty<TodoDetailEvent>()
                         .mergeWith(eventSubject)
                         .mergeWith(injection.stateView.events)
                         .mergeWith(injection.errorHandler.events)
-                        .mergeWith(injection.extraHandler.events)
-                        .toFlowable(BackpressureStrategy.DROP))
+                        .mergeWith(injection.extraHandler.events))
     }
 
     private fun restoreStateFromBundle(bundle: Bundle?): TodoDetailState {
@@ -52,7 +51,7 @@ class TodoDetailActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         injection.viewModel.stateStore?.run {
-            eventSubject.onNext(TodoDetailUiEvent.Refresh(latest.subState.todoUid, !firstLoading))
+            eventSubject.onNext(TodoDetailEvent.Refresh(latest.subState.todoUid, !firstLoading))
         }
     }
 

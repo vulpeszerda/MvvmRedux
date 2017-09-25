@@ -2,9 +2,8 @@ package com.vulpeszerda.mvvmredux.sample.list
 
 import com.vulpeszerda.mvvmredux.library.BaseViewModel
 import com.vulpeszerda.mvvmredux.library.GlobalState
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
-import com.vulpeszerda.mvvmredux.sample.detail.TodoDetailSideEffect
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
@@ -14,102 +13,104 @@ import io.reactivex.subjects.PublishSubject
  * Created by vulpes on 2017. 8. 30..
  */
 class TodoListViewModel(private val database: TodoDatabase) :
-        BaseViewModel<TodoListUiEvent, TodoListState>() {
+        BaseViewModel<TodoListEvent, TodoListState>() {
 
-    private val blockingActionSubject = PublishSubject.create<TodoListUiEvent>()
+    private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
-    override fun toSideEffect(uiEvents: Flowable<TodoListUiEvent>):
-            Observable<SideEffect> {
+    override fun eventTransformer(event: TodoListEvent, getState: () -> GlobalState<TodoListState>):
+            Observable<ReduxEvent> {
         return Observable.merge(
-                uiEvents.toObservable()
+                super.eventTransformer(event, getState)
                         .flatMap {
                             when (it) {
-                                is TodoListUiEvent.Refresh,
-                                is TodoListUiEvent.ClickClearAll -> {
+                                is TodoListEvent.Refresh,
+                                is TodoListEvent.ShowClearConfirm -> {
                                     blockingActionSubject.onNext(it)
                                     Observable.empty()
                                 }
-                                else -> handleUiEvent(it)
+                                else -> handleEvent(it, getState)
                             }
                         },
                 blockingActionSubject
                         .toFlowable(BackpressureStrategy.DROP)
                         .flatMap({
-                            handleUiEvent(it).toFlowable(BackpressureStrategy.ERROR)
+                            handleEvent(it, getState).toFlowable(BackpressureStrategy.ERROR)
                         }, 1)
                         .toObservable())
     }
 
-    private fun handleUiEvent(uiEvent: TodoListUiEvent): Observable<SideEffect> {
-        return Observable.just<SideEffect>(when (uiEvent) {
-            is TodoListUiEvent.Refresh -> return refresh(uiEvent.silent)
-            is TodoListUiEvent.ConfirmClearAll -> return clearAll()
-            is TodoListUiEvent.CheckTodo -> return check(uiEvent.todo)
-            is TodoListUiEvent.ClickClearAll -> TodoListSideEffect.ShowClearConfirm()
-            is TodoListUiEvent.ClickCreate -> TodoListSideEffect.NavigateCreate()
-            is TodoListUiEvent.ClickDetail -> TodoListSideEffect.NavigateDetail(uiEvent.uid)
+    private fun handleEvent(event: ReduxEvent,
+                            getState: () -> GlobalState<TodoListState>): Observable<ReduxEvent> {
+        return Observable.just<ReduxEvent>(when (event) {
+            is TodoListEvent.Refresh -> return refresh(event.silent)
+            is TodoListEvent.ConfirmClearAll -> return clearAll()
+            is TodoListEvent.CheckTodo -> return check(event.uid, event.checked, getState)
+            else -> event
         })
     }
 
-    private fun refresh(silent: Boolean): Observable<SideEffect> {
+    private fun refresh(silent: Boolean): Observable<ReduxEvent> {
         return Single.fromCallable { database.todoDao().all() }
                 .subscribeOn(Schedulers.io())
-                .flatMapObservable<SideEffect> { list ->
+                .flatMapObservable<ReduxEvent> { list ->
                     Observable.fromArray(
-                            TodoListSideEffect.SetTodos(list),
-                            TodoListSideEffect.SetError(null))
+                            TodoListEvent.SetTodos(list),
+                            TodoListEvent.SetError(null))
                 }
-                .onErrorReturn { TodoListSideEffect.SetError(it) }
+                .onErrorReturn { TodoListEvent.SetError(it) }
                 .let {
                     if (silent) it else it
-                            .startWith(TodoListSideEffect.SetLoading(true))
-                            .concatWith(Observable.just(TodoListSideEffect.SetLoading(false)))
+                            .startWith(TodoListEvent.SetLoading(true))
+                            .concatWith(Observable.just(TodoListEvent.SetLoading(false)))
                 }
     }
 
-    private fun clearAll(): Observable<SideEffect> {
+    private fun clearAll(): Observable<ReduxEvent> {
         return Completable.fromAction { database.todoDao().deleteAll() }
                 .subscribeOn(Schedulers.io())
-                .andThen(Observable.fromArray<SideEffect>(
-                        TodoListSideEffect.SetLoading(false),
-                        TodoListSideEffect.SetTodos(ArrayList()),
-                        TodoListSideEffect.SetError(null),
-                        TodoListSideEffect.ShowClearedToast()))
+                .andThen(Observable.fromArray<ReduxEvent>(
+                        TodoListEvent.SetLoading(false),
+                        TodoListEvent.SetTodos(ArrayList()),
+                        TodoListEvent.SetError(null),
+                        TodoListEvent.ShowClearedToast()))
                 .onErrorResumeNext { throwable: Throwable ->
                     Observable.fromArray(
-                            TodoListSideEffect.SetLoading(false),
-                            TodoListSideEffect.SetError(throwable))
+                            TodoListEvent.SetLoading(false),
+                            TodoListEvent.SetError(throwable))
                 }
-                .startWith(TodoListSideEffect.SetLoading(true))
+                .startWith(TodoListEvent.SetLoading(true))
     }
 
-    private fun check(todo: Todo): Observable<SideEffect> {
+    private fun check(uid: Long, checked: Boolean, getState: () -> GlobalState<TodoListState>):
+            Observable<ReduxEvent> {
         return Completable
                 .fromAction {
+                    val todo = getState.invoke().subState.todos.firstOrNull { it.uid == uid }
+                            ?: return@fromAction
                     database.todoDao().update(Todo().apply {
-                        uid = todo.uid
+                        this.uid = todo.uid
                         title = todo.title
                         message = todo.message
-                        isCompleted = !todo.isCompleted
+                        isCompleted = checked
                         createdAt = todo.createdAt
                     })
                 }
                 .subscribeOn(Schedulers.io())
-                .toObservable<SideEffect>()
-                .startWith(TodoListSideEffect.CheckTodo(todo.uid, !todo.isCompleted))
+                .toObservable<ReduxEvent>()
+                .startWith(TodoListEvent.CheckTodo(uid, checked))
     }
 
     override fun reduceState(state: GlobalState<TodoListState>,
-                             action: SideEffect.State): GlobalState<TodoListState> {
-        var newState = super.reduceState(state, action)
+                             event: ReduxEvent.State): GlobalState<TodoListState> {
+        var newState = super.reduceState(state, event)
         var subState = newState.subState
-        when (action) {
-            is TodoListSideEffect.SetLoading ->
-                subState = subState.copy(loading = action.loading)
-            is TodoListSideEffect.SetError ->
-                subState = subState.copy(error = action.error)
-            is TodoListSideEffect.CheckTodo -> {
-                val matchedIdx = subState.todos.indexOfFirst { it.uid == action.uid }
+        when (event) {
+            is TodoListEvent.SetLoading ->
+                subState = subState.copy(loading = event.loading)
+            is TodoListEvent.SetError ->
+                subState = subState.copy(error = event.error)
+            is TodoListEvent.CheckTodo -> {
+                val matchedIdx = subState.todos.indexOfFirst { it.uid == event.uid }
                 val todo = subState.todos.getOrNull(matchedIdx)
                 if (todo != null) {
                     subState = subState.copy(todos = subState.todos.toMutableList()
@@ -118,15 +119,15 @@ class TodoListViewModel(private val database: TodoDatabase) :
                                     uid = todo.uid
                                     title = todo.title
                                     message = todo.message
-                                    isCompleted = action.checked
+                                    isCompleted = event.checked
                                     createdAt = todo.createdAt
                                 })
                             }
                             .toList())
                 }
             }
-            is TodoListSideEffect.SetTodos ->
-                subState = subState.copy(todos = action.todos)
+            is TodoListEvent.SetTodos ->
+                subState = subState.copy(todos = event.todos)
         }
         if (subState !== newState.subState) {
             newState = newState.copy(subState = subState)

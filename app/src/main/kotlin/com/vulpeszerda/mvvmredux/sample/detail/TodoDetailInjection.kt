@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
 import android.arch.lifecycle.ViewModelProviders
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
@@ -15,11 +15,11 @@ class TodoDetailInjection(private val activity: TodoDetailActivity) {
     }
 
     val extraHandler: TodoDetailExtraHandler by lazy {
-        TodoDetailExtraHandler(activity) { errorHandler.onError(SideEffect.Error(it)) }
+        TodoDetailExtraHandler(activity) { errorHandler.onError(ReduxEvent.Error(it)) }
     }
 
     val stateView: TodoDetailStateView by lazy {
-        TodoDetailStateView(activity) { errorHandler.onError(SideEffect.Error(it)) }
+        TodoDetailStateView(activity) { errorHandler.onError(ReduxEvent.Error(it)) }
     }
 
     val viewModel: TodoDetailViewModel by lazy {

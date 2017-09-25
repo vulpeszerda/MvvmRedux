@@ -2,7 +2,7 @@ package com.vulpeszerda.mvvmredux.sample.create
 
 import android.widget.Toast
 import com.vulpeszerda.mvvmredux.library.AbsExtraHandler
-import com.vulpeszerda.mvvmredux.library.SideEffect
+import com.vulpeszerda.mvvmredux.library.ReduxEvent
 
 /**
  * Created by vulpes on 2017. 9. 21..
@@ -10,10 +10,10 @@ import com.vulpeszerda.mvvmredux.library.SideEffect
 class TodoCreateExtraHandler(
         private val activity: TodoCreateActivity,
         errorHandler: (Throwable) -> Unit) :
-        AbsExtraHandler<TodoCreateUiEvent>(activity, errorHandler) {
+        AbsExtraHandler<TodoCreateEvent>(activity, errorHandler) {
 
-    override fun onExtraSideEffect(extra: SideEffect.Extra) {
-        if (extra is TodoCreateSideEffect.ShowFinishToast) {
+    override fun onExtraEvent(extra: ReduxEvent.Extra) {
+        if (extra is TodoCreateEvent.ShowFinishToast) {
             Toast.makeText(activity, "Todo created", Toast.LENGTH_SHORT).show()
         }
     }

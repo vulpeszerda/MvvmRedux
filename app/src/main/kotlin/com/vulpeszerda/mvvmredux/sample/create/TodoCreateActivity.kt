@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.vulpeszerda.mvvmredux.library.BaseActivity
 import com.vulpeszerda.mvvmredux.library.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_create.message as viewMessage
 import kotlinx.android.synthetic.main.todo_create.title as viewTitle
@@ -33,12 +32,11 @@ class TodoCreateActivity : BaseActivity() {
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
         injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
-                Observable.empty<TodoCreateUiEvent>()
+                Observable.empty<TodoCreateEvent>()
                         .mergeWith(injection.stateView.events)
                         .mergeWith(injection.navigator.events)
                         .mergeWith(injection.errorHandler.events)
-                        .mergeWith(injection.extraHandler.events)
-                        .toFlowable(BackpressureStrategy.DROP))
+                        .mergeWith(injection.extraHandler.events))
     }
 
     private fun restoreStateFromBundle(bundle: Bundle?): TodoCreateState {

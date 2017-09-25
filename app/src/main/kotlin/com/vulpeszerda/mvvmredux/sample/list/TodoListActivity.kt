@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.vulpeszerda.mvvmredux.library.BaseActivity
 import com.vulpeszerda.mvvmredux.library.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -16,7 +15,7 @@ class TodoListActivity : BaseActivity() {
         TodoListInjection(this)
     }
 
-    private val eventSubject = PublishSubject.create<TodoListUiEvent>()
+    private val eventSubject = PublishSubject.create<TodoListEvent>()
 
     private var firstLoading = true
 
@@ -35,13 +34,12 @@ class TodoListActivity : BaseActivity() {
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
         injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
-                Observable.empty<TodoListUiEvent>()
+                Observable.empty<TodoListEvent>()
                         .mergeWith(eventSubject)
                         .mergeWith(injection.stateView.events)
                         .mergeWith(injection.navigator.events)
                         .mergeWith(injection.errorHandler.events)
-                        .mergeWith(injection.extraHandler.events)
-                        .toFlowable(BackpressureStrategy.DROP))
+                        .mergeWith(injection.extraHandler.events))
     }
 
     private fun restoreStateFromBundle(bundle: Bundle?): TodoListState {
@@ -50,7 +48,7 @@ class TodoListActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        eventSubject.onNext(TodoListUiEvent.Refresh(!firstLoading))
+        eventSubject.onNext(TodoListEvent.Refresh(!firstLoading))
     }
 
     override fun onStop() {
