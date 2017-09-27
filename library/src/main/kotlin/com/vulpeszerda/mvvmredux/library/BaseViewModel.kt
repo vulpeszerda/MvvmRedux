@@ -26,12 +26,12 @@ abstract class BaseViewModel<E : ReduxEvent, T> : ViewModel() {
     val navigation: Observable<ReduxEvent.Navigation> = navigationSubject.hide()
     val state: Observable<GlobalState<T>> = stateSubject.hide()
 
-    var stateStore: StateStore<E, GlobalState<T>>? = null
+    var stateStore: ReduxStore<E, GlobalState<T>>? = null
         private set
 
     fun initialize(initialState: GlobalState<T>, events: Observable<E>) {
         disposable.clear()
-        stateStore = StateStore(initialState,
+        stateStore = ReduxStore(initialState,
                 this::reduceState,
                 Schedulers.computation()) { action, getState ->
             eventTransformer(action, getState)

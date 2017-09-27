@@ -8,7 +8,7 @@ import io.reactivex.Scheduler
  * Created by vulpes on 2017. 8. 29..
  */
 
-class StateStore<A, T>(
+class ReduxStore<A, T>(
         initialState: T,
         private val reducer: (T, ReduxEvent.State) -> T,
         private val scheduler: Scheduler,
