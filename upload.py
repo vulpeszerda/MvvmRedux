@@ -30,11 +30,11 @@ lastVersionInt += 1
 newVersion = prefix + "." + str(lastVersionInt) + POSTFIX
 newVersionRegex = newVersion.replace(".", "\.")
 
-executeShell("sed -i '' 's/\(coreVersionName *= *\"\)\(.*\)\(\"\)/\\1" + newVersionRegex + "\\3/' ./build.gradle")
+executeShell("sed -i '' 's/\(libraryVersionName *= *\"\)\(.*\)\(\"\)/\\1" + newVersionRegex + "\\3/' ./build.gradle")
 
 print "Updated core version with " + newVersion
 executeShell("git add ./build.gradle")
-executeShell("git commit -m \" Updated core version to " + newVersion + "\"")
+executeShell("git commit -m \" Updated library version to " + newVersion + "\"")
 tag = "v" + newVersion
 executeShell("git tag " + tag)
 executeShell("git push origin master")
