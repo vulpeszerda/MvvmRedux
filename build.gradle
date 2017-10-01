@@ -63,6 +63,10 @@ allprojects {
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
     }
+
+    tasks.withType(Javadoc).all {
+        enabled = false
+    }
 }
 
 if (java7Home == null) {
