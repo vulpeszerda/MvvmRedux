@@ -19,7 +19,7 @@ def executeShell(command):
 
 executeShell("git checkout master")
 
-POSTFIX = "_Akr"
+POSTFIX = ""
 
 oldVersionNumber = executeShell("perl -ne 'if(m/libraryVersionName\s*=\s*\"(.*?)\"/){ print $1; }' ./build.gradle")
 tokens = oldVersionNumber.split(".")
