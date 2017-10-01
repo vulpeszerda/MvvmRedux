@@ -2,6 +2,7 @@ package com.vulpeszerda.mvvmredux
 
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
@@ -11,12 +12,12 @@ import android.support.v7.app.AppCompatActivity
 object RouterFactory {
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> create(activity: AppCompatActivity, klass: Class<T>): T =
+    fun <T: Delegate> create(activity: AppCompatActivity, klass: Class<T>): T =
             klass.constructors.first().newInstance(ActivityDelegate(
                     activity)) as T
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> create(fragment: Fragment, klass: Class<T>): T =
+    fun <T: Delegate> create(fragment: Fragment, klass: Class<T>): T =
             klass.constructors.first().newInstance(FragmentDelegate(
                     fragment)) as T
 
@@ -25,6 +26,7 @@ object RouterFactory {
         fun startActivity(intent: Intent, requestCode: Int?)
         fun setResult(resultCode: Int, data: Intent?)
         fun finish()
+        fun finishAffinity()
     }
 
     class ActivityDelegate(private val activity: AppCompatActivity) : Delegate {
@@ -46,6 +48,10 @@ object RouterFactory {
         override fun finish() {
             activity.finish()
         }
+
+        override fun finishAffinity() {
+            ActivityCompat.finishAffinity(activity)
+        }
     }
 
     class FragmentDelegate(private val fragment: Fragment) : Delegate {
@@ -66,6 +72,10 @@ object RouterFactory {
 
         override fun finish() {
             fragment.activity?.finish()
+        }
+
+        override fun finishAffinity() {
+            fragment.activity?.run { ActivityCompat.finishAffinity(this) }
         }
     }
 
