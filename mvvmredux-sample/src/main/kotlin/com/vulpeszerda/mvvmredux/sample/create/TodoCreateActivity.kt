@@ -3,8 +3,8 @@ package com.vulpeszerda.mvvmredux.sample.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.vulpeszerda.mvvmredux.BaseActivity
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxActivity
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_create.message as viewMessage
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.todo_create.title as viewTitle
 /**
  * Created by vulpes on 2017. 8. 31..
  */
-class TodoCreateActivity : BaseActivity() {
+class TodoCreateActivity : ReduxActivity() {
 
     private val injection: TodoCreateInjection by lazy {
         TodoCreateInjection(this)
@@ -31,7 +31,8 @@ class TodoCreateActivity : BaseActivity() {
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
-        injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
+        injection.viewModel.initialize(GlobalState(
+                restoreStateFromBundle(savedInstanceState)),
                 Observable.empty<TodoCreateEvent>()
                         .mergeWith(injection.stateView.events)
                         .mergeWith(injection.navigator.events)

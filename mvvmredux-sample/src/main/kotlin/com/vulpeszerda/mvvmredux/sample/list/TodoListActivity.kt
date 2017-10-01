@@ -3,13 +3,13 @@ package com.vulpeszerda.mvvmredux.sample.list
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.vulpeszerda.mvvmredux.BaseActivity
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxActivity
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class TodoListActivity : BaseActivity() {
+class TodoListActivity : ReduxActivity() {
 
     private val injection: TodoListInjection by lazy {
         TodoListInjection(this)
@@ -33,7 +33,8 @@ class TodoListActivity : BaseActivity() {
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
-        injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
+        injection.viewModel.initialize(GlobalState(
+                restoreStateFromBundle(savedInstanceState)),
                 Observable.empty<TodoListEvent>()
                         .mergeWith(eventSubject)
                         .mergeWith(injection.stateView.events)

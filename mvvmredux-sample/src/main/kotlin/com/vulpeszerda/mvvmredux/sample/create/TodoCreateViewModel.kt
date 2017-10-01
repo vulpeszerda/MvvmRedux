@@ -1,12 +1,10 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
-import com.vulpeszerda.mvvmredux.BaseViewModel
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxViewModel
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import com.vulpeszerda.mvvmredux.sample.model.Todo
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -15,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by vulpes on 2017. 8. 31..
  */
 class TodoCreateViewModel(private val database: TodoDatabase) :
-        BaseViewModel<TodoCreateEvent, TodoCreateState>() {
+        ReduxViewModel<TodoCreateEvent, GlobalState<TodoCreateState>>() {
 
     override fun eventTransformer(event: TodoCreateEvent,
                                   getState: () -> GlobalState<TodoCreateState>):

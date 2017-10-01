@@ -3,17 +3,16 @@ package com.vulpeszerda.mvvmredux.sample.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.vulpeszerda.mvvmredux.BaseActivity
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxActivity
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by vulpes on 2017. 8. 31..
  */
-class TodoDetailActivity : BaseActivity() {
+class TodoDetailActivity : ReduxActivity() {
 
     private val injection: TodoDetailInjection by lazy {
         TodoDetailInjection(this)
@@ -36,7 +35,8 @@ class TodoDetailActivity : BaseActivity() {
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
-        injection.viewModel.initialize(GlobalState(restoreStateFromBundle(savedInstanceState)),
+        injection.viewModel.initialize(GlobalState(
+                restoreStateFromBundle(savedInstanceState)),
                 Observable.empty<TodoDetailEvent>()
                         .mergeWith(eventSubject)
                         .mergeWith(injection.stateView.events)

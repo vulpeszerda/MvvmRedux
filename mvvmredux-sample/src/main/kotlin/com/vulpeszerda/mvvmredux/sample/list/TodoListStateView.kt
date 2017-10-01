@@ -5,8 +5,8 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
-import com.vulpeszerda.mvvmredux.BaseActivityStateView
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxActivityStateView
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_list.*
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.todo_list.*
 class TodoListStateView(
         private val activity: TodoListActivity,
         errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<TodoListState, TodoListEvent>(activity, errorHandler) {
+        ReduxActivityStateView<GlobalState<TodoListState>, TodoListEvent>(activity, errorHandler) {
 
     private val adapter: TodoListAdapter by lazy {
         TodoListAdapter(object : TodoListAdapter.ActionHandler {

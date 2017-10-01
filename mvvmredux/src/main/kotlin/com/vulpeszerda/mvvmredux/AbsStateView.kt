@@ -23,14 +23,12 @@ abstract class AbsStateView<T, E : ReduxEvent>(
         eventSubject.onNext(uiEvent)
     }
 
-    protected abstract fun onStateChanged(prev: GlobalState<T>?, curr: GlobalState<T>?)
+    protected abstract fun onStateChanged(prev: T?, curr: T?)
 
-    fun subscribe(source: Observable<GlobalState<T>>): Disposable =
+    fun subscribe(source: Observable<T>): Disposable =
             source.filterOnStarted(owner)
                     .distinctUntilChanged()
-                    .scan(StatePair<GlobalState<T>>(
-                            null,
-                            null))
+                    .scan(StatePair<T>(null, null))
                     { prevPair, curr -> StatePair(prevPair.curr, curr) }
                     .filter { (prev, curr) -> prev !== curr }
                     .subscribe({ (prev, curr) -> onStateChanged(prev, curr) }, errorHandler)

@@ -6,21 +6,19 @@ import android.view.View
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-abstract class BaseFragmentStateView<T, E : ReduxEvent>(
-        private val fragment: BaseFragment,
+abstract class ReduxActivityStateView<T, E : ReduxEvent>(
+        private val activity: ReduxActivity,
         errorHandler: (Throwable) -> Unit) :
-        BaseStateView<T, E>(fragment, errorHandler) {
+        ReduxStateView<T, E>(activity, errorHandler) {
 
     override val progressDialog: ProgressDialog by lazy {
-        ProgressDialog(fragment.context)
+        ProgressDialog(activity)
     }
 
     override val isAvailable: Boolean
-        get() = fragment.isAdded && fragment.activity?.isFinishing == false
-
+        get() = !activity.isFinishing
 
     override val containerView: View? by lazy {
-        fragment.view
+        activity.findViewById(android.R.id.content)
     }
-
 }

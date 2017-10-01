@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
-import com.vulpeszerda.mvvmredux.BaseActivityStateView
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxActivityStateView
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import kotlinx.android.synthetic.main.todo_detail.message as viewMessage
 import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
 
@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
 class TodoDetailStateView(
         private val activity: TodoDetailActivity,
         errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<TodoDetailState, TodoDetailEvent>(activity, errorHandler) {
+        ReduxActivityStateView<GlobalState<TodoDetailState>, TodoDetailEvent>(activity, errorHandler) {
 
     override fun onStateChanged(prev: GlobalState<TodoDetailState>?,
                                 curr: GlobalState<TodoDetailState>?) {

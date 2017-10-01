@@ -1,4 +1,4 @@
-package com.vulpeszerda.mvvmredux
+package com.vulpeszerda.mvvmredux.sample
 
 /**
  * Created by vulpes on 2017. 8. 25..

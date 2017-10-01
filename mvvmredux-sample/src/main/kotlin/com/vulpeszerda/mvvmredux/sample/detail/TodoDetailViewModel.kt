@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
-import com.vulpeszerda.mvvmredux.BaseViewModel
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxViewModel
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import io.reactivex.*
@@ -12,7 +12,7 @@ import io.reactivex.subjects.PublishSubject
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoDetailViewModel(private val database: TodoDatabase) :
-        BaseViewModel<TodoDetailEvent, TodoDetailState>() {
+        ReduxViewModel<TodoDetailEvent, GlobalState<TodoDetailState>>() {
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 

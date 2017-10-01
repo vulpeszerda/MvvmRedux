@@ -7,7 +7,7 @@ import android.support.annotation.UiThread
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-abstract class BaseStateView<T, E : ReduxEvent>(
+abstract class ReduxStateView<T, E : ReduxEvent>(
         owner: LifecycleOwner,
         errorHandler: (Throwable) -> Unit) :
         AbsStateView<T, E>(owner, errorHandler) {

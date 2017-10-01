@@ -1,8 +1,8 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
 import com.jakewharton.rxbinding2.view.RxView
-import com.vulpeszerda.mvvmredux.BaseActivityStateView
-import com.vulpeszerda.mvvmredux.GlobalState
+import com.vulpeszerda.mvvmredux.ReduxActivityStateView
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_create.*
 import kotlinx.android.synthetic.main.todo_create.message as viewMessage
@@ -14,7 +14,8 @@ import kotlinx.android.synthetic.main.todo_create.title as viewTitle
 class TodoCreateStateView(
         private val activity: TodoCreateActivity,
         errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<TodoCreateState, TodoCreateEvent>(activity, errorHandler) {
+        ReduxActivityStateView<GlobalState<TodoCreateState>, TodoCreateEvent>(
+                activity, errorHandler) {
 
     override val events: Observable<TodoCreateEvent>
         get() = super.events.mergeWith(RxView.clicks(btn_save)
