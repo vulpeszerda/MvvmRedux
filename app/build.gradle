@@ -74,13 +74,18 @@ kapt {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(":library")
+//    compile project(":library")
 
     compile "com.android.support:support-v4:$supportLib"
     compile "com.android.support:appcompat-v7:$supportLib"
     compile "com.android.support:design:$supportLib"
     compile "com.android.support:recyclerview-v7:$supportLib"
     compile "com.android.support:cardview-v7:$supportLib"
+    testCompile "com.android.support:support-v4:$supportLib"
+    testCompile "com.android.support:appcompat-v7:$supportLib"
+    testCompile "com.android.support:design:$supportLib"
+    testCompile "com.android.support:recyclerview-v7:$supportLib"
+    testCompile "com.android.support:cardview-v7:$supportLib"
     androidTestCompile "com.android.support:support-v4:$supportLib"
     androidTestCompile "com.android.support:appcompat-v7:$supportLib"
     androidTestCompile "com.android.support:design:$supportLib"
