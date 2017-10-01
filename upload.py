@@ -39,5 +39,5 @@ tag = "v" + newVersion
 executeShell("git tag " + tag)
 executeShell("git push origin master")
 executeShell("git push origin " + tag)
-executeShell("./gradlew clean assemble bintrayUpload -PdryRun=false")
+executeShell("./gradlew clean :mvvmredux:assemble bintrayUpload -PdryRun=false")
 
