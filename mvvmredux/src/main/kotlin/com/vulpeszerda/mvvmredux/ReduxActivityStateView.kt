@@ -1,6 +1,5 @@
 package com.vulpeszerda.mvvmredux
 
-import android.app.ProgressDialog
 import android.view.View
 
 /**
@@ -10,10 +9,6 @@ abstract class ReduxActivityStateView<T, E : ReduxEvent>(
         private val activity: ReduxActivity,
         errorHandler: (Throwable) -> Unit) :
         ReduxStateView<T, E>(activity, errorHandler) {
-
-    override val progressDialog: ProgressDialog by lazy {
-        ProgressDialog(activity)
-    }
 
     override val isAvailable: Boolean
         get() = !activity.isFinishing

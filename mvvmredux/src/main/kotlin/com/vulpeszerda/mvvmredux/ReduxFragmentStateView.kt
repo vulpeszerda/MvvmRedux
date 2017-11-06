@@ -11,10 +11,6 @@ abstract class ReduxFragmentStateView<T, E : ReduxEvent>(
         errorHandler: (Throwable) -> Unit) :
         ReduxStateView<T, E>(fragment, errorHandler) {
 
-    override val progressDialog: ProgressDialog by lazy {
-        ProgressDialog(fragment.context)
-    }
-
     override val isAvailable: Boolean
         get() = fragment.isAdded && fragment.activity?.isFinishing == false
 
