@@ -8,15 +8,15 @@ import io.reactivex.Scheduler
  * Created by vulpes on 2017. 8. 29..
  */
 
-class ReduxStore<A, T>(
+class ReduxStore<T>(
         initialState: T,
         private val reducer: (T, ReduxEvent.State) -> T,
         private val scheduler: Scheduler,
-        private val eventTransformer: (A, () -> T) -> Observable<ReduxEvent.State>) {
+        private val eventTransformer: (ReduxEvent, () -> T) -> Observable<ReduxEvent.State>) {
 
     var latest: T = initialState
 
-    fun toState(actions: Observable<A>): Observable<T> {
+    fun toState(actions: Observable<ReduxEvent>): Observable<T> {
         return actions
                 .flatMap { eventTransformer.invoke(it, { latest }) }
                 .observeOn(scheduler)

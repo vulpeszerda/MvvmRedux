@@ -1,10 +1,13 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
+import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.ReduxViewModel
 import com.vulpeszerda.mvvmredux.sample.GlobalState
-import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
-import io.reactivex.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
@@ -12,11 +15,11 @@ import io.reactivex.subjects.PublishSubject
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoDetailViewModel(private val database: TodoDatabase) :
-        ReduxViewModel<TodoDetailEvent, GlobalState<TodoDetailState>>() {
+        ReduxViewModel<GlobalState<TodoDetailState>>() {
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
-    override fun eventTransformer(event: TodoDetailEvent,
+    override fun eventTransformer(event: ReduxEvent,
                                   getState: () -> GlobalState<TodoDetailState>):
             Observable<ReduxEvent> {
         return Observable.merge(

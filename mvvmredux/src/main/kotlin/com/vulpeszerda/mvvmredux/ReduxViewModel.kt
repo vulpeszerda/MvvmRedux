@@ -11,7 +11,7 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 8. 25..
  */
-abstract class ReduxViewModel<E : ReduxEvent, T> : ViewModel() {
+abstract class ReduxViewModel<T> : ViewModel() {
 
     private val disposable = CompositeDisposable()
     private val errorSubject = PublishSubject.create<ReduxEvent.Error>()
@@ -26,10 +26,10 @@ abstract class ReduxViewModel<E : ReduxEvent, T> : ViewModel() {
     val navigation: Observable<ReduxEvent.Navigation> = navigationSubject.hide()
     val state: Observable<T> = stateSubject.hide()
 
-    var stateStore: ReduxStore<E, T>? = null
+    var stateStore: ReduxStore<T>? = null
         private set
 
-    fun initialize(initialState: T, events: Observable<E>) {
+    fun initialize(initialState: T, events: Observable<ReduxEvent>) {
         disposable.clear()
         stateStore = ReduxStore(initialState,
                 this::reduceState,
@@ -59,7 +59,7 @@ abstract class ReduxViewModel<E : ReduxEvent, T> : ViewModel() {
                 })
     }
 
-    protected open fun eventTransformer(event: E, getState: () -> T):
+    protected open fun eventTransformer(event: ReduxEvent, getState: () -> T):
             Observable<ReduxEvent> {
         return Observable.just(event)
     }

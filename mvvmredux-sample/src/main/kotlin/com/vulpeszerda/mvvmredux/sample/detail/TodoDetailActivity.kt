@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.vulpeszerda.mvvmredux.ReduxActivity
+import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
 import io.reactivex.Observable
@@ -37,7 +38,7 @@ class TodoDetailActivity : ReduxActivity() {
     private fun setupViewModel(savedInstanceState: Bundle?) {
         injection.viewModel.initialize(GlobalState(
                 restoreStateFromBundle(savedInstanceState)),
-                Observable.empty<TodoDetailEvent>()
+                Observable.empty<ReduxEvent>()
                         .mergeWith(eventSubject)
                         .mergeWith(injection.stateView.events)
                         .mergeWith(injection.errorHandler.events)

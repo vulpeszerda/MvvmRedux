@@ -13,11 +13,11 @@ import io.reactivex.subjects.PublishSubject
  * Created by vulpes on 2017. 8. 30..
  */
 class TodoListViewModel(private val database: TodoDatabase) :
-        ReduxViewModel<TodoListEvent, GlobalState<TodoListState>>() {
+        ReduxViewModel<GlobalState<TodoListState>>() {
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
-    override fun eventTransformer(event: TodoListEvent, getState: () -> GlobalState<TodoListState>):
+    override fun eventTransformer(event: ReduxEvent, getState: () -> GlobalState<TodoListState>):
             Observable<ReduxEvent> {
         return Observable.merge(
                 super.eventTransformer(event, getState)

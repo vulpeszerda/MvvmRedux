@@ -13,16 +13,19 @@ import io.reactivex.schedulers.Schedulers
  * Created by vulpes on 2017. 8. 31..
  */
 class TodoCreateViewModel(private val database: TodoDatabase) :
-        ReduxViewModel<TodoCreateEvent, GlobalState<TodoCreateState>>() {
+        ReduxViewModel<GlobalState<TodoCreateState>>() {
 
-    override fun eventTransformer(event: TodoCreateEvent,
+    override fun eventTransformer(event: ReduxEvent,
                                   getState: () -> GlobalState<TodoCreateState>):
             Observable<ReduxEvent> {
         return super.eventTransformer(event, getState)
                 .filter { it is TodoCreateEvent.Save }
                 .flatMap({ event ->
-                    val saveEvent = event as TodoCreateEvent.Save
-                    save(saveEvent.title, saveEvent.message)
+                    if (event is TodoCreateEvent.Save) {
+                        save(event.title, event.message)
+                    } else {
+                        Observable.just(event)
+                    }
                 }, 1)
     }
 
