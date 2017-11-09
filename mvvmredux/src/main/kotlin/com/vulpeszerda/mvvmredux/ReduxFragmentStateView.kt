@@ -6,10 +6,10 @@ import android.view.View
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-abstract class ReduxFragmentStateView<T, E : ReduxEvent>(
-        private val fragment: ReduxFragment,
-        errorHandler: (Throwable) -> Unit) :
-        ReduxStateView<T, E>(fragment, errorHandler) {
+abstract class ReduxFragmentStateView<T>(
+        tag: String,
+        private val fragment: ReduxFragment) :
+        ReduxStateView<T>(tag, fragment) {
 
     override val isAvailable: Boolean
         get() = fragment.isAdded && fragment.activity?.isFinishing == false

@@ -8,8 +8,8 @@ import com.vulpeszerda.mvvmredux.sample.TodoRouter
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-class TodoCreateNavigator(activity: TodoCreateActivity, errorHandler: (Throwable) -> Unit) :
-        AbsNavigator<TodoCreateEvent>(activity, errorHandler) {
+class TodoCreateNavigator(activity: TodoCreateActivity) :
+        AbsNavigator("TodoCreateNavigator", activity) {
 
     private val router = RouterFactory.create(activity, TodoRouter::class.java)
 

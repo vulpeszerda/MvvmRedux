@@ -9,10 +9,10 @@ import com.vulpeszerda.mvvmredux.ReduxFragmentStateView
 /**
  * Created by vulpes on 2017. 11. 6..
  */
-abstract class BaseFragmentStateView<T, E : ReduxEvent>(
-        fragment: ReduxFragment,
-        errorHandler: (Throwable) -> Unit) :
-        ReduxFragmentStateView<T, E>(fragment, errorHandler) {
+abstract class BaseFragmentStateView<T>(
+        tag: String,
+        fragment: ReduxFragment) :
+        ReduxFragmentStateView<T>(tag, fragment) {
 
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(fragment.context)

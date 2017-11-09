@@ -5,10 +5,10 @@ import android.view.View
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-abstract class ReduxActivityStateView<T, E : ReduxEvent>(
-        private val activity: ReduxActivity,
-        errorHandler: (Throwable) -> Unit) :
-        ReduxStateView<T, E>(activity, errorHandler) {
+abstract class ReduxActivityStateView<T>(
+        tag: String,
+        protected val activity: ReduxActivity) :
+        ReduxStateView<T>(tag, activity) {
 
     override val isAvailable: Boolean
         get() = !activity.isFinishing

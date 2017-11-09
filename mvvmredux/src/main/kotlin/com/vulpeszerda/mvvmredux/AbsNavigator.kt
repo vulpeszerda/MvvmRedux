@@ -9,18 +9,22 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-abstract class AbsNavigator<E : ReduxEvent>(
-        private val owner: LifecycleOwner,
-        private val errorHandler: (Throwable) -> Unit) : Navigator {
+abstract class AbsNavigator(
+        private val tag: String,
+        private val owner: LifecycleOwner) :
+        Navigator {
 
-    private val eventSubject = PublishSubject.create<E>()
+    private val eventSubject = PublishSubject.create<ReduxEvent>()
 
     val events = eventSubject.hide()!!
 
-    protected fun emitAction(action: E) {
-        eventSubject.onNext(action)
+    protected fun publishEvent(event: ReduxEvent) {
+        eventSubject.onNext(event)
     }
 
     override fun subscribe(source: Observable<ReduxEvent.Navigation>): Disposable =
-            source.filterOnResumed(owner).subscribe(this::navigate, errorHandler)
+            source.filterOnResumed(owner)
+                    .subscribe(this::navigate) {
+                        publishEvent(ReduxEvent.Error(it, tag))
+                    }
 }

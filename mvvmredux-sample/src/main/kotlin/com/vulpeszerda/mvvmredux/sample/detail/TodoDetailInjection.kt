@@ -15,21 +15,16 @@ class TodoDetailInjection(private val activity: TodoDetailActivity) {
     }
 
     val extraHandler: TodoDetailExtraHandler by lazy {
-        TodoDetailExtraHandler(activity) { errorHandler.onError(ReduxEvent.Error(it)) }
+        TodoDetailExtraHandler(activity)
     }
 
     val stateView: TodoDetailStateView by lazy {
-        TodoDetailStateView(activity) { errorHandler.onError(ReduxEvent.Error(it)) }
+        TodoDetailStateView(activity)
     }
 
     val viewModel: TodoDetailViewModel by lazy {
         ViewModelProviders.of(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
                 .get(TodoDetailViewModel::class.java)
-                .apply {
-                    extraHandler.subscribe(extra)
-                    errorHandler.subscribe(error)
-                    stateView.subscribe(state)
-                }
     }
 
 }

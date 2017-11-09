@@ -15,31 +15,19 @@ class TodoListInjection(private val activity: TodoListActivity) {
     }
 
     val stateView: TodoListStateView by lazy {
-        TodoListStateView(activity) {
-            errorHandler.onError(ReduxEvent.Error(it))
-        }
+        TodoListStateView(activity)
     }
 
     val navigator: TodoListNavigator by lazy {
-        TodoListNavigator(activity) {
-            errorHandler.onError(ReduxEvent.Error(it))
-        }
+        TodoListNavigator(activity)
     }
 
     val extraHandler: TodoListExtraHandler by lazy {
-        TodoListExtraHandler(activity) {
-            errorHandler.onError(ReduxEvent.Error(it))
-        }
+        TodoListExtraHandler(activity)
     }
 
     val viewModel: TodoListViewModel by lazy {
         ViewModelProviders.of(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
                 .get(TodoListViewModel::class.java)
-                .apply {
-                    navigator.subscribe(navigation)
-                    extraHandler.subscribe(extra)
-                    errorHandler.subscribe(error)
-                    stateView.subscribe(state)
-                }
     }
 }

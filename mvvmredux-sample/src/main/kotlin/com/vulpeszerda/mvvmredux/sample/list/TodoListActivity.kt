@@ -26,6 +26,13 @@ class TodoListActivity : ReduxActivity() {
         setupViewModel(savedInstanceState)
 
         lifecycle.addObserver(injection.stateView)
+
+        injection.viewModel.apply {
+            injection.navigator.subscribe(navigation)
+            injection.extraHandler.subscribe(extra)
+            injection.errorHandler.subscribe(error)
+            injection.stateView.subscribe(state)
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

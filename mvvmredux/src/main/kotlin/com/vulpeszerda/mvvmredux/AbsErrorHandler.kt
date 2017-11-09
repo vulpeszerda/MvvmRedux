@@ -8,19 +8,21 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-abstract class AbsErrorHandler<E : ReduxEvent>(private val owner: LifecycleOwner) : ErrorHandler {
+abstract class AbsErrorHandler(
+        private val tag: String,
+        private val owner: LifecycleOwner) : ErrorHandler {
 
-    private val eventSubject = PublishSubject.create<E>()
+    private val eventSubject = PublishSubject.create<ReduxEvent>()
 
     val events = eventSubject.hide()!!
 
-    protected fun emitAction(action: E) {
-        eventSubject.onNext(action)
+    protected fun publishEvent(event: ReduxEvent) {
+        eventSubject.onNext(event)
     }
 
     override fun subscribe(source: Observable<ReduxEvent.Error>) {
         source.bufferUntilOnResumed(owner).subscribe(this::onError) { throwable ->
-            onError(ReduxEvent.Error(throwable))
+            onError(ReduxEvent.Error(throwable, tag))
         }
     }
 }

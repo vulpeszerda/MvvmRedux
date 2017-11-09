@@ -8,9 +8,8 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoCreateExtraHandler(
-        private val activity: TodoCreateActivity,
-        errorHandler: (Throwable) -> Unit) :
-        AbsExtraHandler<TodoCreateEvent>(activity, errorHandler) {
+        private val activity: TodoCreateActivity) :
+        AbsExtraHandler("TodoCreateExtraHandler", activity) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         if (extra is TodoCreateEvent.ShowFinishToast) {

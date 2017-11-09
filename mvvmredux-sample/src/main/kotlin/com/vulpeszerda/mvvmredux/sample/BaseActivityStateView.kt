@@ -9,10 +9,10 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
 /**
  * Created by vulpes on 2017. 11. 6..
  */
-abstract class BaseActivityStateView<T, E : ReduxEvent>(
-        activity: ReduxActivity,
-        errorHandler: (Throwable) -> Unit) :
-        ReduxActivityStateView<T, E>(activity, errorHandler) {
+abstract class BaseActivityStateView<T>(
+        tag: String,
+        activity: ReduxActivity) :
+        ReduxActivityStateView<T>(tag, activity) {
 
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(activity)

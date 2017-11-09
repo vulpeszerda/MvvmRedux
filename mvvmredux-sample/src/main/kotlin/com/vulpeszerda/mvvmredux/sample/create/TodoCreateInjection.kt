@@ -16,32 +16,20 @@ class TodoCreateInjection(private val activity: TodoCreateActivity) {
     }
 
     val stateView: TodoCreateStateView by lazy {
-        TodoCreateStateView(activity) {
-            errorHandler.onError(ReduxEvent.Error(it))
-        }
+        TodoCreateStateView(activity)
     }
 
     val navigator: TodoCreateNavigator by lazy {
-        TodoCreateNavigator(activity) {
-            errorHandler.onError(ReduxEvent.Error(it))
-        }
+        TodoCreateNavigator(activity)
     }
 
     val extraHandler: TodoCreateExtraHandler by lazy {
-        TodoCreateExtraHandler(activity) {
-            errorHandler.onError(ReduxEvent.Error(it))
-        }
+        TodoCreateExtraHandler(activity)
     }
 
     val viewModel: TodoCreateViewModel by lazy {
         ViewModelProviders.of(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
                 .get(TodoCreateViewModel::class.java)
-                .apply {
-                    navigator.subscribe(navigation)
-                    extraHandler.subscribe(extra)
-                    errorHandler.subscribe(error)
-                    stateView.subscribe(state)
-                }
     }
 
 }

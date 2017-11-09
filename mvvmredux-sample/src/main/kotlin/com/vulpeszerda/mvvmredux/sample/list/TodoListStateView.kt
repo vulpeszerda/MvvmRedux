@@ -5,6 +5,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
+import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.BaseActivityStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.model.Todo
@@ -15,21 +16,20 @@ import kotlinx.android.synthetic.main.todo_list.*
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListStateView(
-        private val activity: TodoListActivity,
-        errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<GlobalState<TodoListState>, TodoListEvent>(activity, errorHandler) {
+        activity: TodoListActivity) :
+        BaseActivityStateView<GlobalState<TodoListState>>("TodoListStateView", activity) {
 
     private val adapter: TodoListAdapter by lazy {
         TodoListAdapter(object : TodoListAdapter.ActionHandler {
 
             override fun onClicked(todo: Todo) {
-                emitUiEvent(TodoListEvent.NavigateDetail(todo.uid))
+                publishEvent(TodoListEvent.NavigateDetail(todo.uid))
             }
 
         })
     }
 
-    override val events: Observable<TodoListEvent>
+    override val events: Observable<ReduxEvent>
         get() = super.events
                 .mergeWith(RxView.clicks(btn_new).map { TodoListEvent.NavigateCreate() })
                 .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })

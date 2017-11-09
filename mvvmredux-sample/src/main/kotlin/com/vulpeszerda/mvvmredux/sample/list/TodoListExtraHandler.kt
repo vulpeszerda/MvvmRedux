@@ -8,9 +8,8 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-class TodoListExtraHandler(private val activity: TodoListActivity,
-                           errorHandler: (Throwable) -> Unit) :
-        AbsExtraHandler<TodoListEvent>(activity, errorHandler) {
+class TodoListExtraHandler(private val activity: TodoListActivity) :
+        AbsExtraHandler("TodoListExtraHandler", activity) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {
@@ -20,7 +19,7 @@ class TodoListExtraHandler(private val activity: TodoListActivity,
                 AlertDialog.Builder(activity).setTitle("Confirm")
                         .setMessage("Are you sure to clear all todo?")
                         .setPositiveButton("Clear all") { _, _ ->
-                            emitAction(TodoListEvent.ConfirmClearAll())
+                            publishEvent(TodoListEvent.ConfirmClearAll())
                         }
                         .setNegativeButton("Cancel", null)
                         .show()

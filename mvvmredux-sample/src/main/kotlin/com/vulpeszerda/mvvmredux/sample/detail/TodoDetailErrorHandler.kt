@@ -6,8 +6,8 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-class TodoDetailErrorHandler(private val activity: TodoDetailActivity) :
-        AbsErrorHandler<TodoDetailEvent>(activity) {
+class TodoDetailErrorHandler(activity: TodoDetailActivity) :
+        AbsErrorHandler("TodoDetailErrorHandler", activity) {
 
     override fun onError(error: ReduxEvent.Error) {
         error.throwable.printStackTrace()

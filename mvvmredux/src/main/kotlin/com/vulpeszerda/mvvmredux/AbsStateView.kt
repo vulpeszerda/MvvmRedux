@@ -11,16 +11,17 @@ import kotlinx.android.extensions.LayoutContainer
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-abstract class AbsStateView<T, E : ReduxEvent>(
-        private val owner: LifecycleOwner,
-        private val errorHandler: (Throwable) -> Unit) : LayoutContainer, LifecycleObserver {
+abstract class AbsStateView<T>(
+        private val tag: String,
+        private val owner: LifecycleOwner) :
+        LayoutContainer, LifecycleObserver {
 
-    private val eventSubject = PublishSubject.create<E>()
+    private val eventSubject = PublishSubject.create<ReduxEvent>()
 
     open val events = eventSubject.hide()!!
 
-    protected fun emitUiEvent(uiEvent: E) {
-        eventSubject.onNext(uiEvent)
+    protected fun publishEvent(event: ReduxEvent) {
+        eventSubject.onNext(event)
     }
 
     protected abstract fun onStateChanged(prev: T?, curr: T?)
@@ -31,5 +32,7 @@ abstract class AbsStateView<T, E : ReduxEvent>(
                     .scan(StatePair<T>(null, null))
                     { prevPair, curr -> StatePair(prevPair.curr, curr) }
                     .filter { (prev, curr) -> prev !== curr }
-                    .subscribe({ (prev, curr) -> onStateChanged(prev, curr) }, errorHandler)
+                    .subscribe({ (prev, curr) -> onStateChanged(prev, curr) }) {
+                        publishEvent(ReduxEvent.Error(it, tag))
+                    }
 }

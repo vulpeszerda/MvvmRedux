@@ -9,9 +9,8 @@ import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoDetailStateView(
-        private val activity: TodoDetailActivity,
-        errorHandler: (Throwable) -> Unit) :
-        BaseActivityStateView<GlobalState<TodoDetailState>, TodoDetailEvent>(activity, errorHandler) {
+        activity: TodoDetailActivity) :
+        BaseActivityStateView<GlobalState<TodoDetailState>>("TodoDetailStateView", activity) {
 
     override fun onStateChanged(prev: GlobalState<TodoDetailState>?,
                                 curr: GlobalState<TodoDetailState>?) {
