@@ -50,7 +50,7 @@ allprojects {
         sampleVersionName = "1.0.0"
 
         libraryVersionCode = 1
-        libraryVersionName = "1.0.6"
+        libraryVersionName = "1.0.7"
 
         java7Home = project.hasProperty("java7_home") ?
                 project.property("java7_home") : System.getenv("JAVA7_HOME")
