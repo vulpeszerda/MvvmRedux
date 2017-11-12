@@ -2,6 +2,7 @@ package com.vulpeszerda.mvvmredux
 
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
+import android.util.Log
 import com.vulpeszerda.mvvmredux.addon.filterOnStarted
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable

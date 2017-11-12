@@ -9,7 +9,7 @@ import io.reactivex.Scheduler
  */
 
 class ReduxStore<T>(
-        initialState: T,
+        private val initialState: T,
         private val reducer: (T, ReduxEvent.State) -> T,
         private val scheduler: Scheduler,
         private val eventTransformer: (ReduxEvent, () -> T) -> Observable<ReduxEvent.State>) {
@@ -33,6 +33,7 @@ class ReduxStore<T>(
                         Observable.empty()
                     }
                 }
+                .startWith(initialState)
     }
 
     companion object {
