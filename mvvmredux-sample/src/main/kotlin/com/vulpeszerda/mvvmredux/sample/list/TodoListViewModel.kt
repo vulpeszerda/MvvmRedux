@@ -7,6 +7,7 @@ import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 /**
@@ -19,8 +20,13 @@ class TodoListViewModel(private val database: TodoDatabase) :
 
     override fun eventTransformer(event: ReduxEvent, getState: () -> GlobalState<TodoListState>):
             Observable<ReduxEvent> {
-        return Observable.merge(
-                super.eventTransformer(event, getState)
+        return blockingActionSubject
+                .toFlowable(BackpressureStrategy.DROP)
+                .flatMap({
+                    handleEvent(it, getState).toFlowable(BackpressureStrategy.ERROR)
+                }, 1)
+                .toObservable()
+                .mergeWith(super.eventTransformer(event, getState)
                         .flatMap {
                             when (it) {
                                 is TodoListEvent.Refresh,
@@ -30,13 +36,7 @@ class TodoListViewModel(private val database: TodoDatabase) :
                                 }
                                 else -> handleEvent(it, getState)
                             }
-                        },
-                blockingActionSubject
-                        .toFlowable(BackpressureStrategy.DROP)
-                        .flatMap({
-                            handleEvent(it, getState).toFlowable(BackpressureStrategy.ERROR)
-                        }, 1)
-                        .toObservable())
+                        })
     }
 
     private fun handleEvent(event: ReduxEvent,

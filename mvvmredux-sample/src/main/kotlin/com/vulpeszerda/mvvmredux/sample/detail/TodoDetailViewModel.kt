@@ -22,8 +22,13 @@ class TodoDetailViewModel(private val database: TodoDatabase) :
     override fun eventTransformer(event: ReduxEvent,
                                   getState: () -> GlobalState<TodoDetailState>):
             Observable<ReduxEvent> {
-        return Observable.merge(
-                super.eventTransformer(event, getState)
+        return blockingActionSubject
+                .toFlowable(BackpressureStrategy.DROP)
+                .flatMap({
+                    handleEvent(it).toFlowable(BackpressureStrategy.ERROR)
+                }, 1)
+                .toObservable()
+                .mergeWith(super.eventTransformer(event, getState)
                         .flatMap {
                             when (it) {
                                 is TodoDetailEvent.CheckTodo,
@@ -33,13 +38,7 @@ class TodoDetailViewModel(private val database: TodoDatabase) :
                                 }
                                 else -> handleEvent(it)
                             }
-                        },
-                blockingActionSubject
-                        .toFlowable(BackpressureStrategy.DROP)
-                        .flatMap({
-                            handleEvent(it).toFlowable(BackpressureStrategy.ERROR)
-                        }, 1)
-                        .toObservable())
+                        })
     }
 
     private fun handleEvent(event: ReduxEvent): Observable<ReduxEvent> =

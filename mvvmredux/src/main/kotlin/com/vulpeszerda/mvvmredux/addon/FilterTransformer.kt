@@ -17,15 +17,22 @@ class FilterTransformer<T, E> private constructor(
     override fun apply(upstream: Observable<T>): ObservableSource<T> {
         return Observable.defer {
             var lastEvent: E? = null
-            var pendedData: T? = null
+            var pendedData: DataWrapper<T>? = null
             var completed = false
             val disposeSubject = PublishSubject.create<Unit>()
             Observable.merge(
                     upstream
                             .filter { data ->
                                 lastEvent.let { it != null && predicate.invoke(it) }
-                                        .apply { pendedData = if (!this) data else null }
+                                        .apply {
+                                            pendedData = if (!this) {
+                                                DataWrapper(data)
+                                            } else {
+                                                null
+                                            }
+                                        }
                             }
+                            .map { DataWrapper(it) }
                             .doOnComplete {
                                 if (pendedData == null) {
                                     disposeSubject.onNext(Unit)
@@ -42,20 +49,30 @@ class FilterTransformer<T, E> private constructor(
                             .takeUntil { completed }
                             .takeUntil(disposeSubject))
                     .distinctUntilChanged()
+                    .map { it.data }
         }
     }
 
     override fun apply(upstream: Flowable<T>): Publisher<T> {
         return Flowable.defer {
             var lastEvent: E? = null
-            var pendedData: T? = null
+            var pendedData: DataWrapper<T>? = null
             var completed = false
             val disposeSubject = PublishSubject.create<Unit>()
             Flowable.merge(
                     upstream
                             .filter { data ->
                                 lastEvent.let { it != null && predicate.invoke(it) }
-                                        .apply { pendedData = if (!this) data else null }
+                                        .apply {
+                                            pendedData = if (!this) {
+                                                DataWrapper(data)
+                                            } else {
+                                                null
+                                            }
+                                        }
+                            }
+                            .map {
+                                DataWrapper(it)
                             }
                             .doOnComplete {
                                 if (pendedData == null) {
@@ -74,21 +91,29 @@ class FilterTransformer<T, E> private constructor(
                             .takeUntil { completed }
                             .takeUntil(disposeSubject.toFlowable(BackpressureStrategy.LATEST)))
                     .distinctUntilChanged()
+                    .map { it.data }
         }
     }
 
     override fun apply(upstream: Maybe<T>): MaybeSource<T> {
         return Maybe.defer {
             var lastEvent: E? = null
-            var pendedData: T? = null
+            var pendedData: DataWrapper<T>? = null
             var completed = false
             val disposeSubject = PublishSubject.create<Unit>()
             Observable.merge(
                     upstream.toObservable()
                             .filter { data ->
                                 lastEvent.let { it != null && predicate.invoke(it) }
-                                        .apply { pendedData = if (!this) data else null }
+                                        .apply {
+                                            pendedData = if (!this) {
+                                                DataWrapper(data)
+                                            } else {
+                                                null
+                                            }
+                                        }
                             }
+                            .map { DataWrapper(it) }
                             .doOnComplete {
                                 if (pendedData == null) {
                                     disposeSubject.onNext(Unit)
@@ -105,9 +130,12 @@ class FilterTransformer<T, E> private constructor(
                             .takeUntil { completed }
                             .takeUntil(disposeSubject))
                     .distinctUntilChanged()
+                    .map { it.data }
                     .firstElement()
         }
     }
+
+    private class DataWrapper<out T>(val data: T)
 
     companion object {
 
