@@ -33,8 +33,8 @@ abstract class ReduxViewModel<T> : ViewModel() {
         disposable.clear()
         stateStore = ReduxStore(initialState,
                 this::reduceState,
-                Schedulers.computation()) { action, getState ->
-            eventTransformer(action, getState)
+                Schedulers.computation()) { actions, getState ->
+            eventTransformer(actions, getState)
                     .filter {
                         when (it) {
                             is ReduxEvent.Navigation ->
@@ -59,9 +59,9 @@ abstract class ReduxViewModel<T> : ViewModel() {
                 })
     }
 
-    protected open fun eventTransformer(event: ReduxEvent, getState: () -> T):
+    protected open fun eventTransformer(events: Observable<ReduxEvent>, getState: () -> T):
             Observable<ReduxEvent> {
-        return Observable.just(event)
+        return events
     }
 
     protected open fun reduceState(state: T, event: ReduxEvent.State): T {

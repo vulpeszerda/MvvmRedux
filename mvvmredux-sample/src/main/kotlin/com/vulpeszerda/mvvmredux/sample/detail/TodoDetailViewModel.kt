@@ -19,7 +19,7 @@ class TodoDetailViewModel(private val database: TodoDatabase) :
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
-    override fun eventTransformer(event: ReduxEvent,
+    override fun eventTransformer(events: Observable<ReduxEvent>,
                                   getState: () -> GlobalState<TodoDetailState>):
             Observable<ReduxEvent> {
         return blockingActionSubject
@@ -28,7 +28,7 @@ class TodoDetailViewModel(private val database: TodoDatabase) :
                     handleEvent(it).toFlowable(BackpressureStrategy.ERROR)
                 }, 1)
                 .toObservable()
-                .mergeWith(super.eventTransformer(event, getState)
+                .mergeWith(super.eventTransformer(events, getState)
                         .flatMap {
                             when (it) {
                                 is TodoDetailEvent.CheckTodo,

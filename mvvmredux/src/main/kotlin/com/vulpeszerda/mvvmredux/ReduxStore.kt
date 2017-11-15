@@ -12,13 +12,13 @@ class ReduxStore<T>(
         private val initialState: T,
         private val reducer: (T, ReduxEvent.State) -> T,
         private val scheduler: Scheduler,
-        private val eventTransformer: (ReduxEvent, () -> T) -> Observable<ReduxEvent.State>) {
+        private val eventTransformer: (Observable<ReduxEvent>, () -> T) -> Observable<ReduxEvent.State>) {
 
     var latest: T = initialState
 
     fun toState(actions: Observable<ReduxEvent>): Observable<T> {
         return actions
-                .flatMap { eventTransformer.invoke(it, { latest }) }
+                .compose { eventTransformer.invoke(it) { latest } }
                 .observeOn(scheduler)
                 .concatMap { action ->
                     Log.d(TAG, "action: $action")

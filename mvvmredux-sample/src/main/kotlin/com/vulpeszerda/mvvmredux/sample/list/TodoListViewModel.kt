@@ -18,7 +18,7 @@ class TodoListViewModel(private val database: TodoDatabase) :
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
-    override fun eventTransformer(event: ReduxEvent, getState: () -> GlobalState<TodoListState>):
+    override fun eventTransformer(events: Observable<ReduxEvent>, getState: () -> GlobalState<TodoListState>):
             Observable<ReduxEvent> {
         return blockingActionSubject
                 .toFlowable(BackpressureStrategy.DROP)
@@ -26,7 +26,7 @@ class TodoListViewModel(private val database: TodoDatabase) :
                     handleEvent(it, getState).toFlowable(BackpressureStrategy.ERROR)
                 }, 1)
                 .toObservable()
-                .mergeWith(super.eventTransformer(event, getState)
+                .mergeWith(super.eventTransformer(events, getState)
                         .flatMap {
                             when (it) {
                                 is TodoListEvent.Refresh,
