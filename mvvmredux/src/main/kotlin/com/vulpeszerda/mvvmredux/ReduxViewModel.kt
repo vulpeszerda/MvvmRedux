@@ -33,7 +33,7 @@ abstract class ReduxViewModel<T> : ViewModel() {
         disposable.clear()
         stateStore = ReduxStore(initialState,
                 this::reduceState,
-                Schedulers.computation()) { actions, getState ->
+                Schedulers.computation(), { actions, getState ->
             eventTransformer(actions, getState)
                     .filter {
                         when (it) {
@@ -48,7 +48,7 @@ abstract class ReduxViewModel<T> : ViewModel() {
                         return@filter false
                     }
                     .map { it as ReduxEvent.State }
-        }
+        })
         addDisposable(stateStore!!.toState(events)
                 .retry { throwable ->
                     errorSubject.onNext(ReduxEvent.Error(throwable))

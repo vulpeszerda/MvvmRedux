@@ -14,7 +14,7 @@ abstract class AbsErrorHandler(
 
     private val eventSubject = PublishSubject.create<ReduxEvent>()
 
-    val events = eventSubject.hide()!!
+    override val events = eventSubject.hide()!!
 
     protected fun publishEvent(event: ReduxEvent) {
         eventSubject.onNext(event)
