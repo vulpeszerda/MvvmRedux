@@ -1,6 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import com.vulpeszerda.mvvmredux.AbsNavigator
+import com.vulpeszerda.mvvmredux.AbsReduxNavigator
+import com.vulpeszerda.mvvmredux.ActivityContextWrapper
 import com.vulpeszerda.mvvmredux.RouterFactory
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.TodoRouter
@@ -10,7 +11,7 @@ import com.vulpeszerda.mvvmredux.sample.TodoRouter
  */
 
 class TodoListNavigator(activity: TodoListActivity) :
-        AbsNavigator("TodoListNavigator", activity) {
+        AbsReduxNavigator("TodoListNavigator", activity) {
 
     private val router: TodoRouter = RouterFactory.create(activity, TodoRouter::class.java)
 

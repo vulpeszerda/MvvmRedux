@@ -2,25 +2,26 @@ package com.vulpeszerda.mvvmredux.sample
 
 import android.app.ProgressDialog
 import android.support.annotation.UiThread
-import com.vulpeszerda.mvvmredux.ReduxActivity
-import com.vulpeszerda.mvvmredux.ReduxActivityStateView
-import com.vulpeszerda.mvvmredux.ReduxEvent
+import com.vulpeszerda.mvvmredux.*
 
 /**
- * Created by vulpes on 2017. 11. 6..
+ * Created by vulpes on 2017. 11. 23..
  */
-abstract class BaseActivityStateView<T>(
+abstract class BaseStateView<T>(
         tag: String,
-        activity: ReduxActivity) :
-        ReduxActivityStateView<T>(tag, activity) {
+        contextWrapper: ContextWrapper) :
+        AbsReduxStateView<T>(tag, contextWrapper) {
+
+    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
+    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
 
     private val progressDialog: ProgressDialog by lazy {
-        ProgressDialog(activity)
+        ProgressDialog(context)
     }
 
     @UiThread
-    open fun showProgressDialog(title: String?, message: String? = null) {
-        if (isAvailable) {
+    protected fun showProgressDialog(title: String?, message: String? = null) {
+        if (available) {
             with(progressDialog) {
                 setTitle(title)
                 setMessage(message)
@@ -33,7 +34,7 @@ abstract class BaseActivityStateView<T>(
     }
 
     @UiThread
-    open fun hideProgressDialog() {
+    protected fun hideProgressDialog() {
         if (progressDialog.isShowing) {
             progressDialog.dismiss()
         }

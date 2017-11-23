@@ -1,6 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import com.vulpeszerda.mvvmredux.AbsErrorHandler
+import com.vulpeszerda.mvvmredux.AbsReduxErrorHandler
 import com.vulpeszerda.mvvmredux.ReduxEvent
 
 /**
@@ -8,7 +8,7 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
  */
 
 class TodoListErrorHandler(activity: TodoListActivity) :
-        AbsErrorHandler("TodoListErrorHandler", activity) {
+        AbsReduxErrorHandler("TodoListErrorHandler", activity) {
 
     override fun onError(error: ReduxEvent.Error) {
         error.throwable.printStackTrace()

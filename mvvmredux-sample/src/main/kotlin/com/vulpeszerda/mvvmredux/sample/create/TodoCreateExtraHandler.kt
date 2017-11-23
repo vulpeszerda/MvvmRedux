@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
 import android.widget.Toast
-import com.vulpeszerda.mvvmredux.AbsExtraHandler
+import com.vulpeszerda.mvvmredux.AbsReduxExtraHandler
 import com.vulpeszerda.mvvmredux.ReduxEvent
 
 /**
@@ -9,7 +9,7 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
  */
 class TodoCreateExtraHandler(
         private val activity: TodoCreateActivity) :
-        AbsExtraHandler("TodoCreateExtraHandler", activity) {
+        AbsReduxExtraHandler("TodoCreateExtraHandler", activity) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         if (extra is TodoCreateEvent.ShowFinishToast) {
