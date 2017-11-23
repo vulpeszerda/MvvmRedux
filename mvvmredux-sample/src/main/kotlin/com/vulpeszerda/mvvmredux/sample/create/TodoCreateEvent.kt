@@ -8,6 +8,5 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
 sealed class TodoCreateEvent: ReduxEvent {
     data class Save(val title: String, val message: String) : TodoCreateEvent()
     data class SetLoading(val loading: Boolean) : TodoCreateEvent(), ReduxEvent.State
-    class NavigateFinish : TodoCreateEvent(), ReduxEvent.Navigation
     class ShowFinishToast : TodoCreateEvent(), ReduxEvent.Extra
 }

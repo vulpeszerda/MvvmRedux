@@ -1,8 +1,9 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
-import com.vulpeszerda.mvvmredux.ReduxViewModel
-import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.ReduxEvent
+import com.vulpeszerda.mvvmredux.ReduxViewModel
+import com.vulpeszerda.mvvmredux.sample.GlobalEvent
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.Observable
@@ -41,7 +42,7 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
                 .flatMap<ReduxEvent> {
                     Observable.fromArray(
                             TodoCreateEvent.ShowFinishToast(),
-                            TodoCreateEvent.NavigateFinish())
+                            GlobalEvent.NavigateFinish())
                 }
                 .onErrorReturn { ReduxEvent.Error(it, "save") }
                 .startWith(TodoCreateEvent.SetLoading(true))

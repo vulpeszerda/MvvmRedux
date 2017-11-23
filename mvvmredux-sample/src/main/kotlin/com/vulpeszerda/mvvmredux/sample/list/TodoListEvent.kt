@@ -15,8 +15,6 @@ sealed class TodoListEvent : ReduxEvent {
     data class SetError(val error: Throwable?) : TodoListEvent(), ReduxEvent.State
     data class CheckTodo(val uid: Long, val checked: Boolean) : TodoListEvent(), ReduxEvent.State
 
-    class NavigateCreate : TodoListEvent(), ReduxEvent.Navigation
-    data class NavigateDetail(val uid: Long) : TodoListEvent(), ReduxEvent.Navigation
     class ShowClearConfirm : TodoListEvent(), ReduxEvent.Extra
     class ShowClearedToast : TodoListEvent(), ReduxEvent.Extra
 }

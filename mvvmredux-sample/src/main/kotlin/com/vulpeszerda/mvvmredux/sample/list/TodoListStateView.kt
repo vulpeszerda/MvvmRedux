@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.vulpeszerda.mvvmredux.*
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
+import com.vulpeszerda.mvvmredux.sample.GlobalEvent
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R.id.btn_clear
 import com.vulpeszerda.mvvmredux.sample.R.id.btn_new
@@ -26,7 +27,7 @@ class TodoListStateView(
         TodoListAdapter(object : TodoListAdapter.ActionHandler {
 
             override fun onClicked(todo: Todo) {
-                publishEvent(TodoListEvent.NavigateDetail(todo.uid))
+                publishEvent(GlobalEvent.NavigateDetail(todo.uid))
             }
 
         })
@@ -34,7 +35,7 @@ class TodoListStateView(
 
     override val events: Observable<ReduxEvent>
         get() = super.events
-                .mergeWith(RxView.clicks(btn_new).map { TodoListEvent.NavigateCreate() })
+                .mergeWith(RxView.clicks(btn_new).map { GlobalEvent.NavigateCreate() })
                 .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
