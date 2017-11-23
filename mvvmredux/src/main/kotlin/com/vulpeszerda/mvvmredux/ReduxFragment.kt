@@ -10,6 +10,5 @@ import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle
 open class ReduxFragment(lifecycleOwner: LifecycleRegistryOwner = AbsLifecycleRegistryOwner()) :
         Fragment(), LifecycleRegistryOwner by lifecycleOwner {
 
-    protected val rxLifecycleProvider = AndroidLifecycle.createLifecycleProvider(lifecycleOwner)
-
+    val rxLifecycleProvider = AndroidLifecycle.createLifecycleProvider(lifecycleOwner)
 }
