@@ -43,7 +43,8 @@ abstract class ReduxViewModel<T>(private val printLog: Boolean = false) : ViewMo
                                 extraSubject.onNext(it)
                             is ReduxEvent.Error ->
                                 errorSubject.onNext(it)
-                            else -> return@filter true
+                            else -> return@filter it.javaClass.isAssignableFrom(
+                                    ReduxEvent.State::class.java)
                         }
                         return@filter false
                     }
