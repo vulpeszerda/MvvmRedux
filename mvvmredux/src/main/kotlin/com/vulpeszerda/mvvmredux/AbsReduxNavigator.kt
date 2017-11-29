@@ -1,5 +1,6 @@
 package com.vulpeszerda.mvvmredux
 
+import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -26,7 +27,7 @@ abstract class AbsReduxNavigator(
     }
 
     override fun subscribe(source: Observable<ReduxEvent.Navigation>): Disposable =
-            source.filterOnResumed(owner)
+            source.bufferUntilOnResumed(owner)
                     .subscribe(this::navigate) {
                         publishEvent(ReduxEvent.Error(it, tag))
                     }
