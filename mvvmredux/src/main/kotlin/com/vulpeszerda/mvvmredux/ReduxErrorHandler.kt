@@ -1,6 +1,7 @@
 package com.vulpeszerda.mvvmredux
 
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by vulpes on 2017. 8. 25..
@@ -8,5 +9,5 @@ import io.reactivex.Observable
 interface ReduxErrorHandler {
     val events: Observable<ReduxEvent>
     fun onError(error: ReduxEvent.Error)
-    fun subscribe(source: Observable<ReduxEvent.Error>)
+    fun subscribe(source: Observable<ReduxEvent.Error>): Disposable
 }

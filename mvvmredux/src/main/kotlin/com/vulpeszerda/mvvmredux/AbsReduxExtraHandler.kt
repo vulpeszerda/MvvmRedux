@@ -3,6 +3,7 @@ package com.vulpeszerda.mvvmredux
 import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 /**
@@ -25,9 +26,8 @@ abstract class AbsReduxExtraHandler(
         eventSubject.onNext(event)
     }
 
-    override fun subscribe(source: Observable<ReduxEvent.Extra>) {
-        source.bufferUntilOnResumed(owner).subscribe(this::onExtraEvent) {
-            publishEvent(ReduxEvent.Error(it, tag))
-        }
-    }
+    override fun subscribe(source: Observable<ReduxEvent.Extra>): Disposable =
+            source.bufferUntilOnResumed(owner).subscribe(this::onExtraEvent) {
+                publishEvent(ReduxEvent.Error(it, tag))
+            }
 }
