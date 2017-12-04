@@ -11,7 +11,9 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 8. 25..
  */
-abstract class ReduxViewModel<T>(private val printLog: Boolean = false) : ViewModel() {
+abstract class ReduxViewModel<T>(
+        private val tag: String = "ReduxViewModel",
+        private val printLog: Boolean = false) : ViewModel() {
 
     private val disposable = CompositeDisposable()
     private val errorSubject = PublishSubject.create<ReduxEvent.Error>()
@@ -48,7 +50,7 @@ abstract class ReduxViewModel<T>(private val printLog: Boolean = false) : ViewMo
                         return@filter false
                     }
                     .map { it as ReduxEvent.State }
-        }, printLog)
+        }, tag, printLog)
         addDisposable(stateStore!!.toState(events)
                 .retry { throwable ->
                     errorSubject.onNext(ReduxEvent.Error(throwable))
