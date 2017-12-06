@@ -30,17 +30,9 @@ abstract class AbsReduxStateView<T>(
     protected abstract fun onStateChanged(prev: T?, curr: T?)
 
     override fun subscribe(source: Observable<T>): Disposable =
-            source.filterOnStarted(owner)
+            (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
+                    .filterOnStarted(owner)
                     .distinctUntilChanged()
-                    .let {
-                        if (throttle > 0) {
-                            Observable.merge(
-                                    it.take(1),
-                                    it.skip(1).throttleLast(throttle, TimeUnit.MILLISECONDS))
-                        } else {
-                            it
-                        }
-                    }
                     .scan(StatePair<T>(null, null))
                     { prevPair, curr -> StatePair(prevPair.curr, curr) }
                     .filter { (prev, curr) -> prev !== curr }
