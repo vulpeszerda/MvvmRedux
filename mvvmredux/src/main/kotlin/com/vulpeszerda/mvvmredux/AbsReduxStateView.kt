@@ -4,13 +4,15 @@ import com.vulpeszerda.mvvmredux.addon.filterOnStarted
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by vulpes on 2017. 9. 21..
  */
 abstract class AbsReduxStateView<T>(
         protected val tag: String,
-        contextWrapper: ContextWrapper) :
+        contextWrapper: ContextWrapper,
+        private val throttle: Long = 0) :
         ReduxStateView<T>,
         ContextWrapper by contextWrapper {
 
@@ -30,6 +32,15 @@ abstract class AbsReduxStateView<T>(
     override fun subscribe(source: Observable<T>): Disposable =
             source.filterOnStarted(owner)
                     .distinctUntilChanged()
+                    .let {
+                        if (throttle > 0) {
+                            Observable.merge(
+                                    it.take(1),
+                                    it.skip(1).throttleLast(throttle, TimeUnit.MILLISECONDS))
+                        } else {
+                            it
+                        }
+                    }
                     .scan(StatePair<T>(null, null))
                     { prevPair, curr -> StatePair(prevPair.curr, curr) }
                     .filter { (prev, curr) -> prev !== curr }
