@@ -2,6 +2,7 @@ package com.vulpeszerda.mvvmredux
 
 import android.arch.lifecycle.ViewModel
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -13,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
  */
 abstract class ReduxViewModel<T>(
         private val tag: String = "ReduxViewModel",
+        private val onFatalErrorHandler: ((Throwable) -> Unit)? = null,
         private val printLog: Boolean = false) : ViewModel() {
 
     private val disposable = CompositeDisposable()
@@ -52,12 +54,17 @@ abstract class ReduxViewModel<T>(
                     .map { it as ReduxEvent.State }
         }, tag, printLog)
         addDisposable(stateStore!!.toState(events)
-                .retry { throwable ->
-                    errorSubject.onNext(ReduxEvent.Error(throwable))
-                    return@retry ++retryCount < MAX_RETRY_COUNT
-                }
                 .subscribe(stateSubject::onNext) { throwable ->
-                    errorSubject.onNext(ReduxEvent.Error(throwable))
+                    if (onFatalErrorHandler != null) {
+                        onFatalErrorHandler.invoke(throwable)
+                    } else {
+                        errorSubject.onNext(ReduxEvent.Error(throwable, TAG_FATAL))
+                        if (++retryCount < MAX_RETRY_COUNT) {
+                            AndroidSchedulers.mainThread().createWorker().schedule {
+                                initialize(stateStore?.latest ?: initialState, events)
+                            }
+                        }
+                    }
                 })
     }
 
@@ -85,6 +92,8 @@ abstract class ReduxViewModel<T>(
 
     companion object {
 
+        @JvmField
+        val TAG_FATAL = "FatalError"
         private const val MAX_RETRY_COUNT = 5
     }
 }
