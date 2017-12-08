@@ -34,6 +34,10 @@ abstract class AbsReduxStateView<T>(
         eventSubject.onNext(event)
     }
 
+    protected fun addStateConsumer(consumer: StateConsumer<T>) {
+        stateConsumers.add(consumer)
+    }
+
     protected fun addStateConsumer(hasChange: (T?, T?) -> Boolean,
                                    apply: (T?, T?) -> Unit,
                                    applyScheduler: Scheduler = AndroidSchedulers.mainThread()):
