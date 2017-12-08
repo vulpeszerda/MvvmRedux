@@ -28,37 +28,11 @@ abstract class AbsReduxStateView<T>(
 
     override val events = eventSubject.hide()!!
 
-    protected open val stateConsumers = ArrayList<StateConsumer<T>>()
+    protected val stateConsumers = ArrayList<StateConsumer<T>>()
 
     protected fun publishEvent(event: ReduxEvent) {
         eventSubject.onNext(event)
     }
-
-    protected fun addStateConsumer(consumer: StateConsumer<T>) {
-        stateConsumers.add(consumer)
-    }
-
-    protected fun addStateConsumer(hasChange: (T?, T?) -> Boolean,
-                                   apply: (T?, T?) -> Unit,
-                                   applyScheduler: Scheduler = AndroidSchedulers.mainThread()):
-            StateConsumer<T> =
-            object : StateConsumer<T> {
-                override val applyScheduler: Scheduler
-                    get() = applyScheduler
-
-                override fun hasChange(prevState: T?, currState: T?): Boolean =
-                        hasChange.invoke(prevState, currState)
-
-                override fun apply(prevState: T?, currState: T?) =
-                        apply.invoke(prevState, currState)
-            }.apply {
-                stateConsumers.add(this)
-            }
-
-    protected fun removeStateConsumer(consumer: StateConsumer<T>) {
-        stateConsumers.remove(consumer)
-    }
-
 
     override fun subscribe(source: Observable<T>): Disposable =
             (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
@@ -69,10 +43,10 @@ abstract class AbsReduxStateView<T>(
                     { prevPair, curr -> StatePair(prevPair.curr, curr) }
                     .filter { (prev, curr) -> prev !== curr }
                     .flatMapCompletable { (prev, curr) ->
-                        Completable.merge(stateConsumers.mapNotNull {
-                            if (it.hasChange(prev, curr)) {
-                                Completable.fromAction { it.apply(prev, curr) }
-                                        .subscribeOn(it.applyScheduler)
+                        Completable.merge(stateConsumers.mapNotNull { consumer ->
+                            if (consumer.hasChange(prev, curr)) {
+                                Completable.fromAction { consumer.apply(prev, curr) }
+                                        .subscribeOn(consumer.applyScheduler)
                             } else {
                                 null
                             }
