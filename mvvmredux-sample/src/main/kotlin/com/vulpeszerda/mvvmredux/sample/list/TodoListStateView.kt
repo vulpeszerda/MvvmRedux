@@ -6,6 +6,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.vulpeszerda.mvvmredux.ReduxEvent
+import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalEvent
 import com.vulpeszerda.mvvmredux.sample.GlobalState
@@ -37,7 +38,7 @@ class TodoListStateView(
                 .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
     init {
-        addStateConsumer(
+        stateConsumers.add(StateConsumer.create(
                 hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
                 apply = { _, curr ->
                     val currTodos = curr?.subState?.todos ?: ArrayList()
@@ -47,8 +48,8 @@ class TodoListStateView(
                         addAll(currTodos)
                     }
                     diff.dispatchUpdatesTo(adapter)
-                })
-        addStateConsumer(
+                }))
+        stateConsumers.add(StateConsumer.create(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->
                     if (curr?.subState?.loading == true) {
@@ -56,7 +57,7 @@ class TodoListStateView(
                     } else {
                         hideProgressDialog()
                     }
-                })
+                }))
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

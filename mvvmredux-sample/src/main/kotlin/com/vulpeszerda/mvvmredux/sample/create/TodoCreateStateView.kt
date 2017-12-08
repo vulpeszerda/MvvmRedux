@@ -3,6 +3,7 @@ package com.vulpeszerda.mvvmredux.sample.create
 import com.jakewharton.rxbinding2.view.RxView
 import com.vulpeszerda.mvvmredux.ActivityContextWrapper
 import com.vulpeszerda.mvvmredux.ReduxEvent
+import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import io.reactivex.Observable
@@ -28,7 +29,7 @@ class TodoCreateStateView(
                 })
 
     init {
-        addStateConsumer(
+        stateConsumers.add(StateConsumer.create(
                 hasChange = { prev, curr ->
                     prev?.subState?.loading != curr?.subState?.loading
                 },
@@ -38,6 +39,6 @@ class TodoCreateStateView(
                     } else {
                         hideProgressDialog()
                     }
-                })
+                }))
     }
 }

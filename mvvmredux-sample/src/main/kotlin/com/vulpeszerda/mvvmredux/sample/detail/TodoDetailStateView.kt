@@ -1,6 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
 import com.vulpeszerda.mvvmredux.ActivityContextWrapper
+import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import kotlinx.android.synthetic.main.todo_detail.message as viewMessage
@@ -16,13 +17,13 @@ class TodoDetailStateView(
                 ActivityContextWrapper(activity)) {
 
     init {
-        addStateConsumer(
+        stateConsumers.add(StateConsumer.create(
                 hasChange = { prev, curr -> prev?.subState?.todo != curr?.subState?.todo },
                 apply = { _, curr ->
                     viewTitle.text = curr?.subState?.todo?.title
                     viewMessage.text = curr?.subState?.todo?.message
-                })
-        addStateConsumer(
+                }))
+        stateConsumers.add(StateConsumer.create(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->
                     if (curr?.subState?.loading == true) {
@@ -30,6 +31,6 @@ class TodoDetailStateView(
                     } else {
                         hideProgressDialog()
                     }
-                })
+                }))
     }
 }
