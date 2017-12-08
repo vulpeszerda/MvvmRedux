@@ -3,6 +3,7 @@ package com.vulpeszerda.mvvmredux
 import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by vulpes on 2017. 8. 29..
@@ -11,7 +12,8 @@ import io.reactivex.Scheduler
 class ReduxStore<T>(
         private val initialState: T,
         private val reducer: (T, ReduxEvent.State) -> T,
-        private val scheduler: Scheduler,
+        private val middlewareScheduler: Scheduler = Schedulers.newThread(),
+        private val reducerScheduler: Scheduler = Schedulers.newThread(),
         private val eventTransformer: (Observable<ReduxEvent>, () -> T) -> Observable<ReduxEvent.State>,
         private val tag: String = TAG,
         private val printLog: Boolean = false) {
@@ -20,8 +22,9 @@ class ReduxStore<T>(
 
     fun toState(actions: Observable<ReduxEvent>): Observable<T> {
         return actions
+                .observeOn(middlewareScheduler)
                 .compose { eventTransformer.invoke(it) { latest } }
-                .observeOn(scheduler)
+                .observeOn(reducerScheduler)
                 .concatMap { action ->
                     if (printLog) Log.d(tag, "action: $action")
                     val oldState = latest

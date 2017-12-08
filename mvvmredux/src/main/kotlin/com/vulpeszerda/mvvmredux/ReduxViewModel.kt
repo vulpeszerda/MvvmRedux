@@ -2,6 +2,7 @@ package com.vulpeszerda.mvvmredux
 
 import android.arch.lifecycle.ViewModel
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -15,6 +16,8 @@ import io.reactivex.subjects.PublishSubject
 abstract class ReduxViewModel<T>(
         private val tag: String = "ReduxViewModel",
         private val onFatalErrorHandler: ((Throwable) -> Unit)? = null,
+        private val middlewareScheduler: Scheduler = Schedulers.newThread(),
+        private val reducerScheduler: Scheduler = Schedulers.newThread(),
         private val printLog: Boolean = false) : ViewModel() {
 
     private val disposable = CompositeDisposable()
@@ -35,24 +38,27 @@ abstract class ReduxViewModel<T>(
 
     fun initialize(initialState: T, events: Observable<ReduxEvent>) {
         disposable.clear()
-        stateStore = ReduxStore(initialState,
-                this::reduceState,
-                Schedulers.computation(), { actions, getState ->
-            eventTransformer(actions, getState)
-                    .filter {
-                        when (it) {
-                            is ReduxEvent.Navigation ->
-                                navigationSubject.onNext(it)
-                            is ReduxEvent.Extra ->
-                                extraSubject.onNext(it)
-                            is ReduxEvent.Error ->
-                                errorSubject.onNext(it)
-                            else -> return@filter it is ReduxEvent.State
-                        }
-                        return@filter false
-                    }
-                    .map { it as ReduxEvent.State }
-        }, tag, printLog)
+        stateStore = ReduxStore(
+                initialState = initialState,
+                reducer = this::reduceState,
+                tag = tag,
+                printLog = printLog,
+                eventTransformer = { actions, getState ->
+                    eventTransformer(actions, getState)
+                            .filter {
+                                when (it) {
+                                    is ReduxEvent.Navigation ->
+                                        navigationSubject.onNext(it)
+                                    is ReduxEvent.Extra ->
+                                        extraSubject.onNext(it)
+                                    is ReduxEvent.Error ->
+                                        errorSubject.onNext(it)
+                                    else -> return@filter it is ReduxEvent.State
+                                }
+                                return@filter false
+                            }
+                            .map { it as ReduxEvent.State }
+                })
         addDisposable(stateStore!!.toState(events)
                 .subscribe(stateSubject::onNext) { throwable ->
                     if (onFatalErrorHandler != null) {
