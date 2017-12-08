@@ -5,12 +5,10 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
-import com.vulpeszerda.mvvmredux.*
+import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalEvent
 import com.vulpeszerda.mvvmredux.sample.GlobalState
-import com.vulpeszerda.mvvmredux.sample.R.id.btn_clear
-import com.vulpeszerda.mvvmredux.sample.R.id.btn_new
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_list.*
@@ -38,32 +36,33 @@ class TodoListStateView(
                 .mergeWith(RxView.clicks(btn_new).map { GlobalEvent.NavigateCreate() })
                 .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
+    init {
+        addStateConsumer(
+                hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
+                apply = { _, curr ->
+                    val currTodos = curr?.subState?.todos ?: ArrayList()
+                    val diff = DiffUtil.calculateDiff(TodoDiffCallback(adapter.todos, currTodos))
+                    adapter.todos.apply {
+                        clear()
+                        addAll(currTodos)
+                    }
+                    diff.dispatchUpdatesTo(adapter)
+                })
+        addStateConsumer(
+                hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
+                apply = { _, curr ->
+                    if (curr?.subState?.loading == true) {
+                        showProgressDialog("Loading..")
+                    } else {
+                        hideProgressDialog()
+                    }
+                })
+    }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreated() {
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(activity)
-    }
-
-    override fun onStateChanged(prev: GlobalState<TodoListState>?,
-                                curr: GlobalState<TodoListState>?) {
-
-        if (prev?.subState?.todos !== curr?.subState?.todos) {
-            val currTodos = curr?.subState?.todos ?: ArrayList()
-            val diff = DiffUtil.calculateDiff(TodoDiffCallback(adapter.todos, currTodos))
-            adapter.todos.apply {
-                clear()
-                addAll(currTodos)
-            }
-            diff.dispatchUpdatesTo(adapter)
-        }
-
-        if (prev?.subState?.loading != curr?.subState?.loading) {
-            if (curr?.subState?.loading == true) {
-                showProgressDialog("Loading..")
-            } else {
-                hideProgressDialog()
-            }
-        }
     }
 
     private class TodoDiffCallback(private val prev: List<Todo>,

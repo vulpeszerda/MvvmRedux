@@ -4,7 +4,6 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle
 import io.reactivex.*
-import io.reactivex.android.schedulers.AndroidSchedulers
 import org.reactivestreams.Publisher
 
 /**
@@ -13,8 +12,7 @@ import org.reactivestreams.Publisher
 class FilterOnLifecycleTransformer<T> private constructor(
         owner: LifecycleOwner,
         private val from: Lifecycle.Event,
-        private val until: Lifecycle.Event,
-        private val scheduler: Scheduler? = null) :
+        private val until: Lifecycle.Event) :
         ObservableTransformer<T, T>,
         FlowableTransformer<T, T>,
         MaybeTransformer<T, T> {
@@ -32,7 +30,6 @@ class FilterOnLifecycleTransformer<T> private constructor(
                 curr in f..(u - 1)
             })
             .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
-            .let { if (scheduler != null) it.observeOn(scheduler) else it }
 
     override fun apply(upstream: Flowable<T>): Publisher<T> = upstream
             .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
@@ -45,7 +42,6 @@ class FilterOnLifecycleTransformer<T> private constructor(
                 curr in f..(u - 1)
             })
             .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
-            .let { if (scheduler != null) it.observeOn(scheduler) else it }
 
     override fun apply(upstream: Maybe<T>): MaybeSource<T> = upstream
             .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
@@ -58,36 +54,25 @@ class FilterOnLifecycleTransformer<T> private constructor(
                 curr in f..(u - 1)
             })
             .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
-            .let { if (scheduler != null) it.observeOn(scheduler) else it }
 
     companion object {
 
         @JvmStatic
         fun <T> create(owner: LifecycleOwner,
                        from: Lifecycle.Event,
-                       until: Lifecycle.Event,
-                       scheduler: Scheduler? = AndroidSchedulers.mainThread()):
+                       until: Lifecycle.Event):
                 FilterOnLifecycleTransformer<T> =
-                FilterOnLifecycleTransformer(owner,
-                        from,
-                        until,
-                        scheduler)
+                FilterOnLifecycleTransformer(owner, from, until)
 
-        fun <T> createOnResumed(owner: LifecycleOwner,
-                                scheduler: Scheduler? = AndroidSchedulers.mainThread()):
+        fun <T> createOnResumed(owner: LifecycleOwner):
                 FilterOnLifecycleTransformer<T> =
-                FilterOnLifecycleTransformer(owner,
-                        Lifecycle.Event.ON_RESUME,
-                        Lifecycle.Event.ON_PAUSE,
-                        scheduler)
+                FilterOnLifecycleTransformer(
+                        owner, Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_PAUSE)
 
-        fun <T> createOnStarted(owner: LifecycleOwner,
-                                scheduler: Scheduler? = AndroidSchedulers.mainThread()):
+        fun <T> createOnStarted(owner: LifecycleOwner):
                 FilterOnLifecycleTransformer<T> =
-                FilterOnLifecycleTransformer(owner,
-                        Lifecycle.Event.ON_START,
-                        Lifecycle.Event.ON_STOP,
-                        scheduler)
+                FilterOnLifecycleTransformer(
+                        owner, Lifecycle.Event.ON_START, Lifecycle.Event.ON_STOP)
 
         private fun convertEventAsInt(event: Lifecycle.Event): Int = when (event) {
             Lifecycle.Event.ON_CREATE -> 0

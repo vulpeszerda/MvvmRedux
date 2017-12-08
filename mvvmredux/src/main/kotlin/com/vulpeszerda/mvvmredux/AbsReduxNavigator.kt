@@ -3,6 +3,7 @@ package com.vulpeszerda.mvvmredux
 import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
@@ -28,6 +29,7 @@ abstract class AbsReduxNavigator(
 
     override fun subscribe(source: Observable<ReduxEvent.Navigation>): Disposable =
             source.bufferUntilOnResumed(owner)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::navigate) {
                         publishEvent(ReduxEvent.Error(it, tag))
                     }

@@ -2,6 +2,7 @@ package com.vulpeszerda.mvvmredux
 
 import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
@@ -26,7 +27,9 @@ abstract class AbsReduxErrorHandler(
     }
 
     override fun subscribe(source: Observable<ReduxEvent.Error>): Disposable =
-            source.bufferUntilOnResumed(owner).subscribe(this::onError) { throwable ->
-                onError(ReduxEvent.Error(throwable, tag))
-            }
+            source.bufferUntilOnResumed(owner)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::onError) { throwable ->
+                        onError(ReduxEvent.Error(throwable, tag))
+                    }
 }

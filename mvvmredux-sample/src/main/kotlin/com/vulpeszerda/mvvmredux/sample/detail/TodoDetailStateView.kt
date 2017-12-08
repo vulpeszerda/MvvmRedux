@@ -15,20 +15,21 @@ class TodoDetailStateView(
                 "TodoDetailStateView",
                 ActivityContextWrapper(activity)) {
 
-    override fun onStateChanged(prev: GlobalState<TodoDetailState>?,
-                                curr: GlobalState<TodoDetailState>?) {
-
-        if (prev?.subState?.todo != curr?.subState?.todo) {
-            viewTitle.text = curr?.subState?.todo?.title
-            viewMessage.text = curr?.subState?.todo?.message
-        }
-
-        if (prev?.subState?.loading != curr?.subState?.loading) {
-            if (curr?.subState?.loading == true) {
-                showProgressDialog("Loading..")
-            } else {
-                hideProgressDialog()
-            }
-        }
+    init {
+        addStateConsumer(
+                hasChange = { prev, curr -> prev?.subState?.todo != curr?.subState?.todo },
+                apply = { _, curr ->
+                    viewTitle.text = curr?.subState?.todo?.title
+                    viewMessage.text = curr?.subState?.todo?.message
+                })
+        addStateConsumer(
+                hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
+                apply = { _, curr ->
+                    if (curr?.subState?.loading == true) {
+                        showProgressDialog("Loading..")
+                    } else {
+                        hideProgressDialog()
+                    }
+                })
     }
 }

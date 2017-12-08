@@ -27,16 +27,17 @@ class TodoCreateStateView(
                     TodoCreateEvent.Save(title!!, message!!)
                 })
 
-    override fun onStateChanged(prev: GlobalState<TodoCreateState>?,
-                                curr: GlobalState<TodoCreateState>?) {
-
-        if (prev?.subState?.loading != curr?.subState?.loading) {
-            if (curr?.subState?.loading == true) {
-                showProgressDialog("Loading")
-            } else {
-                hideProgressDialog()
-            }
-        }
+    init {
+        addStateConsumer(
+                hasChange = { prev, curr ->
+                    prev?.subState?.loading != curr?.subState?.loading
+                },
+                apply = { _, curr ->
+                    if (curr?.subState?.loading == true) {
+                        showProgressDialog("Loading")
+                    } else {
+                        hideProgressDialog()
+                    }
+                })
     }
-
 }

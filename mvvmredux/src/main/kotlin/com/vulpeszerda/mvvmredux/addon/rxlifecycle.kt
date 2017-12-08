@@ -27,14 +27,10 @@ fun <T> Completable.observeOnAndroidMainThread(): Completable =
 fun <T> Observable<T>.filter(owner: LifecycleOwner,
                              from: Lifecycle.Event,
                              until: Lifecycle.Event): Observable<T> =
-        this.compose(FilterOnLifecycleTransformer.create(
-                owner,
-                from,
-                until))
+        this.compose(FilterOnLifecycleTransformer.create(owner, from, until))
 
 fun <T> Observable<T>.filterOnResumed(owner: LifecycleOwner): Observable<T> =
-        this.compose(FilterOnLifecycleTransformer.createOnResumed(
-                owner))
+        this.compose(FilterOnLifecycleTransformer.createOnResumed(owner))
 
 fun <T> Observable<T>.filterOnStarted(owner: LifecycleOwner): Observable<T> =
         this.compose(FilterOnLifecycleTransformer.createOnStarted(
@@ -73,8 +69,8 @@ fun <T> Maybe<T>.filterOnStarted(owner: LifecycleOwner): Maybe<T> =
                 owner))
 
 fun <T> Observable<T>.bufferUntil(owner: LifecycleOwner,
-                             from: Lifecycle.Event,
-                             until: Lifecycle.Event): Observable<T> =
+                                  from: Lifecycle.Event,
+                                  until: Lifecycle.Event): Observable<T> =
         this.compose(BufferUntilOnLifecycleTransformer.create(
                 owner,
                 from,
@@ -89,8 +85,8 @@ fun <T> Observable<T>.bufferUntilOnStarted(owner: LifecycleOwner): Observable<T>
                 owner))
 
 fun <T> Flowable<T>.bufferUntil(owner: LifecycleOwner,
-                           from: Lifecycle.Event,
-                           until: Lifecycle.Event): Flowable<T> =
+                                from: Lifecycle.Event,
+                                until: Lifecycle.Event): Flowable<T> =
         this.compose(BufferUntilOnLifecycleTransformer.create(
                 owner,
                 from,
@@ -105,8 +101,8 @@ fun <T> Flowable<T>.bufferUntilOnStarted(owner: LifecycleOwner): Flowable<T> =
                 owner))
 
 fun <T> Maybe<T>.bufferUntil(owner: LifecycleOwner,
-                        from: Lifecycle.Event,
-                        until: Lifecycle.Event): Maybe<T> =
+                             from: Lifecycle.Event,
+                             until: Lifecycle.Event): Maybe<T> =
         this.compose(BufferUntilOnLifecycleTransformer.create(
                 owner,
                 from,
@@ -121,8 +117,8 @@ fun <T> Maybe<T>.bufferUntilOnStarted(owner: LifecycleOwner): Maybe<T> =
                 owner))
 
 fun Completable.bufferUntil(owner: LifecycleOwner,
-                       from: Lifecycle.Event,
-                       until: Lifecycle.Event): Completable =
+                            from: Lifecycle.Event,
+                            until: Lifecycle.Event): Completable =
         this.compose(BufferUntilOnLifecycleTransformer.create<Any>(
                 owner,
                 from,
