@@ -29,7 +29,7 @@ class TodoCreateStateView(
                 })
 
     init {
-        stateConsumers.add(StateConsumer.create(
+        stateConsumers.add(StateConsumer.createFromAction(
                 hasChange = { prev, curr ->
                     prev?.subState?.loading != curr?.subState?.loading
                 },

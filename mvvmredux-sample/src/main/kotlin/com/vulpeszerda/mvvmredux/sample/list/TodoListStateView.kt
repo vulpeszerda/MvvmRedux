@@ -38,7 +38,7 @@ class TodoListStateView(
                 .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
     init {
-        stateConsumers.add(StateConsumer.create(
+        stateConsumers.add(StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
                 apply = { _, curr ->
                     val currTodos = curr?.subState?.todos ?: ArrayList()
@@ -49,7 +49,7 @@ class TodoListStateView(
                     }
                     diff.dispatchUpdatesTo(adapter)
                 }))
-        stateConsumers.add(StateConsumer.create(
+        stateConsumers.add(StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->
                     if (curr?.subState?.loading == true) {

@@ -4,7 +4,6 @@ import com.vulpeszerda.mvvmredux.addon.filterOnStarted
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -45,8 +44,7 @@ abstract class AbsReduxStateView<T>(
                     .flatMapCompletable { (prev, curr) ->
                         Completable.merge(stateConsumers.mapNotNull { consumer ->
                             if (consumer.hasChange(prev, curr)) {
-                                Completable.fromAction { consumer.apply(prev, curr) }
-                                        .subscribeOn(consumer.applyScheduler)
+                                consumer.apply(prev, curr)
                             } else {
                                 null
                             }

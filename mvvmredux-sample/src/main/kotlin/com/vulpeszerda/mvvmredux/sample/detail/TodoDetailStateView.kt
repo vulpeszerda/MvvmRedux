@@ -17,13 +17,13 @@ class TodoDetailStateView(
                 ActivityContextWrapper(activity)) {
 
     init {
-        stateConsumers.add(StateConsumer.create(
+        stateConsumers.add(StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todo != curr?.subState?.todo },
                 apply = { _, curr ->
                     viewTitle.text = curr?.subState?.todo?.title
                     viewMessage.text = curr?.subState?.todo?.message
                 }))
-        stateConsumers.add(StateConsumer.create(
+        stateConsumers.add(StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->
                     if (curr?.subState?.loading == true) {
