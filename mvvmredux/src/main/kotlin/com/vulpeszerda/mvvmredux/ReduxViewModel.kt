@@ -16,8 +16,7 @@ import io.reactivex.subjects.PublishSubject
 abstract class ReduxViewModel<T>(
         private val tag: String = "ReduxViewModel",
         private val onFatalErrorHandler: ((Throwable) -> Unit)? = null,
-        private val middlewareScheduler: Scheduler = Schedulers.newThread(),
-        private val reducerScheduler: Scheduler = Schedulers.newThread(),
+        private val reducerScheduler: Scheduler = AndroidSchedulers.mainThread(),
         private val printLog: Boolean = false) : ViewModel() {
 
     private val disposable = CompositeDisposable()
@@ -41,6 +40,7 @@ abstract class ReduxViewModel<T>(
         stateStore = ReduxStore(
                 initialState = initialState,
                 reducer = this::reduceState,
+                reducerScheduler = reducerScheduler,
                 tag = tag,
                 printLog = printLog,
                 eventTransformer = { actions, getState ->

@@ -12,7 +12,6 @@ import io.reactivex.schedulers.Schedulers
 class ReduxStore<T>(
         private val initialState: T,
         private val reducer: (T, ReduxEvent.State) -> T,
-        private val middlewareScheduler: Scheduler = Schedulers.newThread(),
         private val reducerScheduler: Scheduler = Schedulers.newThread(),
         private val eventTransformer: (Observable<ReduxEvent>, () -> T) -> Observable<ReduxEvent.State>,
         private val tag: String = TAG,
@@ -22,7 +21,6 @@ class ReduxStore<T>(
 
     fun toState(actions: Observable<ReduxEvent>): Observable<T> {
         return actions
-                .observeOn(middlewareScheduler)
                 .compose { eventTransformer.invoke(it) { latest } }
                 .observeOn(reducerScheduler)
                 .concatMap { action ->
