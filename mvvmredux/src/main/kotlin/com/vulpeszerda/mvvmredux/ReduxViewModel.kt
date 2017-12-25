@@ -6,7 +6,6 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
@@ -17,6 +16,7 @@ abstract class ReduxViewModel<T>(
         private val tag: String = "ReduxViewModel",
         private val onFatalErrorHandler: ((Throwable) -> Unit)? = null,
         private val reducerScheduler: Scheduler = AndroidSchedulers.mainThread(),
+        private val maxRetryCount: Int = -1,
         private val printLog: Boolean = false) : ViewModel() {
 
     private val disposable = CompositeDisposable()
@@ -65,7 +65,7 @@ abstract class ReduxViewModel<T>(
                         onFatalErrorHandler.invoke(throwable)
                     } else {
                         errorSubject.onNext(ReduxEvent.Error(throwable, TAG_FATAL))
-                        if (++retryCount < MAX_RETRY_COUNT) {
+                        if (maxRetryCount == -1 || ++retryCount < maxRetryCount) {
                             AndroidSchedulers.mainThread().createWorker().schedule {
                                 initialize(stateStore?.latest ?: initialState, events)
                             }
@@ -100,6 +100,5 @@ abstract class ReduxViewModel<T>(
 
         @JvmField
         val TAG_FATAL = "FatalError"
-        private const val MAX_RETRY_COUNT = 5
     }
 }
