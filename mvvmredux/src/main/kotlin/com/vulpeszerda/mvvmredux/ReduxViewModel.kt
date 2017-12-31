@@ -14,7 +14,6 @@ import io.reactivex.subjects.PublishSubject
  */
 abstract class ReduxViewModel<T>(
         private val tag: String = "ReduxViewModel",
-        private val onFatalErrorHandler: ((Throwable) -> Unit)? = null,
         private val reducerScheduler: Scheduler = AndroidSchedulers.mainThread(),
         private val maxRetryCount: Int = -1,
         private val printLog: Boolean = false) : ViewModel() {
@@ -61,14 +60,10 @@ abstract class ReduxViewModel<T>(
                 })
         addDisposable(stateStore!!.toState(events)
                 .subscribe(stateSubject::onNext) { throwable ->
-                    if (onFatalErrorHandler != null) {
-                        onFatalErrorHandler.invoke(throwable)
-                    } else {
-                        errorSubject.onNext(ReduxEvent.Error(throwable, TAG_FATAL))
-                        if (maxRetryCount == -1 || ++retryCount < maxRetryCount) {
-                            AndroidSchedulers.mainThread().createWorker().schedule {
-                                initialize(stateStore?.latest ?: initialState, events)
-                            }
+                    errorSubject.onNext(ReduxEvent.Error(ReduxFatalException(throwable, tag)))
+                    if (maxRetryCount == -1 || ++retryCount < maxRetryCount) {
+                        AndroidSchedulers.mainThread().createWorker().schedule {
+                            initialize(stateStore?.latest ?: initialState, events)
                         }
                     }
                 })
@@ -94,11 +89,5 @@ abstract class ReduxViewModel<T>(
     override fun onCleared() {
         disposable.clear()
         super.onCleared()
-    }
-
-    companion object {
-
-        @JvmField
-        val TAG_FATAL = "FatalError"
     }
 }

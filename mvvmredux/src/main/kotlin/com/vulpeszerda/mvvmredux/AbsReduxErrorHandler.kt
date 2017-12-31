@@ -29,7 +29,7 @@ abstract class AbsReduxErrorHandler(
     override fun subscribe(source: Observable<ReduxEvent.Error>): Disposable =
             source.bufferUntilOnResumed(owner)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::onError) { throwable ->
-                        onError(ReduxEvent.Error(throwable, tag))
+                    .subscribe(this::onError) {
+                        onError(ReduxEvent.Error(ReduxFatalException(it, tag)))
                     }
 }

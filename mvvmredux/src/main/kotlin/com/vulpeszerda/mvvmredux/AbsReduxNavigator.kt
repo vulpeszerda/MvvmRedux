@@ -31,6 +31,6 @@ abstract class AbsReduxNavigator(
             source.bufferUntilOnResumed(owner)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::navigate) {
-                        publishEvent(ReduxEvent.Error(it, tag))
+                        publishEvent(ReduxEvent.Error(ReduxFatalException(it, tag)))
                     }
 }
