@@ -3,6 +3,7 @@ package com.vulpeszerda.mvvmredux.sample
 import android.app.ProgressDialog
 import android.support.annotation.UiThread
 import com.vulpeszerda.mvvmredux.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
  * Created by vulpes on 2017. 11. 23..
@@ -10,7 +11,7 @@ import com.vulpeszerda.mvvmredux.*
 abstract class BaseStateView<T>(
         tag: String,
         contextWrapper: ContextWrapper) :
-        AbsReduxStateView<T>(tag, contextWrapper) {
+        AbsReduxStateView<T>(tag, contextWrapper, AndroidSchedulers.mainThread()) {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))

@@ -15,7 +15,6 @@ import io.reactivex.subjects.PublishSubject
 abstract class ReduxViewModel<T>(
         private val tag: String = "ReduxViewModel",
         private val reducerScheduler: Scheduler = AndroidSchedulers.mainThread(),
-        private val maxRetryCount: Int = -1,
         private val printLog: Boolean = false) : ViewModel() {
 
     private val disposable = CompositeDisposable()
@@ -23,8 +22,6 @@ abstract class ReduxViewModel<T>(
     private val navigationSubject = PublishSubject.create<ReduxEvent.Navigation>()
     private val extraSubject = PublishSubject.create<ReduxEvent.Extra>()
     private val stateSubject = BehaviorSubject.create<T>()
-
-    private var retryCount = 0
 
     val error: Observable<ReduxEvent.Error> = errorSubject.hide()
     val extra: Observable<ReduxEvent.Extra> = extraSubject.hide()
@@ -59,13 +56,8 @@ abstract class ReduxViewModel<T>(
                             .map { it as ReduxEvent.State }
                 })
         addDisposable(stateStore!!.toState(events)
-                .subscribe(stateSubject::onNext) { throwable ->
-                    errorSubject.onNext(ReduxEvent.Error(ReduxFatalException(throwable, tag)))
-                    if (maxRetryCount == -1 || ++retryCount < maxRetryCount) {
-                        AndroidSchedulers.mainThread().createWorker().schedule {
-                            initialize(stateStore?.latest ?: initialState, events)
-                        }
-                    }
+                .subscribe(stateSubject::onNext) {
+                    ReduxFramework.onFatalError(it, tag)
                 })
     }
 

@@ -51,6 +51,6 @@ abstract class AbsReduxStateView<T>(
                         })
                     }
                     .subscribe({ }) {
-                        publishEvent(ReduxEvent.Error(ReduxFatalException(it, tag)))
+                        ReduxFramework.onFatalError(it, tag)
                     }
 }
