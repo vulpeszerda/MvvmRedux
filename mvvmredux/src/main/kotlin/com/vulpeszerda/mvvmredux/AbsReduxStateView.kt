@@ -1,5 +1,6 @@
 package com.vulpeszerda.mvvmredux
 
+import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import com.vulpeszerda.mvvmredux.addon.filterOnStarted
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -35,7 +36,7 @@ abstract class AbsReduxStateView<T>(
 
     override fun subscribe(source: Observable<T>): Disposable =
             (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
-                    .filterOnStarted(owner)
+                    .filterOnResumed(owner)
                     .observeOn(diffScheduler)
                     .distinctUntilChanged()
                     .scan(StatePair<T>(null, null))
@@ -51,6 +52,6 @@ abstract class AbsReduxStateView<T>(
                         })
                     }
                     .subscribe({ }) {
-                        publishEvent(ReduxEvent.Error(ReduxFatalException(it, tag)))
+                        ReduxFramework.onFatalError(it, tag)
                     }
 }

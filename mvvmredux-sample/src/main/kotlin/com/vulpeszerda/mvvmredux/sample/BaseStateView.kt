@@ -11,7 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 abstract class BaseStateView<T>(
         tag: String,
         contextWrapper: ContextWrapper) :
-        AbsReduxStateView<T>(tag, contextWrapper, diffScheduler = AndroidSchedulers.mainThread()) {
+        AbsReduxStateView<T>(tag, contextWrapper, AndroidSchedulers.mainThread()) {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))

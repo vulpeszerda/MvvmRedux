@@ -30,6 +30,6 @@ abstract class AbsReduxErrorHandler(
             source.bufferUntilOnResumed(owner)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::onError) {
-                        onError(ReduxEvent.Error(ReduxFatalException(it, tag)))
+                        ReduxFramework.onFatalError(it, tag)
                     }
 }
