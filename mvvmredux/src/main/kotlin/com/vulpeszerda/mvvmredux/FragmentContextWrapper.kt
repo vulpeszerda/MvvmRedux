@@ -21,7 +21,7 @@ open class FragmentContextWrapper(protected val fragment: ReduxFragment) : Conte
         get() = fragment.isAdded && fragment.activity?.isFinishing == false
 
     override val context: Context
-        get() = fragment.context
+        get() = fragment.context!!
 
     override fun startActivity(intent: Intent, requestCode: Int?) {
         if (requestCode != null) {

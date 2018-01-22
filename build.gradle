@@ -2,20 +2,21 @@
 
 buildscript {
     ext {
-        kotlin = "1.1.51"
-        androidPlugin = "2.3.3"
+        kotlin = "1.2.10"
+        androidPlugin = "3.0.1"
     }
     repositories {
         jcenter()
         mavenCentral()
+        google()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$androidPlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin"
-        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'com.google.gms:google-services:3.1.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.3'
-        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'com.novoda:bintray-release:0.5.0'
     }
 }
 
@@ -23,57 +24,45 @@ allprojects {
     project.ext {
         kotlin = kotlin
 
-        compileSdk = 25
-        targetSdk = 25
-        minSdk = 15
-        buildTools = "25.0.3"
+        compileSdk = 27
+        targetSdk = 27
+        minSdk = 16
+        buildTools = "27.0.3"
 
-        supportLib = "25.4.0"
-        googlePlay = "11.0.4"
-        constraintLayout = "1.0.2"
+        supportLib = "27.0.2"
+        googlePlay = "11.8.0"
+        constraintLayout = "1.1.0-beta4"
 
         junit = "4.12"
         espresso = "3.0.0"
 
-        rxjava2 = "2.1.4"
+        rxjava2 = "2.1.8"
         rxandroid2 = "2.0.1"
-        rxkotlin2 = "2.1.0"
+        rxkotlin2 = "2.2.0"
         rxbinding2 = "2.0.0"
-        rxlifecycle2 = "2.1.0"
+        rxlifecycle2 = "2.2.1"
         rxpermissions2 = "0.9.4@aar"
         rxpreferences2 = "2.0.0-RC3"
 
-        androidArch = "1.0.0-alpha5"
+        androidArch = "1.0.0"
         room = androidArch
 
-        sampleVersionCode = 1
-        sampleVersionName = "1.0.0"
+        sampleVersionCode = 2
+        sampleVersionName = "1.1.0"
 
-        libraryVersionCode = 1
-        libraryVersionName = "1.0.34"
-
-        java7Home = project.hasProperty("java7_home") ?
-                project.property("java7_home") : System.getenv("JAVA7_HOME")
-        java8Home = project.hasProperty("java8_home") ?
-                project.property("java8_home") : System.getenv("JAVA8_HOME")
+        libraryVersionCode = 2
+        libraryVersionName = "1.1.0"
     }
     repositories {
         jcenter()
         mavenCentral()
-        maven { url 'https://maven.google.com' }
+        google()
         maven { url "https://jitpack.io" }
     }
 
     tasks.withType(Javadoc).all {
         enabled = false
     }
-}
-
-if (java7Home == null) {
-    throw new GradleException("Required JAVA7_HOME environment variable not set.")
-}
-if (java8Home == null) {
-    throw new GradleException("Required JAVA8_HOME environment variable not set.")
 }
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')

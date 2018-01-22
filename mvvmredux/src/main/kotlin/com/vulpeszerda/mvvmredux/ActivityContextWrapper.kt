@@ -15,7 +15,7 @@ open class ActivityContextWrapper(protected val activity: ReduxActivity) : Conte
         get() = activity
 
     override val containerView: View? by lazy {
-        activity.findViewById(android.R.id.content)
+        activity.findViewById(android.R.id.content) as View?
     }
 
     override val available: Boolean

@@ -1,14 +1,16 @@
 package com.vulpeszerda.mvvmredux
 
-import android.arch.lifecycle.LifecycleRegistryOwner
+import android.arch.lifecycle.Lifecycle
 import android.support.v4.app.Fragment
 import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle
+import com.trello.rxlifecycle2.LifecycleProvider
 
 /**
  * Created by vulpes on 2017. 8. 25..
  */
-open class ReduxFragment(lifecycleOwner: LifecycleRegistryOwner = AbsLifecycleRegistryOwner()) :
-        Fragment(), LifecycleRegistryOwner by lifecycleOwner {
+open class ReduxFragment : Fragment() {
 
-    val rxLifecycleProvider = AndroidLifecycle.createLifecycleProvider(lifecycleOwner)
+    val rxLifecycleProvider: LifecycleProvider<Lifecycle.Event> by lazy {
+        AndroidLifecycle.createLifecycleProvider(this)
+    }
 }
