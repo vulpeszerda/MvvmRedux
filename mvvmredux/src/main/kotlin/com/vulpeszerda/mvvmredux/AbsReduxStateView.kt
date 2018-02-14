@@ -1,5 +1,7 @@
 package com.vulpeszerda.mvvmredux
 
+import android.arch.lifecycle.Lifecycle
+import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import com.vulpeszerda.mvvmredux.addon.filterOnStarted
 import io.reactivex.Completable
@@ -44,13 +46,15 @@ abstract class AbsReduxStateView<T>(
                     .filter { (prev, curr) -> prev !== curr }
                     .flatMapCompletable { (prev, curr) ->
                         Completable.merge(stateConsumers.mapNotNull { consumer ->
-                            if (consumer.hasChange(prev, curr)) {
+                            if (available && consumer.hasChange(prev, curr)) {
                                 consumer.apply(prev, curr)
                             } else {
                                 null
                             }
                         })
                     }
+                    .toObservable<Unit>()
+                    .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
                     .subscribe({ }) {
                         ReduxFramework.onFatalError(it, tag)
                     }
