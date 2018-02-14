@@ -51,7 +51,7 @@ allprojects {
         sampleVersionName = "1.1.0"
 
         libraryVersionCode = 2
-        libraryVersionName = "1.1.0"
+        libraryVersionName = "1.1.1"
     }
     repositories {
         jcenter()
