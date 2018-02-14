@@ -1,5 +1,7 @@
 package com.vulpeszerda.mvvmredux
 
+import android.arch.lifecycle.Lifecycle
+import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import io.reactivex.Observable
@@ -30,6 +32,8 @@ abstract class AbsReduxExtraHandler(
     override fun subscribe(source: Observable<ReduxEvent.Extra>): Disposable =
             source.bufferUntilOnResumed(owner)
                     .observeOn(AndroidSchedulers.mainThread())
+                    .filter { available }
+                    .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
                     .subscribe(this::onExtraEvent) {
                         ReduxFramework.onFatalError(it, tag)
                     }
