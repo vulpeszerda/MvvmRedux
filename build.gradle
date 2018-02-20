@@ -51,7 +51,12 @@ allprojects {
         sampleVersionName = "1.1.0"
 
         libraryVersionCode = 2
-        libraryVersionName = "1.1.0"
+        libraryVersionName = "1.1.1"
+
+        java7Home = project.hasProperty("java7_home") ?
+                project.property("java7_home") : System.getenv("JAVA7_HOME")
+        java8Home = project.hasProperty("java8_home") ?
+                project.property("java8_home") : System.getenv("JAVA8_HOME")
     }
     repositories {
         jcenter()
