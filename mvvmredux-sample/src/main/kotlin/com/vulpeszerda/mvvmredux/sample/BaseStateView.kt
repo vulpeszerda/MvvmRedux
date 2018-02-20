@@ -40,4 +40,8 @@ abstract class BaseStateView<T>(
             progressDialog.dismiss()
         }
     }
+
+    override fun onStateConsumerError(consumer: StateConsumer<T>, throwable: Throwable) {
+        throwable.printStackTrace()
+    }
 }

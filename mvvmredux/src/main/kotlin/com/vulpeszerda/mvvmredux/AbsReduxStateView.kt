@@ -19,12 +19,12 @@ abstract class AbsReduxStateView<T>(
         protected val tag: String,
         contextWrapper: ContextWrapper,
         private val diffScheduler: Scheduler = Schedulers.newThread(),
-        private val throttle: Long = 0) :
+        private val throttle: Long = 0):
         ReduxStateView<T>,
         ContextWrapper by contextWrapper {
 
-    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
-    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
+    constructor(tag: String, activity: ReduxActivity): this(tag, ActivityContextWrapper(activity))
+    constructor(tag: String, fragment: ReduxFragment): this(tag, FragmentContextWrapper(fragment))
 
     private val eventSubject = PublishSubject.create<ReduxEvent>()
 
@@ -41,21 +41,21 @@ abstract class AbsReduxStateView<T>(
                     .filterOnResumed(owner)
                     .observeOn(diffScheduler)
                     .distinctUntilChanged()
-                    .scan(StatePair<T>(null, null))
-                    { prevPair, curr -> StatePair(prevPair.curr, curr) }
-                    .filter { (prev, curr) -> prev !== curr }
-                    .flatMapCompletable { (prev, curr) ->
-                        Completable.merge(stateConsumers.mapNotNull { consumer ->
-                            if (available && consumer.hasChange(prev, curr)) {
-                                consumer.apply(prev, curr)
-                            } else {
-                                null
-                            }
+                    .filter { available && containerView != null }
+                    .compose { stream ->
+                        val cache = stream.share()
+                        Observable.merge(stateConsumers.map { consumer ->
+                            cache.compose(StateConsumerTransformer(consumer, { throwable ->
+                                onStateConsumerError(consumer, throwable)
+                            }))
                         })
                     }
-                    .toObservable<Unit>()
                     .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
                     .subscribe({ }) {
                         ReduxFramework.onFatalError(it, tag)
                     }
+
+    protected open fun onStateConsumerError(consumer: StateConsumer<T>, throwable: Throwable) {
+        ReduxFramework.onFatalError(throwable, tag)
+    }
 }

@@ -76,38 +76,50 @@ kapt {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':mvvmredux')
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':mvvmredux')
 
-    compile "com.android.support:support-v4:$supportLib"
-    compile "com.android.support:appcompat-v7:$supportLib"
-    compile "com.android.support:design:$supportLib"
-    compile "com.android.support:recyclerview-v7:$supportLib"
-    compile "com.android.support:cardview-v7:$supportLib"
-    testCompile "com.android.support:support-v4:$supportLib"
-    testCompile "com.android.support:appcompat-v7:$supportLib"
-    testCompile "com.android.support:design:$supportLib"
-    testCompile "com.android.support:recyclerview-v7:$supportLib"
-    testCompile "com.android.support:cardview-v7:$supportLib"
-    androidTestCompile "com.android.support:support-v4:$supportLib"
-    androidTestCompile "com.android.support:appcompat-v7:$supportLib"
-    androidTestCompile "com.android.support:design:$supportLib"
-    androidTestCompile "com.android.support:recyclerview-v7:$supportLib"
-    androidTestCompile "com.android.support:cardview-v7:$supportLib"
+    implementation "com.android.support:support-v4:$supportLib"
+    implementation "com.android.support:appcompat-v7:$supportLib"
+    implementation "com.android.support:design:$supportLib"
+    implementation "com.android.support:recyclerview-v7:$supportLib"
+    implementation "com.android.support:cardview-v7:$supportLib"
+    testImplementation "com.android.support:support-v4:$supportLib"
+    testImplementation "com.android.support:appcompat-v7:$supportLib"
+    testImplementation "com.android.support:design:$supportLib"
+    testImplementation "com.android.support:recyclerview-v7:$supportLib"
+    testImplementation "com.android.support:cardview-v7:$supportLib"
+    androidTestImplementation "com.android.support:support-v4:$supportLib"
+    androidTestImplementation "com.android.support:appcompat-v7:$supportLib"
+    androidTestImplementation "com.android.support:design:$supportLib"
+    androidTestImplementation "com.android.support:recyclerview-v7:$supportLib"
+    androidTestImplementation "com.android.support:cardview-v7:$supportLib"
 
-    compile "com.android.support.constraint:constraint-layout:$constraintLayout"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin2"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid2"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding2"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxbinding2"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbinding2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rxlifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxlifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxlifecycle2"
 
-    compile "android.arch.lifecycle:runtime:$androidArch"
-    compile "android.arch.lifecycle:extensions:$androidArch"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayout"
+
+    implementation "android.arch.lifecycle:runtime:$androidArch"
+    implementation "android.arch.lifecycle:extensions:$androidArch"
     annotationProcessor "android.arch.lifecycle:compiler:$androidArch"
     kapt "android.arch.lifecycle:compiler:$androidArch"
 
     /* Room */
-    compile "android.arch.persistence.room:runtime:$room"
+    implementation "android.arch.persistence.room:runtime:$room"
     kapt "android.arch.persistence.room:compiler:$room"
-    testCompile "android.arch.persistence.room:testing:$room"
-    compile "android.arch.persistence.room:rxjava2:$room"
+    testImplementation "android.arch.persistence.room:testing:$room"
+    implementation "android.arch.persistence.room:rxjava2:$room"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin"
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin"
 }

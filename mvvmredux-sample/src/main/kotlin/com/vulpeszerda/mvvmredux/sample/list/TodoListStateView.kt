@@ -37,6 +37,8 @@ class TodoListStateView(
                 .mergeWith(RxView.clicks(btn_new).map { GlobalEvent.NavigateCreate() })
                 .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
+    private var count = 0
+
     init {
         stateConsumers.add(StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
