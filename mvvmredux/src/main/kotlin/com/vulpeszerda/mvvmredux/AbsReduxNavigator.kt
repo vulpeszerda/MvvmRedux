@@ -14,9 +14,9 @@ import io.reactivex.subjects.PublishSubject
 @Suppress("unused")
 abstract class AbsReduxNavigator(
     protected val tag: String,
-    contextWrapper: ContextService
+    contextService: ContextService
 ) : ReduxNavigator,
-    ContextService by contextWrapper {
+    ContextService by contextService {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))

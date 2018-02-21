@@ -9,8 +9,8 @@ import com.vulpeszerda.mvvmredux.sample.list.TodoListActivity
 /**
  * Created by vulpes on 2017. 11. 23..
  */
-open class BaseNavigator(tag: String, contextWrapper: ContextService) :
-    AbsReduxNavigator(tag, contextWrapper) {
+open class BaseNavigator(tag: String, contextService: ContextService) :
+    AbsReduxNavigator(tag, contextService) {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))

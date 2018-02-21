@@ -14,9 +14,9 @@ import io.reactivex.subjects.PublishSubject
 @Suppress("unused")
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
-    contextWrapper: ContextService
+    contextService: ContextService
 ) : ReduxExtraHandler,
-    ContextService by contextWrapper {
+    ContextService by contextService {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))
