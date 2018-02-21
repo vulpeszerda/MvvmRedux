@@ -8,11 +8,12 @@ import org.reactivestreams.Publisher
  * Created by vulpes on 2017. 9. 19..
  */
 class FilterTransformer<T, E> private constructor(
-        private val events: Observable<E>,
-        private val predicate: (E) -> Boolean) :
-        ObservableTransformer<T, T>,
-        FlowableTransformer<T, T>,
-        MaybeTransformer<T, T> {
+    private val events: Observable<E>,
+    private val predicate: (E) -> Boolean
+) :
+    ObservableTransformer<T, T>,
+    FlowableTransformer<T, T>,
+    MaybeTransformer<T, T> {
 
     override fun apply(upstream: Observable<T>): ObservableSource<T> {
         return Observable.defer {
@@ -21,35 +22,35 @@ class FilterTransformer<T, E> private constructor(
             var completed = false
             val disposeSubject = PublishSubject.create<Unit>()
             Observable.merge(
-                    upstream
-                            .filter { data ->
-                                lastEvent.let { it != null && predicate.invoke(it) }
-                                        .apply {
-                                            pendedData = if (!this) {
-                                                DataWrapper(data)
-                                            } else {
-                                                null
-                                            }
-                                        }
-                            }
-                            .map { DataWrapper(it) }
-                            .doOnComplete {
-                                if (pendedData == null) {
-                                    disposeSubject.onNext(Unit)
-                                }
-                                completed = true
-                            },
-                    events.doOnNext { lastEvent = it }
-                            .filter(predicate)
-                            .flatMap {
-                                pendedData.let {
-                                    if (it == null) Observable.empty() else Observable.just(it)
+                upstream
+                    .filter { data ->
+                        lastEvent.let { it != null && predicate.invoke(it) }
+                            .apply {
+                                pendedData = if (!this) {
+                                    DataWrapper(data)
+                                } else {
+                                    null
                                 }
                             }
-                            .takeUntil { completed }
-                            .takeUntil(disposeSubject))
-                    .distinctUntilChanged()
-                    .map { it.data }
+                    }
+                    .map { DataWrapper(it) }
+                    .doOnComplete {
+                        if (pendedData == null) {
+                            disposeSubject.onNext(Unit)
+                        }
+                        completed = true
+                    },
+                events.doOnNext { lastEvent = it }
+                    .filter(predicate)
+                    .flatMap {
+                        pendedData.let {
+                            if (it == null) Observable.empty() else Observable.just(it)
+                        }
+                    }
+                    .takeUntil { completed }
+                    .takeUntil(disposeSubject))
+                .distinctUntilChanged()
+                .map { it.data }
         }
     }
 
@@ -60,38 +61,38 @@ class FilterTransformer<T, E> private constructor(
             var completed = false
             val disposeSubject = PublishSubject.create<Unit>()
             Flowable.merge(
-                    upstream
-                            .filter { data ->
-                                lastEvent.let { it != null && predicate.invoke(it) }
-                                        .apply {
-                                            pendedData = if (!this) {
-                                                DataWrapper(data)
-                                            } else {
-                                                null
-                                            }
-                                        }
-                            }
-                            .map {
-                                DataWrapper(it)
-                            }
-                            .doOnComplete {
-                                if (pendedData == null) {
-                                    disposeSubject.onNext(Unit)
-                                }
-                                completed = true
-                            },
-                    events.toFlowable(BackpressureStrategy.LATEST)
-                            .doOnNext { lastEvent = it }
-                            .filter(predicate)
-                            .flatMap {
-                                pendedData.let {
-                                    if (it == null) Flowable.empty() else Flowable.just(it)
+                upstream
+                    .filter { data ->
+                        lastEvent.let { it != null && predicate.invoke(it) }
+                            .apply {
+                                pendedData = if (!this) {
+                                    DataWrapper(data)
+                                } else {
+                                    null
                                 }
                             }
-                            .takeUntil { completed }
-                            .takeUntil(disposeSubject.toFlowable(BackpressureStrategy.LATEST)))
-                    .distinctUntilChanged()
-                    .map { it.data }
+                    }
+                    .map {
+                        DataWrapper(it)
+                    }
+                    .doOnComplete {
+                        if (pendedData == null) {
+                            disposeSubject.onNext(Unit)
+                        }
+                        completed = true
+                    },
+                events.toFlowable(BackpressureStrategy.LATEST)
+                    .doOnNext { lastEvent = it }
+                    .filter(predicate)
+                    .flatMap {
+                        pendedData.let {
+                            if (it == null) Flowable.empty() else Flowable.just(it)
+                        }
+                    }
+                    .takeUntil { completed }
+                    .takeUntil(disposeSubject.toFlowable(BackpressureStrategy.LATEST)))
+                .distinctUntilChanged()
+                .map { it.data }
         }
     }
 
@@ -102,36 +103,36 @@ class FilterTransformer<T, E> private constructor(
             var completed = false
             val disposeSubject = PublishSubject.create<Unit>()
             Observable.merge(
-                    upstream.toObservable()
-                            .filter { data ->
-                                lastEvent.let { it != null && predicate.invoke(it) }
-                                        .apply {
-                                            pendedData = if (!this) {
-                                                DataWrapper(data)
-                                            } else {
-                                                null
-                                            }
-                                        }
-                            }
-                            .map { DataWrapper(it) }
-                            .doOnComplete {
-                                if (pendedData == null) {
-                                    disposeSubject.onNext(Unit)
-                                }
-                                completed = true
-                            },
-                    events.doOnNext { lastEvent = it }
-                            .filter(predicate)
-                            .flatMap {
-                                pendedData.let {
-                                    if (it == null) Observable.empty() else Observable.just(it)
+                upstream.toObservable()
+                    .filter { data ->
+                        lastEvent.let { it != null && predicate.invoke(it) }
+                            .apply {
+                                pendedData = if (!this) {
+                                    DataWrapper(data)
+                                } else {
+                                    null
                                 }
                             }
-                            .takeUntil { completed }
-                            .takeUntil(disposeSubject))
-                    .distinctUntilChanged()
-                    .map { it.data }
-                    .firstElement()
+                    }
+                    .map { DataWrapper(it) }
+                    .doOnComplete {
+                        if (pendedData == null) {
+                            disposeSubject.onNext(Unit)
+                        }
+                        completed = true
+                    },
+                events.doOnNext { lastEvent = it }
+                    .filter(predicate)
+                    .flatMap {
+                        pendedData.let {
+                            if (it == null) Observable.empty() else Observable.just(it)
+                        }
+                    }
+                    .takeUntil { completed }
+                    .takeUntil(disposeSubject))
+                .distinctUntilChanged()
+                .map { it.data }
+                .firstElement()
         }
     }
 
@@ -140,8 +141,10 @@ class FilterTransformer<T, E> private constructor(
     companion object {
 
         @JvmStatic
-        fun <T, E> create(events: Observable<E>,
-                          predicate: (E) -> Boolean): FilterTransformer<T, E> =
-                FilterTransformer(events, predicate)
+        fun <T, E> create(
+            events: Observable<E>,
+            predicate: (E) -> Boolean
+        ): FilterTransformer<T, E> =
+            FilterTransformer(events, predicate)
     }
 }

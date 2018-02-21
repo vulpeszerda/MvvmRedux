@@ -14,24 +14,27 @@ interface StateConsumer<in T> {
 
     companion object {
 
-        fun <T> create(hasChange: (T?, T?) -> Boolean,
-                       apply: (T?, T?) -> Completable): StateConsumer<T> =
-                object : StateConsumer<T> {
+        fun <T> create(
+            hasChange: (T?, T?) -> Boolean,
+            apply: (T?, T?) -> Completable
+        ): StateConsumer<T> =
+            object : StateConsumer<T> {
 
-                    override fun hasChange(prevState: T?, currState: T?): Boolean =
-                            hasChange.invoke(prevState, currState)
+                override fun hasChange(prevState: T?, currState: T?): Boolean =
+                    hasChange.invoke(prevState, currState)
 
-                    override fun apply(prevState: T?, currState: T?) =
-                            apply.invoke(prevState, currState)
-                }
+                override fun apply(prevState: T?, currState: T?) =
+                    apply.invoke(prevState, currState)
+            }
 
-        fun <T> createFromAction(hasChange: (T?, T?) -> Boolean,
-                                 apply: (T?, T?) -> Unit,
-                                 scheduler: Scheduler? = null):
-                StateConsumer<T> =
-                create(hasChange, { prev, curr ->
-                    Completable.fromAction { apply.invoke(prev, curr) }
-                            .let { if (scheduler != null) it.subscribeOn(scheduler) else it }
-                })
+        fun <T> createFromAction(
+            hasChange: (T?, T?) -> Boolean,
+            apply: (T?, T?) -> Unit,
+            scheduler: Scheduler? = null
+        ): StateConsumer<T> =
+            create(hasChange, { prev, curr ->
+                Completable.fromAction { apply.invoke(prev, curr) }
+                    .let { if (scheduler != null) it.subscribeOn(scheduler) else it }
+            })
     }
 }

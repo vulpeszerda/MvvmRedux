@@ -15,21 +15,24 @@ import kotlinx.android.synthetic.main.todo_create.title as viewTitle
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoCreateStateView(
-        activity: TodoCreateActivity) :
-        BaseStateView<GlobalState<TodoCreateState>>(
-                "TodoCreateStateView",
-                ActivityContextWrapper(activity)) {
+    activity: TodoCreateActivity
+) :
+    BaseStateView<GlobalState<TodoCreateState>>(
+        "TodoCreateStateView",
+        ActivityContextWrapper(activity)
+    ) {
 
     override val events: Observable<ReduxEvent>
         get() = super.events.mergeWith(RxView.clicks(btn_save)
-                .map { Pair(viewTitle.text?.toString(), viewMessage.text?.toString()) }
-                .filter { it.first != null && it.second != null }
-                .map<TodoCreateEvent> { (title, message) ->
-                    TodoCreateEvent.Save(title!!, message!!)
-                })
+            .map { Pair(viewTitle.text?.toString(), viewMessage.text?.toString()) }
+            .filter { it.first != null && it.second != null }
+            .map<TodoCreateEvent> { (title, message) ->
+                TodoCreateEvent.Save(title!!, message!!)
+            })
 
     init {
-        stateConsumers.add(StateConsumer.createFromAction(
+        stateConsumers.add(
+            StateConsumer.createFromAction(
                 hasChange = { prev, curr ->
                     prev?.subState?.loading != curr?.subState?.loading
                 },
@@ -39,6 +42,7 @@ class TodoCreateStateView(
                     } else {
                         hideProgressDialog()
                     }
-                }))
+                })
+        )
     }
 }

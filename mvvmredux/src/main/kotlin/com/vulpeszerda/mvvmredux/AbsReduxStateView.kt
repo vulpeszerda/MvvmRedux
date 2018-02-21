@@ -13,13 +13,15 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by vulpes on 2017. 9. 21..
  */
+@Suppress("unused")
 abstract class AbsReduxStateView<T>(
-        protected val tag: String,
-        contextWrapper: ContextWrapper,
-        private val diffScheduler: Scheduler = Schedulers.newThread(),
-        private val throttle: Long = 0) :
-        ReduxStateView<T>,
-        ContextWrapper by contextWrapper {
+    protected val tag: String,
+    contextWrapper: ContextWrapper,
+    private val diffScheduler: Scheduler = Schedulers.newThread(),
+    private val throttle: Long = 0
+) :
+    ReduxStateView<T>,
+    ContextWrapper by contextWrapper {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
@@ -35,22 +37,22 @@ abstract class AbsReduxStateView<T>(
     }
 
     override fun subscribe(source: Observable<T>): Disposable =
-            (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
-                    .filterOnResumed(owner)
-                    .observeOn(diffScheduler)
-                    .filter { available && containerView != null }
-                    .compose { stream ->
-                        val shared = stream.share()
-                        Observable.merge(stateConsumers.map { consumer ->
-                            shared.compose(StateConsumerTransformer(consumer, { throwable ->
-                                onStateConsumerError(consumer, throwable)
-                            }))
-                        })
-                    }
-                    .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
-                    .subscribe({ }) {
-                        ReduxFramework.onFatalError(it, tag)
-                    }
+        (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
+            .filterOnResumed(owner)
+            .observeOn(diffScheduler)
+            .filter { available && containerView != null }
+            .compose { stream ->
+                val shared = stream.share()
+                Observable.merge(stateConsumers.map { consumer ->
+                    shared.compose(StateConsumerTransformer(consumer, { throwable ->
+                        onStateConsumerError(consumer, throwable)
+                    }))
+                })
+            }
+            .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+            .subscribe({ }) {
+                ReduxFramework.onFatalError(it, tag)
+            }
 
     protected open fun onStateConsumerError(consumer: StateConsumer<T>, throwable: Throwable) {
         ReduxFramework.onFatalError(throwable, tag)

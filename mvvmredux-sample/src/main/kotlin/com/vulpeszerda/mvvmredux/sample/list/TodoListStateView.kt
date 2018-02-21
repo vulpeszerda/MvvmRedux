@@ -18,9 +18,11 @@ import kotlinx.android.synthetic.main.todo_list.*
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListStateView(
-        private val activity: TodoListActivity) :
-        BaseStateView<GlobalState<TodoListState>>(
-                "TodoListStateView", activity) {
+    private val activity: TodoListActivity
+) :
+    BaseStateView<GlobalState<TodoListState>>(
+        "TodoListStateView", activity
+    ) {
 
     private val adapter: TodoListAdapter by lazy {
         TodoListAdapter(object : TodoListAdapter.ActionHandler {
@@ -34,13 +36,14 @@ class TodoListStateView(
 
     override val events: Observable<ReduxEvent>
         get() = super.events
-                .mergeWith(RxView.clicks(btn_new).map { GlobalEvent.NavigateCreate() })
-                .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
+            .mergeWith(RxView.clicks(btn_new).map { GlobalEvent.NavigateCreate() })
+            .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
     private var count = 0
 
     init {
-        stateConsumers.add(StateConsumer.createFromAction(
+        stateConsumers.add(
+            StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
                 apply = { _, curr ->
                     val currTodos = curr?.subState?.todos ?: ArrayList()
@@ -50,8 +53,10 @@ class TodoListStateView(
                         addAll(currTodos)
                     }
                     diff.dispatchUpdatesTo(adapter)
-                }))
-        stateConsumers.add(StateConsumer.createFromAction(
+                })
+        )
+        stateConsumers.add(
+            StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->
                     if (curr?.subState?.loading == true) {
@@ -59,7 +64,8 @@ class TodoListStateView(
                     } else {
                         hideProgressDialog()
                     }
-                }))
+                })
+        )
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -68,18 +74,20 @@ class TodoListStateView(
         list.layoutManager = LinearLayoutManager(activity)
     }
 
-    private class TodoDiffCallback(private val prev: List<Todo>,
-                                   private val curr: List<Todo>) : DiffUtil.Callback() {
+    private class TodoDiffCallback(
+        private val prev: List<Todo>,
+        private val curr: List<Todo>
+    ) : DiffUtil.Callback() {
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                prev[oldItemPosition].uid == curr[newItemPosition].uid
+            prev[oldItemPosition].uid == curr[newItemPosition].uid
 
         override fun getOldListSize(): Int = prev.size
 
         override fun getNewListSize(): Int = curr.size
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                prev[oldItemPosition] == curr[newItemPosition]
+            prev[oldItemPosition] == curr[newItemPosition]
 
     }
 }

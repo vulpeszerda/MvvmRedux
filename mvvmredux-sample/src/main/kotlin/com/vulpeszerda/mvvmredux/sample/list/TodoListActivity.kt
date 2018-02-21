@@ -41,14 +41,17 @@ class TodoListActivity : ReduxActivity() {
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
-        injection.viewModel.initialize(GlobalState(
-                restoreStateFromBundle(savedInstanceState)),
-                Observable.empty<ReduxEvent>()
-                        .mergeWith(eventSubject)
-                        .mergeWith(injection.stateView.events)
-                        .mergeWith(injection.navigator.events)
-                        .mergeWith(injection.errorHandler.events)
-                        .mergeWith(injection.extraHandler.events))
+        injection.viewModel.initialize(
+            GlobalState(
+                restoreStateFromBundle(savedInstanceState)
+            ),
+            Observable.empty<ReduxEvent>()
+                .mergeWith(eventSubject)
+                .mergeWith(injection.stateView.events)
+                .mergeWith(injection.navigator.events)
+                .mergeWith(injection.errorHandler.events)
+                .mergeWith(injection.extraHandler.events)
+        )
     }
 
     private fun restoreStateFromBundle(bundle: Bundle?): TodoListState {

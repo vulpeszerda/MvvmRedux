@@ -12,10 +12,12 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 8. 25..
  */
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class ReduxViewModel<T>(
-        private val tag: String = "ReduxViewModel",
-        private val reducerScheduler: Scheduler = AndroidSchedulers.mainThread(),
-        private val printLog: Boolean = false) : ViewModel() {
+    private val tag: String = "ReduxViewModel",
+    private val reducerScheduler: Scheduler = AndroidSchedulers.mainThread(),
+    private val printLog: Boolean = false
+) : ViewModel() {
 
     private val disposable = CompositeDisposable()
     private val errorSubject = PublishSubject.create<ReduxEvent.Error>()
@@ -34,31 +36,31 @@ abstract class ReduxViewModel<T>(
     fun initialize(initialState: T, events: Observable<ReduxEvent>) {
         disposable.clear()
         stateStore = ReduxStore(
-                initialState = initialState,
-                reducer = this::reduceState,
-                reducerScheduler = reducerScheduler,
-                tag = tag,
-                printLog = printLog,
-                eventTransformer = { actions, getState ->
-                    eventTransformer(actions, getState)
-                            .filter {
-                                when (it) {
-                                    is ReduxEvent.Navigation ->
-                                        navigationSubject.onNext(it)
-                                    is ReduxEvent.Extra ->
-                                        extraSubject.onNext(it)
-                                    is ReduxEvent.Error ->
-                                        errorSubject.onNext(it)
-                                    else -> return@filter it is ReduxEvent.State
-                                }
-                                return@filter false
-                            }
-                            .map { it as ReduxEvent.State }
-                })
+            initialState = initialState,
+            reducer = this::reduceState,
+            reducerScheduler = reducerScheduler,
+            tag = tag,
+            printLog = printLog,
+            eventTransformer = { actions, getState ->
+                eventTransformer(actions, getState)
+                    .filter {
+                        when (it) {
+                            is ReduxEvent.Navigation ->
+                                navigationSubject.onNext(it)
+                            is ReduxEvent.Extra ->
+                                extraSubject.onNext(it)
+                            is ReduxEvent.Error ->
+                                errorSubject.onNext(it)
+                            else -> return@filter it is ReduxEvent.State
+                        }
+                        return@filter false
+                    }
+                    .map { it as ReduxEvent.State }
+            })
         addDisposable(stateStore!!.toState(events)
-                .subscribe(stateSubject::onNext) {
-                    ReduxFramework.onFatalError(it, tag)
-                })
+            .subscribe(stateSubject::onNext) {
+                ReduxFramework.onFatalError(it, tag)
+            })
     }
 
     protected open fun eventTransformer(events: Observable<ReduxEvent>, getState: () -> T):

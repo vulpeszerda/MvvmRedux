@@ -1,7 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
 import android.arch.lifecycle.ViewModelProviders
-import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
@@ -29,7 +28,7 @@ class TodoCreateInjection(private val activity: TodoCreateActivity) {
 
     val viewModel: TodoCreateViewModel by lazy {
         ViewModelProviders.of(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
-                .get(TodoCreateViewModel::class.java)
+            .get(TodoCreateViewModel::class.java)
     }
 
 }

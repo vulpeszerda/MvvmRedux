@@ -7,4 +7,4 @@ import com.vulpeszerda.mvvmredux.sample.BaseNavigator
  */
 
 class TodoListNavigator(activity: TodoListActivity) :
-        BaseNavigator("TodoListNavigator", activity)
+    BaseNavigator("TodoListNavigator", activity)

@@ -8,6 +8,7 @@ import com.trello.rxlifecycle2.LifecycleProvider
 /**
  * Created by vulpes on 2017. 8. 25..
  */
+@Suppress("unused")
 open class ReduxActivity : AppCompatActivity() {
 
     val rxLifecycleProvider: LifecycleProvider<Lifecycle.Event> by lazy {

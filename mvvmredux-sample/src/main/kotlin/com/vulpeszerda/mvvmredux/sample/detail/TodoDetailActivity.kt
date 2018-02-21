@@ -42,13 +42,16 @@ class TodoDetailActivity : ReduxActivity() {
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
-        injection.viewModel.initialize(GlobalState(
-                restoreStateFromBundle(savedInstanceState)),
-                Observable.empty<ReduxEvent>()
-                        .mergeWith(eventSubject)
-                        .mergeWith(injection.stateView.events)
-                        .mergeWith(injection.errorHandler.events)
-                        .mergeWith(injection.extraHandler.events))
+        injection.viewModel.initialize(
+            GlobalState(
+                restoreStateFromBundle(savedInstanceState)
+            ),
+            Observable.empty<ReduxEvent>()
+                .mergeWith(eventSubject)
+                .mergeWith(injection.stateView.events)
+                .mergeWith(injection.errorHandler.events)
+                .mergeWith(injection.extraHandler.events)
+        )
     }
 
     private fun restoreStateFromBundle(bundle: Bundle?): TodoDetailState {
@@ -73,7 +76,7 @@ class TodoDetailActivity : ReduxActivity() {
 
         fun createIntent(context: Context, uid: Long): Intent {
             return Intent(context, TodoDetailActivity::class.java)
-                    .apply { putExtra(EXTRA_UID, uid) }
+                .apply { putExtra(EXTRA_UID, uid) }
         }
     }
 

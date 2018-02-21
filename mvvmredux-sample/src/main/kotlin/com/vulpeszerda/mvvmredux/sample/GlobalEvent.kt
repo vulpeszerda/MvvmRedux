@@ -7,13 +7,13 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
  */
 sealed class GlobalEvent : ReduxEvent {
     data class NavigateList(val requestCode: Int? = null) :
-            GlobalEvent(), ReduxEvent.Navigation
+        GlobalEvent(), ReduxEvent.Navigation
 
     data class NavigateDetail(val uid: Long, val requestCode: Int? = null) :
-            GlobalEvent(), ReduxEvent.Navigation
+        GlobalEvent(), ReduxEvent.Navigation
 
     data class NavigateCreate(val requestCode: Int? = null) :
-            GlobalEvent(), ReduxEvent.Navigation
+        GlobalEvent(), ReduxEvent.Navigation
 
     class NavigateFinish : GlobalEvent(), ReduxEvent.Navigation
 }

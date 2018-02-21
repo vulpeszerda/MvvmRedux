@@ -11,19 +11,24 @@ import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoDetailStateView(
-        activity: TodoDetailActivity) :
-        BaseStateView<GlobalState<TodoDetailState>>(
-                "TodoDetailStateView",
-                ActivityContextWrapper(activity)) {
+    activity: TodoDetailActivity
+) :
+    BaseStateView<GlobalState<TodoDetailState>>(
+        "TodoDetailStateView",
+        ActivityContextWrapper(activity)
+    ) {
 
     init {
-        stateConsumers.add(StateConsumer.createFromAction(
+        stateConsumers.add(
+            StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todo != curr?.subState?.todo },
                 apply = { _, curr ->
                     viewTitle.text = curr?.subState?.todo?.title
                     viewMessage.text = curr?.subState?.todo?.message
-                }))
-        stateConsumers.add(StateConsumer.createFromAction(
+                })
+        )
+        stateConsumers.add(
+            StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->
                     if (curr?.subState?.loading == true) {
@@ -31,6 +36,7 @@ class TodoDetailStateView(
                     } else {
                         hideProgressDialog()
                     }
-                }))
+                })
+        )
     }
 }

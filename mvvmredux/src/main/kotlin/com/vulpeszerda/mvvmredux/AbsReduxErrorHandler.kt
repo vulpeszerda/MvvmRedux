@@ -11,11 +11,12 @@ import io.reactivex.subjects.PublishSubject
 /**
  * Created by vulpes on 2017. 9. 21..
  */
+@Suppress("unused")
 abstract class AbsReduxErrorHandler(
-        protected val tag: String,
-        contextWrapper: ContextWrapper) :
-        ReduxErrorHandler,
-        ContextWrapper by contextWrapper {
+    protected val tag: String,
+    contextWrapper: ContextWrapper
+) : ReduxErrorHandler,
+    ContextWrapper by contextWrapper {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
@@ -29,11 +30,11 @@ abstract class AbsReduxErrorHandler(
     }
 
     override fun subscribe(source: Observable<ReduxEvent.Error>): Disposable =
-            source.bufferUntilOnResumed(owner)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .filter { available }
-                    .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
-                    .subscribe(this::onError) {
-                        ReduxFramework.onFatalError(it, tag)
-                    }
+        source.bufferUntilOnResumed(owner)
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter { available }
+            .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+            .subscribe(this::onError) {
+                ReduxFramework.onFatalError(it, tag)
+            }
 }

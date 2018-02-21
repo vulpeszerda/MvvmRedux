@@ -1,7 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
 import android.arch.lifecycle.ViewModelProviders
-import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
@@ -28,6 +27,6 @@ class TodoListInjection(private val activity: TodoListActivity) {
 
     val viewModel: TodoListViewModel by lazy {
         ViewModelProviders.of(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
-                .get(TodoListViewModel::class.java)
+            .get(TodoListViewModel::class.java)
     }
 }

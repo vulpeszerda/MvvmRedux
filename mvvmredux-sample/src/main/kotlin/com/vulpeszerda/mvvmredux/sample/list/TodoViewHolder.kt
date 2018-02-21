@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.todo_item.*
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoViewHolder(override val containerView: View, actionHandler: ActionHandler) :
-        RecyclerView.ViewHolder(containerView), LayoutContainer {
+    RecyclerView.ViewHolder(containerView), LayoutContainer {
 
     interface ActionHandler {
         fun onClicked(todo: Todo)
@@ -36,9 +36,11 @@ class TodoViewHolder(override val containerView: View, actionHandler: ActionHand
     companion object {
 
         fun create(parentView: ViewGroup, actionHandler: ActionHandler): TodoViewHolder {
-            return TodoViewHolder(LayoutInflater.from(parentView.context)
+            return TodoViewHolder(
+                LayoutInflater.from(parentView.context)
                     .inflate(R.layout.todo_item, parentView, false),
-                    actionHandler)
+                actionHandler
+            )
         }
     }
 }

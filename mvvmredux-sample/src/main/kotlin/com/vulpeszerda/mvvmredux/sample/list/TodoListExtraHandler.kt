@@ -9,7 +9,7 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListExtraHandler(private val activity: TodoListActivity) :
-        AbsReduxExtraHandler("TodoListExtraHandler", activity) {
+    AbsReduxExtraHandler("TodoListExtraHandler", activity) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {
@@ -17,12 +17,12 @@ class TodoListExtraHandler(private val activity: TodoListActivity) :
                 Toast.makeText(activity, "Cleared", Toast.LENGTH_SHORT).show()
             is TodoListEvent.ShowClearConfirm ->
                 AlertDialog.Builder(activity).setTitle("Confirm")
-                        .setMessage("Are you sure to clear all todo?")
-                        .setPositiveButton("Clear all") { _, _ ->
-                            publishEvent(TodoListEvent.ConfirmClearAll())
-                        }
-                        .setNegativeButton("Cancel", null)
-                        .show()
+                    .setMessage("Are you sure to clear all todo?")
+                    .setPositiveButton("Clear all") { _, _ ->
+                        publishEvent(TodoListEvent.ConfirmClearAll())
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
         }
     }
 }

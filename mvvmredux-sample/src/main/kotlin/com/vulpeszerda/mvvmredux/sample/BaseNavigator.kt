@@ -10,7 +10,7 @@ import com.vulpeszerda.mvvmredux.sample.list.TodoListActivity
  * Created by vulpes on 2017. 11. 23..
  */
 open class BaseNavigator(tag: String, contextWrapper: ContextWrapper) :
-        AbsReduxNavigator(tag, contextWrapper) {
+    AbsReduxNavigator(tag, contextWrapper) {
 
     constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
     constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
@@ -21,8 +21,10 @@ open class BaseNavigator(tag: String, contextWrapper: ContextWrapper) :
             is GlobalEvent.NavigateCreate ->
                 startActivity(TodoCreateActivity.createIntent(context), navigation.requestCode)
             is GlobalEvent.NavigateDetail ->
-                startActivity(TodoDetailActivity.createIntent(context, navigation.uid),
-                        navigation.requestCode)
+                startActivity(
+                    TodoDetailActivity.createIntent(context, navigation.uid),
+                    navigation.requestCode
+                )
             is GlobalEvent.NavigateList ->
                 startActivity(TodoListActivity.createIntent(context), navigation.requestCode)
             is GlobalEvent.NavigateFinish ->
