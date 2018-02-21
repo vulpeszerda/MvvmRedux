@@ -38,12 +38,11 @@ abstract class AbsReduxStateView<T>(
             (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
                     .filterOnResumed(owner)
                     .observeOn(diffScheduler)
-                    .distinctUntilChanged()
                     .filter { available && containerView != null }
                     .compose { stream ->
-                        val cache = stream.share()
+                        val shared = stream.share()
                         Observable.merge(stateConsumers.map { consumer ->
-                            cache.compose(StateConsumerTransformer(consumer, { throwable ->
+                            shared.compose(StateConsumerTransformer(consumer, { throwable ->
                                 onStateConsumerError(consumer, throwable)
                             }))
                         })
