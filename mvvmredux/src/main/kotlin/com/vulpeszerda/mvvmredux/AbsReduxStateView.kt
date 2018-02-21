@@ -3,8 +3,6 @@ package com.vulpeszerda.mvvmredux
 import android.arch.lifecycle.Lifecycle
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
-import com.vulpeszerda.mvvmredux.addon.filterOnStarted
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
@@ -41,21 +39,21 @@ abstract class AbsReduxStateView<T>(
                     .filterOnResumed(owner)
                     .observeOn(diffScheduler)
                     .distinctUntilChanged()
-                    .scan(StatePair<T>(null, null))
-                    { prevPair, curr -> StatePair(prevPair.curr, curr) }
-                    .filter { (prev, curr) -> prev !== curr }
-                    .flatMapCompletable { (prev, curr) ->
-                        Completable.merge(stateConsumers.mapNotNull { consumer ->
-                            if (available && consumer.hasChange(prev, curr)) {
-                                consumer.apply(prev, curr)
-                            } else {
-                                null
-                            }
+                    .filter { available && containerView != null }
+                    .compose { stream ->
+                        val cache = stream.share()
+                        Observable.merge(stateConsumers.map { consumer ->
+                            cache.compose(StateConsumerTransformer(consumer, { throwable ->
+                                onStateConsumerError(consumer, throwable)
+                            }))
                         })
                     }
-                    .toObservable<Unit>()
                     .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
                     .subscribe({ }) {
                         ReduxFramework.onFatalError(it, tag)
                     }
+
+    protected open fun onStateConsumerError(consumer: StateConsumer<T>, throwable: Throwable) {
+        ReduxFramework.onFatalError(throwable, tag)
+    }
 }

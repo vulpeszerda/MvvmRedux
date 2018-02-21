@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlin = "1.2.10"
+        kotlin = "1.2.21"
         androidPlugin = "3.0.1"
     }
     repositories {
@@ -31,7 +31,7 @@ allprojects {
 
         supportLib = "27.0.2"
         googlePlay = "11.8.0"
-        constraintLayout = "1.1.0-beta4"
+        constraintLayout = "1.1.0-beta5"
 
         junit = "4.12"
         espresso = "3.0.0"
@@ -51,7 +51,7 @@ allprojects {
         sampleVersionName = "1.1.0"
 
         libraryVersionCode = 2
-        libraryVersionName = "1.1.1"
+        libraryVersionName = "1.1.2"
 
         java7Home = project.hasProperty("java7_home") ?
                 project.property("java7_home") : System.getenv("JAVA7_HOME")
