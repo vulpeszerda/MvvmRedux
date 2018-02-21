@@ -22,8 +22,7 @@ class TodoDetailViewModel(private val database: TodoDatabase) :
     override fun eventTransformer(
         events: Observable<ReduxEvent>,
         getState: () -> GlobalState<TodoDetailState>
-    ):
-            Observable<ReduxEvent> {
+    ): Observable<ReduxEvent> {
         return blockingActionSubject
             .toFlowable(BackpressureStrategy.DROP)
             .flatMap({

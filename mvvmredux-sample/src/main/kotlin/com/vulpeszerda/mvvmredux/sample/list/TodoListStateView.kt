@@ -18,11 +18,8 @@ import kotlinx.android.synthetic.main.todo_list.*
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListStateView(
-    private val activity: TodoListActivity
-) :
-    BaseStateView<GlobalState<TodoListState>>(
-        "TodoListStateView", activity
-    ) {
+    activity: TodoListActivity
+) : BaseStateView<GlobalState<TodoListState>>("TodoListStateView", activity) {
 
     private val adapter: TodoListAdapter by lazy {
         TodoListAdapter(object : TodoListAdapter.ActionHandler {
@@ -39,10 +36,8 @@ class TodoListStateView(
             .mergeWith(RxView.clicks(btn_new).map { GlobalEvent.NavigateCreate() })
             .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
-    private var count = 0
-
     init {
-        stateConsumers.add(
+        addConsumer(
             StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
                 apply = { _, curr ->
@@ -55,7 +50,7 @@ class TodoListStateView(
                     diff.dispatchUpdatesTo(adapter)
                 })
         )
-        stateConsumers.add(
+        addConsumer(
             StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->

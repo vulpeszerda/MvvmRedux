@@ -1,6 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
-import com.vulpeszerda.mvvmredux.ActivityContextWrapper
+import com.vulpeszerda.mvvmredux.ActivityContextService
 import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalState
@@ -15,11 +15,11 @@ class TodoDetailStateView(
 ) :
     BaseStateView<GlobalState<TodoDetailState>>(
         "TodoDetailStateView",
-        ActivityContextWrapper(activity)
+        ActivityContextService(activity)
     ) {
 
     init {
-        stateConsumers.add(
+        addConsumer(
             StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.todo != curr?.subState?.todo },
                 apply = { _, curr ->
@@ -27,7 +27,7 @@ class TodoDetailStateView(
                     viewMessage.text = curr?.subState?.todo?.message
                 })
         )
-        stateConsumers.add(
+        addConsumer(
             StateConsumer.createFromAction(
                 hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
                 apply = { _, curr ->

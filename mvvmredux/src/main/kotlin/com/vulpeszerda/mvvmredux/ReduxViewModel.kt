@@ -64,13 +64,9 @@ abstract class ReduxViewModel<T>(
     }
 
     protected open fun eventTransformer(events: Observable<ReduxEvent>, getState: () -> T):
-            Observable<ReduxEvent> {
-        return events
-    }
+            Observable<ReduxEvent> = events
 
-    protected open fun reduceState(state: T, event: ReduxEvent.State): T {
-        return state
-    }
+    protected open fun reduceState(state: T, event: ReduxEvent.State): T = state
 
     protected fun addDisposable(disposable: Disposable) {
         this.disposable.add(disposable)

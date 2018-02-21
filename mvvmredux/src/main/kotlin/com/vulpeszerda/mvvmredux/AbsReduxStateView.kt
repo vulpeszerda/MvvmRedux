@@ -16,21 +16,32 @@ import java.util.concurrent.TimeUnit
 @Suppress("unused")
 abstract class AbsReduxStateView<T>(
     protected val tag: String,
-    contextWrapper: ContextWrapper,
+    contextService: ContextService,
     private val diffScheduler: Scheduler = Schedulers.newThread(),
     private val throttle: Long = 0
-) :
-    ReduxStateView<T>,
-    ContextWrapper by contextWrapper {
+) : ReduxStateView<T>,
+    ContextService by contextService {
 
-    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
-    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
+    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
+    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))
 
     private val eventSubject = PublishSubject.create<ReduxEvent>()
 
     override val events = eventSubject.hide()!!
 
-    protected val stateConsumers = ArrayList<StateConsumer<T>>()
+    private val stateConsumers = ArrayList<StateConsumer<T>>()
+
+    protected fun addConsumer(consumer: StateConsumer<T>) {
+        synchronized(stateConsumers) {
+            stateConsumers.add(consumer)
+        }
+    }
+
+    protected fun removeConsumer(consumer: StateConsumer<T>) {
+        synchronized(stateConsumers) {
+            stateConsumers.remove(consumer)
+        }
+    }
 
     protected fun publishEvent(event: ReduxEvent) {
         eventSubject.onNext(event)
@@ -43,10 +54,12 @@ abstract class AbsReduxStateView<T>(
             .filter { available && containerView != null }
             .compose { stream ->
                 val shared = stream.share()
-                Observable.merge(stateConsumers.map { consumer ->
-                    shared.compose(StateConsumerTransformer(consumer, { throwable ->
-                        onStateConsumerError(consumer, throwable)
-                    }))
+                val consumers = stateConsumers
+                Observable.merge(consumers.map { consumer ->
+                    shared.compose(
+                        StateConsumerTransformer(consumer) { throwable ->
+                            onStateConsumerError(consumer, throwable)
+                        })
                 })
             }
             .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)

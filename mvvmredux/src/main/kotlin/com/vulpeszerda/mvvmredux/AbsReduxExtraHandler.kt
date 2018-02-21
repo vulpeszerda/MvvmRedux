@@ -14,12 +14,12 @@ import io.reactivex.subjects.PublishSubject
 @Suppress("unused")
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
-    contextWrapper: ContextWrapper
+    contextWrapper: ContextService
 ) : ReduxExtraHandler,
-    ContextWrapper by contextWrapper {
+    ContextService by contextWrapper {
 
-    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextWrapper(activity))
-    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextWrapper(fragment))
+    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
+    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))
 
     private val eventSubject = PublishSubject.create<ReduxEvent>()
 

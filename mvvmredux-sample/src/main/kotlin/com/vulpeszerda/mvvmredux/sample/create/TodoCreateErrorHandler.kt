@@ -8,8 +8,7 @@ import com.vulpeszerda.mvvmredux.ReduxEvent
  */
 class TodoCreateErrorHandler(
     activity: TodoCreateActivity
-) :
-    AbsReduxErrorHandler("TodoCreateErrorHandler", activity) {
+) : AbsReduxErrorHandler("TodoCreateErrorHandler", activity) {
 
     override fun onError(error: ReduxEvent.Error) {
         error.throwable.printStackTrace()

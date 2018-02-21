@@ -8,9 +8,9 @@ import io.reactivex.Scheduler
  */
 interface StateConsumer<in T> {
 
-    fun hasChange(prevState: T?, currState: T?): Boolean
+    fun hasChange(prev: T?, curr: T?): Boolean
 
-    fun apply(prevState: T?, currState: T?): Completable
+    fun apply(prev: T?, curr: T?): Completable
 
     companion object {
 
@@ -20,11 +20,11 @@ interface StateConsumer<in T> {
         ): StateConsumer<T> =
             object : StateConsumer<T> {
 
-                override fun hasChange(prevState: T?, currState: T?): Boolean =
-                    hasChange.invoke(prevState, currState)
+                override fun hasChange(prev: T?, curr: T?): Boolean =
+                    hasChange.invoke(prev, curr)
 
-                override fun apply(prevState: T?, currState: T?) =
-                    apply.invoke(prevState, currState)
+                override fun apply(prev: T?, curr: T?) =
+                    apply.invoke(prev, curr)
             }
 
         fun <T> createFromAction(
