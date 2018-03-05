@@ -110,7 +110,7 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraintLayout"
 
     implementation "android.arch.lifecycle:runtime:$androidArch"
-    implementation "android.arch.lifecycle:extensions:$androidArch"
+    implementation "android.arch.lifecycle:viewmodel:$androidArch"
     annotationProcessor "android.arch.lifecycle:compiler:$androidArch"
     kapt "android.arch.lifecycle:compiler:$androidArch"
 
