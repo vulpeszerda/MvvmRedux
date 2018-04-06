@@ -49,7 +49,7 @@ class FilterTransformer<T, E> private constructor(
                     }
                     .takeUntil { completed }
                     .takeUntil(disposeSubject))
-                .distinctUntilChanged()
+                .distinctUntilChanged { prev, curr -> prev === curr }
                 .map { it.data }
         }
     }
@@ -91,7 +91,7 @@ class FilterTransformer<T, E> private constructor(
                     }
                     .takeUntil { completed }
                     .takeUntil(disposeSubject.toFlowable(BackpressureStrategy.LATEST)))
-                .distinctUntilChanged()
+                .distinctUntilChanged { prev, curr -> prev === curr }
                 .map { it.data }
         }
     }
@@ -130,7 +130,7 @@ class FilterTransformer<T, E> private constructor(
                     }
                     .takeUntil { completed }
                     .takeUntil(disposeSubject))
-                .distinctUntilChanged()
+                .distinctUntilChanged { prev, curr -> prev === curr }
                 .map { it.data }
                 .firstElement()
         }
