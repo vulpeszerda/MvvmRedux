@@ -63,10 +63,6 @@ kapt {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
     testImplementation "junit:junit:$junit"
 
     implementation "com.android.support:support-v4:$supportLib"
@@ -75,20 +71,15 @@ dependencies {
     androidTestImplementation "com.android.support:appcompat-v7:$supportLib"
 
     /* RxJava related */
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin2"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid2"
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding2"
-    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxbinding2"
-    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbinding2"
-    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycle2"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-android:$rxlifecycle2"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rxlifecycle2"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxlifecycle2"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxlifecycle2"
+    implementation "io.reactivex.rxjava2:rxjava:$rxJava2"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin2"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxLifecycle2"
 
-
-    implementation "android.arch.lifecycle:runtime:$androidArch"
     implementation "android.arch.lifecycle:viewmodel:$androidArch"
     kapt "android.arch.lifecycle:compiler:$androidArch"
 
