@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlin = "1.2.21"
+        kotlin = "1.2.31"
         androidPlugin = "3.0.1"
     }
     repositories {
@@ -29,29 +29,28 @@ allprojects {
         minSdk = 16
         buildTools = "27.0.3"
 
-        supportLib = "27.1.0"
-        googlePlay = "11.8.0"
-        constraintLayout = "1.1.0-beta5"
+        supportLib = "27.1.1"
+        googlePlay = "12.0.1"
+        constraintLayout = "1.1.0-beta6"
 
         junit = "4.12"
         espresso = "3.0.0"
 
-        rxjava2 = "2.1.8"
-        rxandroid2 = "2.0.1"
-        rxkotlin2 = "2.2.0"
-        rxbinding2 = "2.0.0"
-        rxlifecycle2 = "2.2.1"
-        rxpermissions2 = "0.9.4@aar"
-        rxpreferences2 = "2.0.0-RC3"
+        rxJava2 = "2.1.12"
+        rxAndroid2 = "2.0.2"
+        rxKotlin2 = "2.2.0"
+        rxBinding2 = "2.1.1"
+        rxLifecycle2 = "2.2.1"
+        rxPermission2 = "0.9.5@aar"
 
-        androidArch = "1.1.0"
+        androidArch = "1.1.1"
         room = "1.0.0"
 
         sampleVersionCode = 2
         sampleVersionName = "1.1.0"
 
         libraryVersionCode = 2
-        libraryVersionName = "1.1.6"
+        libraryVersionName = "1.1.7"
 
         java7Home = project.hasProperty("java7_home") ?
                 project.property("java7_home") : System.getenv("JAVA7_HOME")
