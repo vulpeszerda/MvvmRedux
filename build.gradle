@@ -2,8 +2,10 @@
 
 buildscript {
     ext {
-        kotlin = "1.2.31"
-        androidPlugin = "3.0.1"
+        kotlin = "1.2.41"
+        androidPlugin = "3.1.2"
+        dexcount = "0.6.3"
+        bintray = "0.8.0"
     }
     repositories {
         jcenter()
@@ -14,9 +16,8 @@ buildscript {
         classpath "com.android.tools.build:gradle:$androidPlugin"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin"
-        classpath 'com.google.gms:google-services:3.1.1'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.0'
-        classpath 'com.novoda:bintray-release:0.5.0'
+        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexcount"
+        classpath "com.novoda:bintray-release:$bintray"
     }
 }
 
@@ -27,11 +28,9 @@ allprojects {
         compileSdk = 27
         targetSdk = 27
         minSdk = 16
-        buildTools = "27.0.3"
 
         supportLib = "27.1.1"
-        googlePlay = "12.0.1"
-        constraintLayout = "1.1.0-beta6"
+        constraintLayout = "1.1.0"
 
         junit = "4.12"
         espresso = "3.0.0"

@@ -6,7 +6,6 @@ apply plugin: "com.getkeepsafe.dexcount"
 
 android {
     compileSdkVersion compileSdk
-    buildToolsVersion buildTools
     lintOptions {
         quiet false
         abortOnError true

@@ -6,7 +6,6 @@ apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion compileSdk
-    buildToolsVersion buildTools
 
     lintOptions {
         quiet false
