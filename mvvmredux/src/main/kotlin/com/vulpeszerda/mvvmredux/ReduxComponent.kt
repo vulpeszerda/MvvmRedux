@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
 import android.support.annotation.CallSuper
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 open class ReduxComponent(
     contextService: ContextService
@@ -11,8 +12,10 @@ open class ReduxComponent(
     ReduxEventPublisher by ReduxEventPublisher.Impl() {
 
     init {
-        @Suppress("LeakingThis")
-        contextService.owner.lifecycle.addObserver(this)
+        AndroidSchedulers.mainThread().createWorker().schedule {
+            @Suppress("LeakingThis")
+            contextService.owner.lifecycle.addObserver(this)
+        }
     }
 
     @CallSuper
