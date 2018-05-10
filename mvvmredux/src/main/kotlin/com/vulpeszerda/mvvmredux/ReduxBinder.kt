@@ -2,24 +2,26 @@ package com.vulpeszerda.mvvmredux
 
 import android.os.Bundle
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 interface ReduxBinder {
 
     fun setupViewModel(
         savedInstanceState: Bundle?,
-        extraStream: Observable<ReduxEvent> = Observable.empty()
-    )
+        vararg extraStream: Observable<ReduxEvent>
+    ): Disposable
 
     abstract class AbsImpl<T>(private val component: Component<T>) : ReduxBinder {
 
         override fun setupViewModel(
             savedInstanceState: Bundle?,
-            extraStream: Observable<ReduxEvent>
-        ) {
+            vararg extraStream: Observable<ReduxEvent>
+        ): Disposable {
             val initialState = restoreStateFromBundle(savedInstanceState)
-            val stream = getEventStream(component, extraStream)
+            val stream = getEventStream(component, Observable.mergeArray(*extraStream))
             initializeViewModel(component, initialState, stream)
-            bindComponent(component)
+            return bindComponent(component)
         }
 
         protected open fun initializeViewModel(
@@ -30,14 +32,15 @@ interface ReduxBinder {
             component.viewModel.initialize(initialState, stream)
         }
 
-        protected open fun bindComponent(component: Component<T>) {
-            component.viewModel.apply {
-                component.navigator.subscribe(navigation)
-                component.extraHandler.subscribe(extra)
-                component.errorHandler.subscribe(error)
-                component.stateView.subscribe(state)
+        protected open fun bindComponent(component: Component<T>): Disposable =
+            component.viewModel.let {
+                CompositeDisposable(
+                    component.navigator.subscribe(it.navigation),
+                    component.extraHandler.subscribe(it.extra),
+                    component.errorHandler.subscribe(it.error),
+                    component.stateView.subscribe(it.state)
+                )
             }
-        }
 
         protected open fun getEventStream(
             component: Component<T>,
