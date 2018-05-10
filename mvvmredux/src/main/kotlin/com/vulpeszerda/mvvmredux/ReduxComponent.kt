@@ -3,8 +3,9 @@ package com.vulpeszerda.mvvmredux
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
+import android.os.Handler
+import android.os.Looper
 import android.support.annotation.CallSuper
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 open class ReduxComponent(
     contextService: ContextService
@@ -12,7 +13,7 @@ open class ReduxComponent(
     ReduxEventPublisher by ReduxEventPublisher.Impl() {
 
     init {
-        AndroidSchedulers.mainThread().createWorker().schedule {
+        Handler(Looper.myLooper()).post {
             @Suppress("LeakingThis")
             contextService.owner.lifecycle.addObserver(this)
         }
