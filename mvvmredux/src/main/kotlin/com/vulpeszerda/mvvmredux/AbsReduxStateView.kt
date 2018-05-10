@@ -1,16 +1,12 @@
 package com.vulpeszerda.mvvmredux
 
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.OnLifecycleEvent
-import android.support.annotation.CallSuper
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
 /**
@@ -22,27 +18,10 @@ abstract class AbsReduxStateView<T>(
     contextService: ContextService,
     private val diffScheduler: Scheduler = Schedulers.newThread(),
     private val throttle: Long = 0
-) : ReduxStateView<T>,
-    ContextService by contextService {
-
-    private val eventSubject = PublishSubject.create<ReduxEvent>()
-
-    override val events = eventSubject.hide()!!
+) : ReduxComponent(contextService),
+    ReduxStateView<T> {
 
     private val stateConsumers = ArrayList<StateConsumer<T>>()
-
-    init {
-        @Suppress("LeakingThis")
-        contextService.owner.lifecycle.addObserver(this)
-    }
-
-    @CallSuper
-    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-    open fun onLifecycleEvent(owner: LifecycleOwner, event: Lifecycle.Event) {
-        if (event == Lifecycle.Event.ON_DESTROY) {
-            owner.lifecycle.removeObserver(this)
-        }
-    }
 
     protected fun addConsumer(consumer: StateConsumer<T>) {
         synchronized(stateConsumers) {
@@ -54,10 +33,6 @@ abstract class AbsReduxStateView<T>(
         synchronized(stateConsumers) {
             stateConsumers.remove(consumer)
         }
-    }
-
-    protected fun publishEvent(event: ReduxEvent) {
-        eventSubject.onNext(event)
     }
 
     override fun subscribe(source: Observable<T>): Disposable =

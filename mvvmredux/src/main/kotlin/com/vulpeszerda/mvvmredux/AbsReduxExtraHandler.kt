@@ -9,7 +9,6 @@ import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by vulpes on 2017. 9. 21..
@@ -18,29 +17,8 @@ import io.reactivex.subjects.PublishSubject
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
     contextService: ContextService
-) : ReduxExtraHandler,
-    ContextService by contextService {
-
-    private val eventSubject = PublishSubject.create<ReduxEvent>()
-
-    override val events = eventSubject.hide()!!
-
-    init {
-        @Suppress("LeakingThis")
-        contextService.owner.lifecycle.addObserver(this)
-    }
-
-    @CallSuper
-    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-    open fun onLifecycleEvent(owner: LifecycleOwner, event: Lifecycle.Event) {
-        if (event == Lifecycle.Event.ON_DESTROY) {
-            owner.lifecycle.removeObserver(this)
-        }
-    }
-
-    protected fun publishEvent(event: ReduxEvent) {
-        eventSubject.onNext(event)
-    }
+) : ReduxComponent(contextService),
+    ReduxExtraHandler {
 
     override fun subscribe(source: Observable<ReduxEvent.Extra>): Disposable =
         source.bufferUntilOnResumed(owner)
