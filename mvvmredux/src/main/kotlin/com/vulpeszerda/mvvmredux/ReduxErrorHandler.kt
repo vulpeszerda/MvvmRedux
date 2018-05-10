@@ -6,8 +6,7 @@ import io.reactivex.disposables.Disposable
 /**
  * Created by vulpes on 2017. 8. 25..
  */
-interface ReduxErrorHandler {
-    val events: Observable<ReduxEvent>
+interface ReduxErrorHandler : ReduxEventPublisher {
     fun onError(error: ReduxEvent.Error)
     fun subscribe(source: Observable<ReduxEvent.Error>): Disposable
 }
