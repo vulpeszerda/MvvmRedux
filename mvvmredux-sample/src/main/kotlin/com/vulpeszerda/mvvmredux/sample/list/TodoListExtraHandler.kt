@@ -2,13 +2,15 @@ package com.vulpeszerda.mvvmredux.sample.list
 
 import android.support.v7.app.AlertDialog
 import com.vulpeszerda.mvvmredux.AbsReduxExtraHandler
+import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.ReduxEvent
 
 /**
  * Created by vulpes on 2017. 9. 21..
  */
-class TodoListExtraHandler(activity: TodoListActivity) :
-    AbsReduxExtraHandler("TodoListExtraHandler", activity) {
+class TodoListExtraHandler(
+    contextService: ContextService
+) : AbsReduxExtraHandler("TodoListExtraHandler", contextService) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {

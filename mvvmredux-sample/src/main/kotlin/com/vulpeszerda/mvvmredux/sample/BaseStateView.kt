@@ -2,19 +2,18 @@ package com.vulpeszerda.mvvmredux.sample
 
 import android.app.ProgressDialog
 import android.support.annotation.UiThread
-import com.vulpeszerda.mvvmredux.*
+import com.vulpeszerda.mvvmredux.AbsReduxStateView
+import com.vulpeszerda.mvvmredux.ContextService
+import com.vulpeszerda.mvvmredux.StateConsumer
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
  * Created by vulpes on 2017. 11. 23..
  */
-abstract class BaseStateView<T>(
-    tag: String,
+open class BaseStateView<T>(
+    tag: String = "BaseStateView",
     contextService: ContextService
-) : AbsReduxStateView<T>(tag, contextService, AndroidSchedulers.mainThread()) {
-
-    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
-    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))
+) : AbsReduxStateView<GlobalState<T>>(tag, contextService, AndroidSchedulers.mainThread()) {
 
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(context)
@@ -41,7 +40,10 @@ abstract class BaseStateView<T>(
         }
     }
 
-    override fun onStateConsumerError(consumer: StateConsumer<T>, throwable: Throwable) {
+    override fun onStateConsumerError(
+        consumer: StateConsumer<GlobalState<T>>,
+        throwable: Throwable
+    ) {
         throwable.printStackTrace()
     }
 }

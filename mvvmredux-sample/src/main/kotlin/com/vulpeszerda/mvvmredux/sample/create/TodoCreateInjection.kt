@@ -1,34 +1,36 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
 import android.arch.lifecycle.ViewModelProvider
+import com.vulpeszerda.mvvmredux.ActivityContextService
+import com.vulpeszerda.mvvmredux.ReduxBinder
+import com.vulpeszerda.mvvmredux.sample.BaseComponent
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-class TodoCreateInjection(private val activity: TodoCreateActivity) {
+class TodoCreateInjection(
+    activity: TodoCreateActivity
+) : BaseComponent<TodoCreateState>(ActivityContextService(activity)) {
 
 
-    val errorHandler: TodoCreateErrorHandler by lazy {
-        TodoCreateErrorHandler(activity)
+    override val stateView: TodoCreateStateView by lazy {
+        TodoCreateStateView(contextService)
     }
 
-    val stateView: TodoCreateStateView by lazy {
-        TodoCreateStateView(activity)
+    override val extraHandler: TodoCreateExtraHandler by lazy {
+        TodoCreateExtraHandler(contextService)
     }
 
-    val navigator: TodoCreateNavigator by lazy {
-        TodoCreateNavigator(activity)
-    }
-
-    val extraHandler: TodoCreateExtraHandler by lazy {
-        TodoCreateExtraHandler(activity)
-    }
-
-    val viewModel: TodoCreateViewModel by lazy {
+    override val viewModel: TodoCreateViewModel by lazy {
         ViewModelProvider(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
             .get(TodoCreateViewModel::class.java)
+    }
+
+    val binder: ReduxBinder by lazy {
+        ReduxBinder.SimpleImpl(this) { GlobalState(TodoCreateState()) }
     }
 
 }

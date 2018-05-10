@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
+import com.vulpeszerda.mvvmredux.AbsReduxViewModel
 import com.vulpeszerda.mvvmredux.ReduxEvent
-import com.vulpeszerda.mvvmredux.ReduxViewModel
 import com.vulpeszerda.mvvmredux.sample.GlobalEvent
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by vulpes on 2017. 8. 31..
  */
 class TodoCreateViewModel(private val database: TodoDatabase) :
-    ReduxViewModel<GlobalState<TodoCreateState>>() {
+    AbsReduxViewModel<GlobalState<TodoCreateState>>() {
 
     override fun eventTransformer(
         events: Observable<ReduxEvent>,

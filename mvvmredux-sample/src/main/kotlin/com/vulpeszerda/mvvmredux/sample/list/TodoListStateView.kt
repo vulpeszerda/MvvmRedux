@@ -5,11 +5,11 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
+import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import com.vulpeszerda.mvvmredux.sample.GlobalEvent
-import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_list.*
@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.todo_list.*
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListStateView(
-    activity: TodoListActivity
-) : BaseStateView<GlobalState<TodoListState>>("TodoListStateView", activity) {
+    contextService: ContextService
+) : BaseStateView<TodoListState>("TodoListStateView", contextService) {
 
     private val adapter: TodoListAdapter by lazy {
         TodoListAdapter(object : TodoListAdapter.ActionHandler {

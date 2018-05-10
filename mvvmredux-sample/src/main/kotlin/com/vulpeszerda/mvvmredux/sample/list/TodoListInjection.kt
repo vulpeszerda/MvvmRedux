@@ -1,32 +1,36 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
 import android.arch.lifecycle.ViewModelProvider
+import com.vulpeszerda.mvvmredux.ActivityContextService
+import com.vulpeszerda.mvvmredux.ReduxBinder
+import com.vulpeszerda.mvvmredux.sample.BaseComponent
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-class TodoListInjection(private val activity: TodoListActivity) {
+class TodoListInjection(
+    activity: TodoListActivity
+) : BaseComponent<TodoListState>(ActivityContextService(activity)) {
 
-    val errorHandler: TodoListErrorHandler by lazy {
-        TodoListErrorHandler(activity)
+    override val stateView: TodoListStateView by lazy {
+        TodoListStateView(contextService)
     }
 
-    val stateView: TodoListStateView by lazy {
-        TodoListStateView(activity)
+    override val extraHandler: TodoListExtraHandler by lazy {
+        TodoListExtraHandler(contextService)
     }
 
-    val navigator: TodoListNavigator by lazy {
-        TodoListNavigator(activity)
-    }
-
-    val extraHandler: TodoListExtraHandler by lazy {
-        TodoListExtraHandler(activity)
-    }
-
-    val viewModel: TodoListViewModel by lazy {
+    override val viewModel: TodoListViewModel by lazy {
         ViewModelProvider(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
             .get(TodoListViewModel::class.java)
+    }
+
+    val binder: ReduxBinder by lazy {
+        ReduxBinder.SimpleImpl(this) {
+            GlobalState(TodoListState())
+        }
     }
 }

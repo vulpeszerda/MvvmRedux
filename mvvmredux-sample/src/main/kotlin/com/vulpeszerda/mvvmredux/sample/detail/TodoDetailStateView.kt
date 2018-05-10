@@ -1,9 +1,8 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
-import com.vulpeszerda.mvvmredux.ActivityContextService
+import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
-import com.vulpeszerda.mvvmredux.sample.GlobalState
 import kotlinx.android.synthetic.main.todo_detail.message as viewMessage
 import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
 
@@ -11,12 +10,8 @@ import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
  * Created by vulpes on 2017. 9. 22..
  */
 class TodoDetailStateView(
-    activity: TodoDetailActivity
-) :
-    BaseStateView<GlobalState<TodoDetailState>>(
-        "TodoDetailStateView",
-        ActivityContextService(activity)
-    ) {
+    contextService: ContextService
+) : BaseStateView<TodoDetailState>("TodoDetailStateView", contextService) {
 
     init {
         addConsumer(

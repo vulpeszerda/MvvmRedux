@@ -1,29 +1,44 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
 import android.arch.lifecycle.ViewModelProvider
+import com.vulpeszerda.mvvmredux.ActivityContextService
+import com.vulpeszerda.mvvmredux.ReduxBinder
+import com.vulpeszerda.mvvmredux.sample.BaseComponent
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-class TodoDetailInjection(private val activity: TodoDetailActivity) {
+class TodoDetailInjection(
+    activity: TodoDetailActivity
+) : BaseComponent<TodoDetailState>(ActivityContextService(activity)) {
 
-    val errorHandler: TodoDetailErrorHandler by lazy {
-        TodoDetailErrorHandler(activity)
+    override val extraHandler: TodoDetailExtraHandler by lazy {
+        TodoDetailExtraHandler(contextService)
     }
 
-    val extraHandler: TodoDetailExtraHandler by lazy {
-        TodoDetailExtraHandler(activity)
+    override val stateView: TodoDetailStateView by lazy {
+        TodoDetailStateView(contextService)
     }
 
-    val stateView: TodoDetailStateView by lazy {
-        TodoDetailStateView(activity)
-    }
-
-    val viewModel: TodoDetailViewModel by lazy {
+    override val viewModel: TodoDetailViewModel by lazy {
         ViewModelProvider(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
             .get(TodoDetailViewModel::class.java)
+    }
+
+    val binder: ReduxBinder by lazy {
+        ReduxBinder.SimpleImpl(this) {
+            GlobalState(
+                TodoDetailState(
+                    activity.intent.getLongExtra(
+                        TodoDetailActivity.EXTRA_UID,
+                        -1
+                    )
+                )
+            )
+        }
     }
 
 }

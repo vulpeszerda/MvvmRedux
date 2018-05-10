@@ -1,6 +1,9 @@
 package com.vulpeszerda.mvvmredux
 
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.OnLifecycleEvent
+import android.support.annotation.CallSuper
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import com.vulpeszerda.mvvmredux.addon.filterOnResumed
 import io.reactivex.Observable
@@ -22,14 +25,24 @@ abstract class AbsReduxStateView<T>(
 ) : ReduxStateView<T>,
     ContextService by contextService {
 
-    constructor(tag: String, activity: ReduxActivity) : this(tag, ActivityContextService(activity))
-    constructor(tag: String, fragment: ReduxFragment) : this(tag, FragmentContextService(fragment))
-
     private val eventSubject = PublishSubject.create<ReduxEvent>()
 
     override val events = eventSubject.hide()!!
 
     private val stateConsumers = ArrayList<StateConsumer<T>>()
+
+    init {
+        @Suppress("LeakingThis")
+        contextService.owner.lifecycle.addObserver(this)
+    }
+
+    @CallSuper
+    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+    open fun onLifecycleEvent(owner: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            owner.lifecycle.removeObserver(this)
+        }
+    }
 
     protected fun addConsumer(consumer: StateConsumer<T>) {
         synchronized(stateConsumers) {
