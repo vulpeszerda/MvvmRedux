@@ -1,7 +1,5 @@
 package com.vulpeszerda.mvvmredux
 
-import io.reactivex.Observable
-
 interface ReduxContext<T> {
 
     val viewModel: ReduxViewModel<T>
@@ -14,17 +12,17 @@ interface ReduxContext<T> {
 
     val stateView: ReduxStateView<T>
 
-    val eventStream: Observable<ReduxEvent>
+    val reduxComponents: List<ReduxComponent>
 
     abstract class AbsImpl<T> : ReduxContext<T> {
 
-        override val eventStream: Observable<ReduxEvent> =
-            Observable.mergeArray(
-                navigator.events,
-                extraHandler.events,
-                errorHandler.events,
-                stateView.events
+        override val reduxComponents: List<ReduxComponent> by lazy {
+            listOf(
+                navigator,
+                extraHandler,
+                errorHandler,
+                stateView
             )
-
+        }
     }
 }

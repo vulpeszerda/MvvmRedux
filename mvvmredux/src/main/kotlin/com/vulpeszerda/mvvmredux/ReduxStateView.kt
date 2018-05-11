@@ -6,6 +6,6 @@ import io.reactivex.disposables.Disposable
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-interface ReduxStateView<T> : ReduxEventPublisher {
+interface ReduxStateView<T> : ReduxComponent {
     fun subscribe(source: Observable<T>): Disposable
 }

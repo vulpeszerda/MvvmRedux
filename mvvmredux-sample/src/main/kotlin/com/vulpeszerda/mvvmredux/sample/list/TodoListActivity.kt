@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.vulpeszerda.mvvmredux.ReduxActivity
+import com.vulpeszerda.mvvmredux.ReduxBinder
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
 
 class TodoListActivity : ReduxActivity() {
 
-    private val injection: TodoListInjection by lazy {
-        TodoListInjection(this)
+    private val component: TodoListComponent by lazy {
+        TodoListComponent(this)
     }
 
     private var firstLoading = true
@@ -17,7 +19,7 @@ class TodoListActivity : ReduxActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_list)
-        injection.binder.setupViewModel(savedInstanceState, events)
+        ReduxBinder.bind(component, GlobalState(TodoListState()), events)
     }
 
     override fun onStart() {

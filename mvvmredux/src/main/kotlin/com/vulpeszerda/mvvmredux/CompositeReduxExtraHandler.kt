@@ -15,6 +15,10 @@ class CompositeReduxExtraHandler(
         Observable.merge(_components.map { it.events })
             .mergeWith(publisher.events)
 
+    override fun bindToLifecycle() {
+        _components.forEach { it.bindToLifecycle() }
+    }
+
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         _components.forEach { it.onExtraEvent(extra) }
     }

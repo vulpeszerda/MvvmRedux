@@ -11,7 +11,7 @@ import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-class TodoListInjection(
+class TodoListComponent(
     activity: TodoListActivity
 ) : BaseComponent<TodoListState>(ActivityContextService(activity)) {
 
@@ -28,9 +28,4 @@ class TodoListInjection(
             .get(TodoListViewModel::class.java)
     }
 
-    val binder: ReduxBinder by lazy {
-        ReduxBinder.SimpleImpl(this) {
-            GlobalState(TodoListState())
-        }
-    }
 }

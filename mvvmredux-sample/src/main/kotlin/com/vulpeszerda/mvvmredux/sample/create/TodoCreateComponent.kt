@@ -11,7 +11,7 @@ import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 /**
  * Created by vulpes on 2017. 9. 22..
  */
-class TodoCreateInjection(
+class TodoCreateComponent(
     activity: TodoCreateActivity
 ) : BaseComponent<TodoCreateState>(ActivityContextService(activity)) {
 
@@ -27,10 +27,6 @@ class TodoCreateInjection(
     override val viewModel: TodoCreateViewModel by lazy {
         ViewModelProvider(activity, ViewModelFactory(TodoDatabase.getInstance(activity)))
             .get(TodoCreateViewModel::class.java)
-    }
-
-    val binder: ReduxBinder by lazy {
-        ReduxBinder.SimpleImpl(this) { GlobalState(TodoCreateState()) }
     }
 
 }

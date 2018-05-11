@@ -14,7 +14,7 @@ import io.reactivex.disposables.Disposable
 abstract class AbsReduxErrorHandler(
     protected val tag: String,
     contextService: ContextService
-) : ReduxComponent(contextService),
+) : ReduxComponent.Impl(contextService),
     ReduxErrorHandler {
 
     override fun subscribe(source: Observable<ReduxEvent.Error>): Disposable =

@@ -17,7 +17,7 @@ import io.reactivex.disposables.Disposable
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
     contextService: ContextService
-) : ReduxComponent(contextService),
+) : ReduxComponent.Impl(contextService),
     ReduxExtraHandler {
 
     override fun subscribe(source: Observable<ReduxEvent.Extra>): Disposable =

@@ -18,7 +18,7 @@ abstract class AbsReduxStateView<T>(
     contextService: ContextService,
     private val diffScheduler: Scheduler = Schedulers.newThread(),
     private val throttle: Long = 0
-) : ReduxComponent(contextService),
+) : ReduxComponent.Impl(contextService),
     ReduxStateView<T> {
 
     private val stateConsumers = ArrayList<StateConsumer<T>>()

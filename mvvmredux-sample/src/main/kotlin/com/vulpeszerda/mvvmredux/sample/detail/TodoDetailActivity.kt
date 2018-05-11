@@ -4,16 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.vulpeszerda.mvvmredux.ReduxActivity
+import com.vulpeszerda.mvvmredux.ReduxBinder
+import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
-import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by vulpes on 2017. 8. 31..
  */
 class TodoDetailActivity : ReduxActivity() {
 
-    private val injection: TodoDetailInjection by lazy {
-        TodoDetailInjection(this)
+    private val component: TodoDetailComponent by lazy {
+        TodoDetailComponent(this)
     }
 
     private var firstLoading = true
@@ -21,12 +22,13 @@ class TodoDetailActivity : ReduxActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_detail)
-        injection.binder.setupViewModel(savedInstanceState, events)
+        val initialState = GlobalState(TodoDetailState(intent.getLongExtra(EXTRA_UID, -1)))
+        ReduxBinder.bind(component, initialState, events)
     }
 
     override fun onStart() {
         super.onStart()
-        injection.viewModel.stateStore?.run {
+        component.viewModel.stateStore?.run {
             publishEvent(TodoDetailEvent.Refresh(latest.subState.todoUid, !firstLoading))
         }
     }

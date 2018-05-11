@@ -14,7 +14,7 @@ import io.reactivex.disposables.Disposable
 abstract class AbsReduxNavigator(
     protected val tag: String,
     contextService: ContextService
-) : ReduxComponent(contextService),
+) : ReduxComponent.Impl(contextService),
     ReduxNavigator {
 
     override fun subscribe(source: Observable<ReduxEvent.Navigation>): Disposable =

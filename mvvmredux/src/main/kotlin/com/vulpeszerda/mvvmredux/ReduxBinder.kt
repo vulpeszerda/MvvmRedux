@@ -1,31 +1,30 @@
 package com.vulpeszerda.mvvmredux
 
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-interface ReduxBinder<T> {
+object ReduxBinder {
 
-    fun bind(initialState: T): Disposable
+    fun <T> bind(
+        reduxContext: ReduxContext<T>,
+        initialState: T,
+        extraStream: Observable<ReduxEvent> = Observable.empty()
+    ): Disposable {
+        reduxContext.reduxComponents.forEach { it.bindToLifecycle() }
+        reduxContext.viewModel.initialize(
+            initialState,
+            Observable.merge(reduxContext.reduxComponents.map { it.events })
+                .mergeWith(extraStream)
+        )
 
-    open class Impl<T>(private val reduxContext: ReduxContext<T>) : ReduxBinder<T> {
-
-        override fun bind(initialState: T): Disposable {
-            initViewModel(initialState)
-            return bindComponent(reduxContext)
+        return reduxContext.viewModel.let {
+            CompositeDisposable(
+                reduxContext.navigator.subscribe(it.navigation),
+                reduxContext.extraHandler.subscribe(it.extra),
+                reduxContext.errorHandler.subscribe(it.error),
+                reduxContext.stateView.subscribe(it.state)
+            )
         }
-
-        protected open fun initViewModel(initialState: T) {
-            reduxContext.viewModel.initialize(initialState, reduxContext.eventStream)
-        }
-
-        protected open fun bindComponent(component: ReduxContext<T>): Disposable =
-            component.viewModel.let {
-                CompositeDisposable(
-                    component.navigator.subscribe(it.navigation),
-                    component.extraHandler.subscribe(it.extra),
-                    component.errorHandler.subscribe(it.error),
-                    component.stateView.subscribe(it.state)
-                )
-            }
     }
 }

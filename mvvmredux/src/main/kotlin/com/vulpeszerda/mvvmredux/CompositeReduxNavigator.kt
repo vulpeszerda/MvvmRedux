@@ -11,6 +11,10 @@ class CompositeReduxNavigator(
     private val _components = components
     private val publisher = ReduxEventPublisher.Impl()
 
+    override fun bindToLifecycle() {
+        _components.forEach { it.bindToLifecycle() }
+    }
+
     override val events: Observable<ReduxEvent> =
         Observable.merge(_components.map { it.events })
             .mergeWith(publisher.events)

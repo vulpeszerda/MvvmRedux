@@ -15,6 +15,10 @@ class CompositeReduxStateView<T>(
         Observable.merge(_components.map { it.events })
             .mergeWith(publisher.events)
 
+    override fun bindToLifecycle() {
+        _components.forEach { it.bindToLifecycle() }
+    }
+
     override fun subscribe(source: Observable<T>): Disposable =
         CompositeDisposable(_components.map { it.subscribe(source) })
 
