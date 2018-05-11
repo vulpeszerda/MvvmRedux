@@ -4,7 +4,7 @@ import com.vulpeszerda.mvvmredux.*
 
 open class BaseComponent<T>(
     protected val contextService: ContextService
-) : Component<GlobalState<T>> {
+) : ReduxContext<GlobalState<T>> {
 
     override val viewModel: ReduxViewModel<GlobalState<T>> by lazy {
         throw NotImplementedError()
