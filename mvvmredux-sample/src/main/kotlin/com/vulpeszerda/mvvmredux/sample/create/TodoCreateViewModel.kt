@@ -47,7 +47,7 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
                     GlobalEvent.NavigateFinish()
                 )
             }
-            .onErrorReturn { ReduxEvent.Error(it, "save") }
+            .onErrorReturn { GlobalEvent.Error(it, "save") }
             .startWith(TodoCreateEvent.SetLoading(true))
             .concatWith(Observable.just(TodoCreateEvent.SetLoading(false)))
     }

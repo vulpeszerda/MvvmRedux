@@ -17,14 +17,10 @@ abstract class AbsReduxViewModel<T>(
 ) : ViewModel(), ReduxViewModel<T> {
 
     private val disposable = CompositeDisposable()
-    private val errorSubject = PublishSubject.create<ReduxEvent.Error>()
-    private val navigationSubject = PublishSubject.create<ReduxEvent.Navigation>()
     private val extraSubject = PublishSubject.create<ReduxEvent.Extra>()
     private val stateSubject = BehaviorSubject.create<T>()
 
-    override val error: Observable<ReduxEvent.Error> = errorSubject.hide()
     override val extra: Observable<ReduxEvent.Extra> = extraSubject.hide()
-    override val navigation: Observable<ReduxEvent.Navigation> = navigationSubject.hide()
     override val state: Observable<T> = stateSubject.hide()
 
     override val stateStore: ReduxStore<T>?
@@ -44,12 +40,8 @@ abstract class AbsReduxViewModel<T>(
                 eventTransformer(actions, getState)
                     .filter {
                         when (it) {
-                            is ReduxEvent.Navigation ->
-                                navigationSubject.onNext(it)
                             is ReduxEvent.Extra ->
                                 extraSubject.onNext(it)
-                            is ReduxEvent.Error ->
-                                errorSubject.onNext(it)
                             else -> return@filter it is ReduxEvent.State
                         }
                         return@filter false

@@ -7,8 +7,6 @@ import com.vulpeszerda.mvvmredux.ReduxActivity
 import com.vulpeszerda.mvvmredux.ReduxBinder
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
-import kotlinx.android.synthetic.main.todo_create.message as viewMessage
-import kotlinx.android.synthetic.main.todo_create.title as viewTitle
 
 /**
  * Created by vulpes on 2017. 8. 31..

@@ -10,16 +10,8 @@ open class BaseComponent<T>(
         throw NotImplementedError()
     }
 
-    override val navigator: ReduxNavigator by lazy {
-        BaseNavigator(contextService = contextService)
-    }
-
     override val extraHandler: ReduxExtraHandler by lazy {
         BaseExtraHandler(contextService = contextService)
-    }
-
-    override val errorHandler: ReduxErrorHandler by lazy {
-        BaseErrorHandler(contextService = contextService)
     }
 
     override val stateView: ReduxStateView<GlobalState<T>> by lazy {

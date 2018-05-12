@@ -20,9 +20,7 @@ object ReduxBinder {
 
         return reduxContext.viewModel.let {
             CompositeDisposable(
-                reduxContext.navigator.subscribe(it.navigation),
                 reduxContext.extraHandler.subscribe(it.extra),
-                reduxContext.errorHandler.subscribe(it.error),
                 reduxContext.stateView.subscribe(it.state)
             )
         }

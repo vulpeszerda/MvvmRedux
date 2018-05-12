@@ -1,16 +1,16 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
 import android.support.v7.app.AlertDialog
-import com.vulpeszerda.mvvmredux.AbsReduxExtraHandler
 import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.ReduxEvent
+import com.vulpeszerda.mvvmredux.sample.BaseExtraHandler
 
 /**
  * Created by vulpes on 2017. 9. 21..
  */
 class TodoListExtraHandler(
     contextService: ContextService
-) : AbsReduxExtraHandler("TodoListExtraHandler", contextService) {
+) : BaseExtraHandler("TodoListExtraHandler", contextService) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {
@@ -24,6 +24,8 @@ class TodoListExtraHandler(
                     }
                     .setNegativeButton("Cancel", null)
                     .show()
+            else ->
+                super.onExtraEvent(extra)
         }
     }
 }

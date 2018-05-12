@@ -4,11 +4,7 @@ interface ReduxContext<T> {
 
     val viewModel: ReduxViewModel<T>
 
-    val navigator: ReduxNavigator
-
     val extraHandler: ReduxExtraHandler
-
-    val errorHandler: ReduxErrorHandler
 
     val stateView: ReduxStateView<T>
 
@@ -17,12 +13,7 @@ interface ReduxContext<T> {
     abstract class AbsImpl<T> : ReduxContext<T> {
 
         override val reduxComponents: List<ReduxComponent> by lazy {
-            listOf(
-                navigator,
-                extraHandler,
-                errorHandler,
-                stateView
-            )
+            listOf(extraHandler, stateView)
         }
     }
 }

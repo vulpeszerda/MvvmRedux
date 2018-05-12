@@ -5,7 +5,5 @@ package com.vulpeszerda.mvvmredux
  */
 interface ReduxEvent {
     interface State : ReduxEvent
-    interface Navigation : ReduxEvent
     interface Extra : ReduxEvent
-    data class Error(val throwable: Throwable, val tag: String? = null) : ReduxEvent
 }
