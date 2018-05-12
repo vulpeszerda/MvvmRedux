@@ -28,11 +28,9 @@ class TodoCreateStateView(
     init {
         addConsumer(
             StateConsumer.createFromAction(
-                hasChange = { prev, curr ->
-                    prev?.subState?.loading != curr?.subState?.loading
-                },
+                hasChange = { prev, curr -> prev.subState.loading != curr.subState.loading },
                 apply = { _, curr ->
-                    if (curr?.subState?.loading == true) {
+                    if (curr.subState.loading) {
                         showProgressDialog("Loading")
                     } else {
                         hideProgressDialog()

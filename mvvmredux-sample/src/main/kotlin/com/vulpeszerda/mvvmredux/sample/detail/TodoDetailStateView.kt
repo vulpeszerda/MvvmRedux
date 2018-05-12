@@ -16,17 +16,17 @@ class TodoDetailStateView(
     init {
         addConsumer(
             StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev?.subState?.todo != curr?.subState?.todo },
+                hasChange = { prev, curr -> prev.subState.todo != curr.subState.todo },
                 apply = { _, curr ->
-                    viewTitle.text = curr?.subState?.todo?.title
-                    viewMessage.text = curr?.subState?.todo?.message
+                    viewTitle.text = curr.subState.todo?.title
+                    viewMessage.text = curr.subState.todo?.message
                 })
         )
         addConsumer(
             StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
+                hasChange = { prev, curr -> prev.subState.loading != curr.subState.loading },
                 apply = { _, curr ->
-                    if (curr?.subState?.loading == true) {
+                    if (curr.subState.loading) {
                         showProgressDialog("Loading..")
                     } else {
                         hideProgressDialog()

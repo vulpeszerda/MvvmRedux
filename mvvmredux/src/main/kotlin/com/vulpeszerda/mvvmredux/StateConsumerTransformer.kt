@@ -19,7 +19,7 @@ class StateConsumerTransformer<T>(
         upstream.filter { prevState !== it }
             .flatMapCompletable { currState ->
                 val prev = prevState
-                val completable = if (consumer.hasChange(prev, currState)) {
+                val completable = if (prev == null || consumer.hasChange(prev, currState)) {
                     consumer.apply(prev, currState)
                 } else {
                     Completable.complete()

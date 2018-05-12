@@ -39,9 +39,9 @@ class TodoListStateView(
     init {
         addConsumer(
             StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev?.subState?.todos !== curr?.subState?.todos },
+                hasChange = { prev, curr -> prev.subState.todos !== curr.subState.todos },
                 apply = { _, curr ->
-                    val currTodos = curr?.subState?.todos ?: ArrayList()
+                    val currTodos = curr.subState.todos
                     val diff = DiffUtil.calculateDiff(TodoDiffCallback(adapter.todos, currTodos))
                     adapter.todos.apply {
                         clear()
@@ -52,9 +52,9 @@ class TodoListStateView(
         )
         addConsumer(
             StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev?.subState?.loading != curr?.subState?.loading },
+                hasChange = { prev, curr -> prev.subState.loading != curr.subState.loading },
                 apply = { _, curr ->
-                    if (curr?.subState?.loading == true) {
+                    if (curr.subState.loading) {
                         showProgressDialog("Loading..")
                     } else {
                         hideProgressDialog()
