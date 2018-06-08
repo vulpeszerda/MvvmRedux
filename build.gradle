@@ -3,7 +3,7 @@
 buildscript {
     ext {
         kotlin = "1.2.41"
-        androidPlugin = "3.1.2"
+        androidPlugin = "3.1.3"
         dexcount = "0.6.3"
         bintray = "0.8.0"
     }
@@ -30,7 +30,7 @@ allprojects {
         minSdk = 16
 
         supportLib = "27.1.1"
-        constraintLayout = "1.1.0"
+        constraintLayout = "1.1.1"
 
         junit = "4.12"
         espresso = "3.0.0"
@@ -43,7 +43,7 @@ allprojects {
         rxPermission2 = "0.9.5@aar"
 
         androidArch = "1.1.1"
-        room = "1.0.0"
+        room = "1.1.0"
 
         sampleVersionCode = 2
         sampleVersionName = "1.1.0"
