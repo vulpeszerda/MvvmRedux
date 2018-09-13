@@ -4,9 +4,6 @@ import io.reactivex.*
 import io.reactivex.subjects.PublishSubject
 import org.reactivestreams.Publisher
 
-/**
- * Created by vulpes on 2017. 9. 19..
- */
 class FilterTransformer<T, E> private constructor(
     private val events: Observable<E>,
     private val predicate: (E) -> Boolean
@@ -43,9 +40,7 @@ class FilterTransformer<T, E> private constructor(
                 events.doOnNext { lastEvent = it }
                     .filter(predicate)
                     .flatMap {
-                        pendedData.let {
-                            if (it == null) Observable.empty() else Observable.just(it)
-                        }
+                        pendedData?.let { data -> Observable.just(data) } ?: Observable.empty()
                     }
                     .takeUntil { completed }
                     .takeUntil(disposeSubject))
@@ -85,9 +80,7 @@ class FilterTransformer<T, E> private constructor(
                     .doOnNext { lastEvent = it }
                     .filter(predicate)
                     .flatMap {
-                        pendedData.let {
-                            if (it == null) Flowable.empty() else Flowable.just(it)
-                        }
+                        pendedData?.let { data -> Flowable.just(data) } ?: Flowable.empty()
                     }
                     .takeUntil { completed }
                     .takeUntil(disposeSubject.toFlowable(BackpressureStrategy.LATEST)))
@@ -124,9 +117,7 @@ class FilterTransformer<T, E> private constructor(
                 events.doOnNext { lastEvent = it }
                     .filter(predicate)
                     .flatMap {
-                        pendedData.let {
-                            if (it == null) Observable.empty() else Observable.just(it)
-                        }
+                        pendedData?.let { data -> Observable.just(data) } ?: Observable.empty()
                     }
                     .takeUntil { completed }
                     .takeUntil(disposeSubject))

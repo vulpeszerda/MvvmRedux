@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
+@Suppress("unused")
 class CompositeReduxStateView<T>(
     vararg components: ReduxStateView<T>
 ) : ReduxStateView<T> {

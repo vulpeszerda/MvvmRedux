@@ -11,9 +11,6 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
-/**
- * Created by vulpes on 2017. 9. 22..
- */
 class TodoDetailViewModel(private val database: TodoDatabase) :
     AbsReduxViewModel<GlobalState<TodoDetailState>>() {
 

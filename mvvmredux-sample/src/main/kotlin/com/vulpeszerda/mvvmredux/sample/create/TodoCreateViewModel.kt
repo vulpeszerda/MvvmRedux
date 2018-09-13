@@ -10,9 +10,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-/**
- * Created by vulpes on 2017. 8. 31..
- */
 class TodoCreateViewModel(private val database: TodoDatabase) :
     AbsReduxViewModel<GlobalState<TodoCreateState>>() {
 
@@ -43,7 +40,7 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
             .toObservable()
             .flatMap<ReduxEvent> {
                 Observable.fromArray(
-                    TodoCreateEvent.ShowFinishToast(),
+                    TodoCreateEvent.ShowFinishToast,
                     GlobalEvent.NavigateFinish()
                 )
             }

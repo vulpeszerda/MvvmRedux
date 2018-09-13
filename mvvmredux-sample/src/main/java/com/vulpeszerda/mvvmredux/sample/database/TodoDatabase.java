@@ -10,10 +10,6 @@ import android.support.annotation.NonNull;
 import com.vulpeszerda.mvvmredux.sample.BuildConfig;
 import com.vulpeszerda.mvvmredux.sample.model.Todo;
 
-/**
- * Created by vulpes on 2017. 9. 4..
- */
-
 @Database(entities = {Todo.class},
           version = BuildConfig.DATABASE_VERSION)
 @TypeConverters(value = {DateTypeConverter.class})

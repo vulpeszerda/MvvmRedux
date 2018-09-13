@@ -5,10 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 
-/**
- * Created by vulpes on 2017. 8. 29..
- */
-
 class ReduxStore<T>(
     private val initialState: T,
     private val reducer: (T, ReduxEvent.State) -> T,

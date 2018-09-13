@@ -9,9 +9,6 @@ import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.Toast
 
-/**
- * Created by vulpes on 2017. 11. 23..
- */
 open class ActivityContextService(override val activity: ReduxActivity) : ContextService {
 
     override val owner: LifecycleOwner

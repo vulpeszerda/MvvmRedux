@@ -4,9 +4,6 @@ import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.BaseExtraHandler
 
-/**
- * Created by vulpes on 2017. 9. 22..
- */
 class TodoDetailExtraHandler(
     contextService: ContextService
 ) : BaseExtraHandler("TodoDetailExtraHandler", contextService) {

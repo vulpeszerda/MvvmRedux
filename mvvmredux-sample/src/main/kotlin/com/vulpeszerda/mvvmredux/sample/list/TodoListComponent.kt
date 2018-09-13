@@ -8,9 +8,6 @@ import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
-/**
- * Created by vulpes on 2017. 9. 22..
- */
 class TodoListComponent(
     activity: TodoListActivity
 ) : BaseComponent<TodoListState>(ActivityContextService(activity)) {

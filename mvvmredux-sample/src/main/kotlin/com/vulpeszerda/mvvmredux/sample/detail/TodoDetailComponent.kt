@@ -2,15 +2,10 @@ package com.vulpeszerda.mvvmredux.sample.detail
 
 import android.arch.lifecycle.ViewModelProvider
 import com.vulpeszerda.mvvmredux.ActivityContextService
-import com.vulpeszerda.mvvmredux.ReduxBinder
 import com.vulpeszerda.mvvmredux.sample.BaseComponent
-import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
-/**
- * Created by vulpes on 2017. 9. 22..
- */
 class TodoDetailComponent(
     activity: TodoDetailActivity
 ) : BaseComponent<TodoDetailState>(ActivityContextService(activity)) {

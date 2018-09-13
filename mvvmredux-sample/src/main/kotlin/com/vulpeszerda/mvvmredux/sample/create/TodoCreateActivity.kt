@@ -8,9 +8,6 @@ import com.vulpeszerda.mvvmredux.ReduxBinder
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
 
-/**
- * Created by vulpes on 2017. 8. 31..
- */
 class TodoCreateActivity : ReduxActivity() {
 
     private val component: TodoCreateComponent by lazy {

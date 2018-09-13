@@ -9,9 +9,6 @@ import com.vulpeszerda.mvvmredux.sample.model.Todo
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.todo_item.*
 
-/**
- * Created by vulpes on 2017. 9. 21..
- */
 class TodoViewHolder(override val containerView: View, actionHandler: ActionHandler) :
     RecyclerView.ViewHolder(containerView), LayoutContainer {
 

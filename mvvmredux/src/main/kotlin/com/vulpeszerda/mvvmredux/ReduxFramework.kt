@@ -1,8 +1,5 @@
 package com.vulpeszerda.mvvmredux
 
-/**
- * Created by vulpes on 2018. 1. 20..
- */
 object ReduxFramework {
 
     interface FatalErrorHandler {

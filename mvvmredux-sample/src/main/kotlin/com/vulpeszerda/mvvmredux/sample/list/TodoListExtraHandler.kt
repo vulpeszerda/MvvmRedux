@@ -5,9 +5,6 @@ import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.BaseExtraHandler
 
-/**
- * Created by vulpes on 2017. 9. 21..
- */
 class TodoListExtraHandler(
     contextService: ContextService
 ) : BaseExtraHandler("TodoListExtraHandler", contextService) {
@@ -20,7 +17,7 @@ class TodoListExtraHandler(
                 AlertDialog.Builder(getActivityOrThrow()).setTitle("Confirm")
                     .setMessage("Are you sure to clear all todo?")
                     .setPositiveButton("Clear all") { _, _ ->
-                        publishEvent(TodoListEvent.ConfirmClearAll())
+                        publishEvent(TodoListEvent.ConfirmClearAll)
                     }
                     .setNegativeButton("Cancel", null)
                     .show()

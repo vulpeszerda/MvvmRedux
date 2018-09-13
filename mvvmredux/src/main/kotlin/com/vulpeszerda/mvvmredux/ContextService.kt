@@ -9,9 +9,6 @@ import android.support.v4.app.FragmentManager
 import android.widget.Toast
 import kotlinx.android.extensions.LayoutContainer
 
-/**
- * Created by vulpes on 2017. 11. 23..
- */
 interface ContextService : LayoutContainer, LifecycleObserver {
     val owner: LifecycleOwner
     val available: Boolean
@@ -20,8 +17,8 @@ interface ContextService : LayoutContainer, LifecycleObserver {
     val fragmentManager: FragmentManager
     fun getContextOrThrow(): Context
     fun getActivityOrThrow(): Activity
-    fun startActivity(intent: Intent, requestCode: Int?)
-    fun setResult(resultCode: Int, data: Intent?)
+    fun startActivity(intent: Intent, requestCode: Int? = null)
+    fun setResult(resultCode: Int, data: Intent? = null)
     fun finish()
     fun finishAffinity()
     fun recreate()

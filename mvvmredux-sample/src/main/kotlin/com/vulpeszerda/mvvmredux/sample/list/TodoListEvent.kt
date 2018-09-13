@@ -3,11 +3,8 @@ package com.vulpeszerda.mvvmredux.sample.list
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 
-/**
- * Created by vulpes on 2017. 8. 30..
- */
 sealed class TodoListEvent : ReduxEvent {
-    class ConfirmClearAll : TodoListEvent()
+    object ConfirmClearAll : TodoListEvent()
     data class Refresh(val silent: Boolean) : TodoListEvent()
 
     data class SetLoading(val loading: Boolean) : TodoListEvent(), ReduxEvent.State

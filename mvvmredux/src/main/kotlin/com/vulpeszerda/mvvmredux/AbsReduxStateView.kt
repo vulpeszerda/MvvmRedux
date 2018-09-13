@@ -9,10 +9,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by vulpes on 2017. 9. 21..
- */
-@Suppress("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxStateView<T>(
     protected val tag: String,
     contextService: ContextService,

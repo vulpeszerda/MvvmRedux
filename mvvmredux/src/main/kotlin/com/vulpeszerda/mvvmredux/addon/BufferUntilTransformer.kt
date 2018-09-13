@@ -3,9 +3,6 @@ package com.vulpeszerda.mvvmredux.addon
 import io.reactivex.*
 import org.reactivestreams.Publisher
 
-/**
- * Created by vulpes on 2017. 9. 5..
- */
 class BufferUntilTransformer<T, E> private constructor(
     private val events: Observable<E>,
     private val predicate: (E) -> Boolean

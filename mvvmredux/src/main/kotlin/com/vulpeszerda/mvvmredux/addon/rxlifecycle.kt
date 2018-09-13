@@ -1,28 +1,13 @@
+@file:Suppress("unused")
+
 package com.vulpeszerda.mvvmredux.addon
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
-import io.reactivex.*
-import io.reactivex.android.schedulers.AndroidSchedulers
-
-/**
- * Created by vulpes on 2017. 9. 5..
- */
-
-fun <T> Observable<T>.observeOnAndroidMainThread(): Observable<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-
-fun <T> Flowable<T>.observeOnAndroidMainThread(): Flowable<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-
-fun <T> Single<T>.observeOnAndroidMainThread(): Single<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-
-fun <T> Maybe<T>.observeOnAndroidMainThread(): Maybe<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-
-fun <T> Completable.observeOnAndroidMainThread(): Completable =
-    this.observeOn(AndroidSchedulers.mainThread())
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
 
 fun <T> Observable<T>.filter(
     owner: LifecycleOwner,

@@ -7,10 +7,6 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-/**
- * Created by vulpes on 2017. 9. 4..
- */
-
 @Entity(tableName = Todo.TABLE_NAME)
 public class Todo {
 

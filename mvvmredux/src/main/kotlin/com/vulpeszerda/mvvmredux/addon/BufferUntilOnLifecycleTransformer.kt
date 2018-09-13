@@ -6,9 +6,6 @@ import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle
 import io.reactivex.*
 import org.reactivestreams.Publisher
 
-/**
- * Created by vulpes on 2017. 9. 19..
- */
 class BufferUntilOnLifecycleTransformer<T> private constructor(
     owner: LifecycleOwner,
     private val from: Lifecycle.Event,

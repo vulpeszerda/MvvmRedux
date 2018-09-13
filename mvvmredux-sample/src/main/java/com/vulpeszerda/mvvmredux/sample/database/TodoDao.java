@@ -14,10 +14,6 @@ import com.vulpeszerda.mvvmredux.sample.model.Todo;
 
 import java.util.List;
 
-/**
- * Created by vulpes on 2017. 9. 4..
- */
-
 @Dao
 public interface TodoDao {
 

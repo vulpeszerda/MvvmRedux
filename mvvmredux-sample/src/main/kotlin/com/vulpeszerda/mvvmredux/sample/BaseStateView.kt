@@ -7,9 +7,6 @@ import com.vulpeszerda.mvvmredux.ContextService
 import com.vulpeszerda.mvvmredux.StateConsumer
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-/**
- * Created by vulpes on 2017. 11. 23..
- */
 open class BaseStateView<T>(
     tag: String = "BaseStateView",
     contextService: ContextService

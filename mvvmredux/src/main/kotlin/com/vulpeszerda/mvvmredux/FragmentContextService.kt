@@ -9,9 +9,7 @@ import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.Toast
 
-/**
- * Created by vulpes on 2017. 11. 23..
- */
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 open class FragmentContextService(protected val fragment: ReduxFragment) : ContextService {
 
     override val owner: LifecycleOwner

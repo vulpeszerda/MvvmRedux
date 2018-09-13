@@ -6,9 +6,6 @@ import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import kotlinx.android.synthetic.main.todo_detail.message as viewMessage
 import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
 
-/**
- * Created by vulpes on 2017. 9. 22..
- */
 class TodoDetailStateView(
     contextService: ContextService
 ) : BaseStateView<TodoDetailState>("TodoDetailStateView", contextService) {

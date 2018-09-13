@@ -7,9 +7,6 @@ import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 import com.vulpeszerda.mvvmredux.sample.detail.TodoDetailViewModel
 import com.vulpeszerda.mvvmredux.sample.list.TodoListViewModel
 
-/**
- * Created by vulpes on 2017. 9. 5..
- */
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val database: TodoDatabase) : ViewModelProvider.Factory {
 

@@ -10,9 +10,6 @@ import kotlinx.android.synthetic.main.todo_create.*
 import kotlinx.android.synthetic.main.todo_create.message as viewMessage
 import kotlinx.android.synthetic.main.todo_create.title as viewTitle
 
-/**
- * Created by vulpes on 2017. 9. 22..
- */
 class TodoCreateStateView(
     contextService: ContextService
 ) : BaseStateView<TodoCreateState>("TodoCreateStateView", contextService) {

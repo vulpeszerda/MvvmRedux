@@ -14,9 +14,6 @@ import com.vulpeszerda.mvvmredux.sample.model.Todo
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_list.*
 
-/**
- * Created by vulpes on 2017. 9. 21..
- */
 class TodoListStateView(
     contextService: ContextService
 ) : BaseStateView<TodoListState>("TodoListStateView", contextService) {
