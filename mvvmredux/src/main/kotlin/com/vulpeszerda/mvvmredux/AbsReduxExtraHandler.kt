@@ -10,8 +10,8 @@ import io.reactivex.disposables.Disposable
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
-    contextService: ContextService
-) : ReduxComponent.Impl(contextService),
+    contextDelegate: ContextDelegate
+) : ReduxComponent.Impl(contextDelegate),
     ReduxExtraHandler {
 
     override fun subscribe(source: Observable<ReduxEvent.Extra>): Disposable =

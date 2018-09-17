@@ -3,14 +3,14 @@ package com.vulpeszerda.mvvmredux.sample
 import android.app.ProgressDialog
 import android.support.annotation.UiThread
 import com.vulpeszerda.mvvmredux.AbsReduxStateView
-import com.vulpeszerda.mvvmredux.ContextService
+import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.StateConsumer
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 open class BaseStateView<T>(
     tag: String = "BaseStateView",
-    contextService: ContextService
-) : AbsReduxStateView<GlobalState<T>>(tag, contextService, AndroidSchedulers.mainThread()) {
+    contextDelegate: ContextDelegate
+) : AbsReduxStateView<GlobalState<T>>(tag, contextDelegate, AndroidSchedulers.mainThread()) {
 
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(context)

@@ -3,7 +3,7 @@ package com.vulpeszerda.mvvmredux.sample
 import com.vulpeszerda.mvvmredux.*
 
 open class BaseComponent<T>(
-    protected val contextService: ContextService
+    protected val contextDelegate: ContextDelegate
 ) : ReduxContext.AbsImpl<GlobalState<T>>() {
 
     override val viewModel: ReduxViewModel<GlobalState<T>> by lazy {
@@ -11,11 +11,11 @@ open class BaseComponent<T>(
     }
 
     override val extraHandler: ReduxExtraHandler by lazy {
-        BaseExtraHandler(contextService = contextService)
+        BaseExtraHandler(contextDelegate = contextDelegate)
     }
 
     override val stateView: ReduxStateView<GlobalState<T>> by lazy {
-        BaseStateView<T>(contextService = contextService)
+        BaseStateView<T>(contextDelegate = contextDelegate)
     }
 
 }

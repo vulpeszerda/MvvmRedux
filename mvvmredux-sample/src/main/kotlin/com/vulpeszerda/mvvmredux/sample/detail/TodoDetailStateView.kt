@@ -1,14 +1,14 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
-import com.vulpeszerda.mvvmredux.ContextService
+import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.StateConsumer
 import com.vulpeszerda.mvvmredux.sample.BaseStateView
 import kotlinx.android.synthetic.main.todo_detail.message as viewMessage
 import kotlinx.android.synthetic.main.todo_detail.title as viewTitle
 
 class TodoDetailStateView(
-    contextService: ContextService
-) : BaseStateView<TodoDetailState>("TodoDetailStateView", contextService) {
+    contextDelegate: ContextDelegate
+) : BaseStateView<TodoDetailState>("TodoDetailStateView", contextDelegate) {
 
     init {
         addConsumer(

@@ -1,24 +1,22 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
 import android.arch.lifecycle.ViewModelProvider
-import com.vulpeszerda.mvvmredux.ActivityContextService
-import com.vulpeszerda.mvvmredux.ReduxBinder
+import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.sample.BaseComponent
-import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
 class TodoCreateComponent(
     activity: TodoCreateActivity
-) : BaseComponent<TodoCreateState>(ActivityContextService(activity)) {
+) : BaseComponent<TodoCreateState>(ContextDelegate.create(activity)) {
 
 
     override val stateView: TodoCreateStateView by lazy {
-        TodoCreateStateView(contextService)
+        TodoCreateStateView(contextDelegate)
     }
 
     override val extraHandler: TodoCreateExtraHandler by lazy {
-        TodoCreateExtraHandler(contextService)
+        TodoCreateExtraHandler(contextDelegate)
     }
 
     override val viewModel: TodoCreateViewModel by lazy {

@@ -1,21 +1,21 @@
 package com.vulpeszerda.mvvmredux.sample.detail
 
 import android.arch.lifecycle.ViewModelProvider
-import com.vulpeszerda.mvvmredux.ActivityContextService
+import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.sample.BaseComponent
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory
 import com.vulpeszerda.mvvmredux.sample.database.TodoDatabase
 
 class TodoDetailComponent(
     activity: TodoDetailActivity
-) : BaseComponent<TodoDetailState>(ActivityContextService(activity)) {
+) : BaseComponent<TodoDetailState>(ContextDelegate.create(activity)) {
 
     override val extraHandler: TodoDetailExtraHandler by lazy {
-        TodoDetailExtraHandler(contextService)
+        TodoDetailExtraHandler(contextDelegate)
     }
 
     override val stateView: TodoDetailStateView by lazy {
-        TodoDetailStateView(contextService)
+        TodoDetailStateView(contextDelegate)
     }
 
     override val viewModel: TodoDetailViewModel by lazy {

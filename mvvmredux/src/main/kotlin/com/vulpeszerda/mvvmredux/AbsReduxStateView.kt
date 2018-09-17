@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxStateView<T>(
     protected val tag: String,
-    contextService: ContextService,
+    contextDelegate: ContextDelegate,
     private val diffScheduler: Scheduler = Schedulers.newThread(),
     private val throttle: Long = 0
-) : ReduxComponent.Impl(contextService),
+) : ReduxComponent.Impl(contextDelegate),
     ReduxStateView<T> {
 
     private val stateConsumers = ArrayList<StateConsumer<T>>()

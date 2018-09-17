@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample
 
 import com.vulpeszerda.mvvmredux.AbsReduxExtraHandler
-import com.vulpeszerda.mvvmredux.ContextService
+import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.create.TodoCreateActivity
 import com.vulpeszerda.mvvmredux.sample.detail.TodoDetailActivity
@@ -9,8 +9,8 @@ import com.vulpeszerda.mvvmredux.sample.list.TodoListActivity
 
 open class BaseExtraHandler(
     tag: String = "BaseExtraHandler",
-    contextService: ContextService
-) : AbsReduxExtraHandler(tag, contextService) {
+    contextDelegate: ContextDelegate
+) : AbsReduxExtraHandler(tag, contextDelegate) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {

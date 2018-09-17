@@ -1,17 +1,18 @@
 package com.vulpeszerda.mvvmredux.sample.create
 
-import com.vulpeszerda.mvvmredux.ContextService
+import android.widget.Toast
+import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.ReduxEvent
 import com.vulpeszerda.mvvmredux.sample.BaseExtraHandler
 
 class TodoCreateExtraHandler(
-    contextService: ContextService
-) : BaseExtraHandler("TodoCreateExtraHandler", contextService) {
+    contextDelegate: ContextDelegate
+) : BaseExtraHandler("TodoCreateExtraHandler", contextDelegate) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         super.onExtraEvent(extra)
         if (extra is TodoCreateEvent.ShowFinishToast) {
-            toast("Todo created")
+            Toast.makeText(getContextOrThrow(), "Todo created", Toast.LENGTH_SHORT).show()
         }
     }
 
