@@ -2,8 +2,8 @@
 
 package com.vulpeszerda.mvvmredux.addon
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe

@@ -3,7 +3,7 @@ package com.vulpeszerda.mvvmredux.sample.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.vulpeszerda.mvvmredux.sample.GlobalState
 import com.vulpeszerda.mvvmredux.sample.R
 import io.reactivex.Observable

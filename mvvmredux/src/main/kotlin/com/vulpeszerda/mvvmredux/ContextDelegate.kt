@@ -1,15 +1,15 @@
 package com.vulpeszerda.mvvmredux
 
 import android.app.Activity
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.android.extensions.LayoutContainer
 
 interface ContextDelegate : LayoutContainer, LifecycleObserver {

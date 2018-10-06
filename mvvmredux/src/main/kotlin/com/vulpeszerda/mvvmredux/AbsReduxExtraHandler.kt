@@ -1,6 +1,6 @@
 package com.vulpeszerda.mvvmredux
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import com.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import io.reactivex.Observable

@@ -1,6 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.widget.Toast
 import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.ReduxEvent

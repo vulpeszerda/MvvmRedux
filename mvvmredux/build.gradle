@@ -4,7 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.github.vulpeszerda'
+group = 'com.vulpeszerda.mvvmredux'
+version = libraryVersionName
 
 android {
     compileSdkVersion compileSdk
@@ -21,7 +22,7 @@ android {
         versionCode libraryVersionCode
         versionName libraryVersionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     compileOptions {
@@ -66,10 +67,10 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation "junit:junit:$junit"
 
-    implementation "com.android.support:support-v4:$supportLib"
-    implementation "com.android.support:appcompat-v7:$supportLib"
-    androidTestImplementation "com.android.support:support-v4:$supportLib"
-    androidTestImplementation "com.android.support:appcompat-v7:$supportLib"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    androidTestImplementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    androidTestImplementation 'androidx.appcompat:appcompat:1.0.0'
 
     /* RxJava related */
     implementation "io.reactivex.rxjava2:rxjava:$rxJava2"
@@ -81,8 +82,8 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycle2"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxLifecycle2"
 
-    implementation "android.arch.lifecycle:viewmodel:$androidArch"
-    kapt "android.arch.lifecycle:compiler:$androidArch"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin"

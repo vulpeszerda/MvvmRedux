@@ -1,7 +1,7 @@
 package com.vulpeszerda.mvvmredux.sample
 
 import android.app.ProgressDialog
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 import com.vulpeszerda.mvvmredux.AbsReduxStateView
 import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.StateConsumer

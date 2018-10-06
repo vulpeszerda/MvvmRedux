@@ -1,6 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.sample.BaseComponent
 import com.vulpeszerda.mvvmredux.sample.ViewModelFactory

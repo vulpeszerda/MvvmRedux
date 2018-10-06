@@ -1,6 +1,6 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.vulpeszerda.mvvmredux.sample.model.Todo
 

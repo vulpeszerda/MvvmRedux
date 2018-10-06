@@ -1,9 +1,9 @@
 package com.vulpeszerda.mvvmredux.sample.list
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.vulpeszerda.mvvmredux.ContextDelegate
 import com.vulpeszerda.mvvmredux.ReduxEvent
