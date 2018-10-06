@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion compileSdk
@@ -85,14 +84,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
-}
-
-publish {
-    groupId = 'com.vulpeszerda.mvvmredux'
-    artifactId = 'mvvmredux'
-    publishVersion = libraryVersionName
-    desc = 'Android mvvm using android arch component'
-    website = 'https://github.com/vulpeszerda/MvvmRedux'
-    bintrayUser = project.hasProperty("bintrayUser") ? bintrayUser : ""
-    bintrayKey = project.hasProperty("bintrayKey") ? bintrayKey : ""
 }
