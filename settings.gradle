@@ -1,1 +1,2 @@
 include ':mvvmredux-sample', ':mvvmredux'
+rootProject.name = 'mvvmredux'
