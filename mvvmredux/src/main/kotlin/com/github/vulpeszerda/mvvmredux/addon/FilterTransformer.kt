@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample.addon
+package com.github.vulpeszerda.mvvmredux.addon
 
 import io.reactivex.*
 import io.reactivex.subjects.PublishSubject

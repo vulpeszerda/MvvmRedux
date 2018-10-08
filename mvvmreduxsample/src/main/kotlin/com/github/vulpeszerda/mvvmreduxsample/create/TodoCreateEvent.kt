@@ -1,6 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
-import com.github.vulpeszerda.mvvmreduxsample.ReduxEvent
+import com.github.vulpeszerda.mvvmredux.ReduxEvent
 
 sealed class TodoCreateEvent : ReduxEvent {
     data class Save(val title: String, val message: String) : TodoCreateEvent()

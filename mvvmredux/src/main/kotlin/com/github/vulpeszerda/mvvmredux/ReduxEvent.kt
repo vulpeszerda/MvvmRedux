@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 interface ReduxEvent {
     interface State : ReduxEvent

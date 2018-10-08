@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import android.app.Activity
 import android.content.Context

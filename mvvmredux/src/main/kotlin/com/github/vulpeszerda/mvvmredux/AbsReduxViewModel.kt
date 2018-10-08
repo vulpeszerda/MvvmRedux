@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable

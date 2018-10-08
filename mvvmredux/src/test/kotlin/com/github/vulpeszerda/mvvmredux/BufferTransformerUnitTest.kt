@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import com.github.vulpeszerda.mvvmreduxsample.addon.BufferUntilTransformer
 import io.reactivex.BackpressureStrategy

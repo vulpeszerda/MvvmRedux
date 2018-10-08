@@ -1,14 +1,12 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
-import com.github.vulpeszerda.mvvmreduxsample.addon.FilterTransformer
+import com.github.vulpeszerda.mvvmredux.addon.FilterTransformer
 import io.reactivex.BackpressureStrategy
 import io.reactivex.observers.TestObserver
-
-import org.junit.Test
-
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subscribers.TestSubscriber
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).

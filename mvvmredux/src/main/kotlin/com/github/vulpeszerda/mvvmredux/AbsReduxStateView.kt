@@ -1,7 +1,7 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import androidx.lifecycle.Lifecycle
-import com.github.vulpeszerda.mvvmreduxsample.addon.filterOnResumed
+import com.github.vulpeszerda.mvvmredux.addon.filterOnResumed
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxStateView<T>(
     protected val tag: String,
-    contextDelegate: ContextDelegate,
+    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate,
     private val diffScheduler: Scheduler = Schedulers.newThread(),
     private val throttle: Long = 0
 ) : ReduxComponent.Impl(contextDelegate),

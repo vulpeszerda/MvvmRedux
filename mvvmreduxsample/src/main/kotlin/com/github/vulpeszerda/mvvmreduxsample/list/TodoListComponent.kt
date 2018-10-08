@@ -2,13 +2,12 @@ package com.github.vulpeszerda.mvvmreduxsample.list
 
 import androidx.lifecycle.ViewModelProvider
 import com.github.vulpeszerda.mvvmreduxsample.BaseComponent
-import com.github.vulpeszerda.mvvmreduxsample.ContextDelegate
 import com.github.vulpeszerda.mvvmreduxsample.ViewModelFactory
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
 
 class TodoListComponent(
     activity: TodoListActivity
-) : BaseComponent<TodoListState>(ContextDelegate.create(activity)) {
+) : BaseComponent<TodoListState>(com.github.vulpeszerda.mvvmredux.ContextDelegate.create(activity)) {
 
     override val stateView: TodoListStateView by lazy {
         TodoListStateView(contextDelegate)

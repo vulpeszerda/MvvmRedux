@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable

@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.github.vulpeszerda.mvvmreduxsample.addon
+package com.github.vulpeszerda.mvvmredux.addon
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner

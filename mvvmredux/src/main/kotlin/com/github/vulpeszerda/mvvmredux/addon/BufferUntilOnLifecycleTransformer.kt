@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample.addon
+package com.github.vulpeszerda.mvvmredux.addon
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -6,19 +6,22 @@ import com.trello.lifecycle2.android.lifecycle.AndroidLifecycle
 import io.reactivex.*
 import org.reactivestreams.Publisher
 
-class FilterOnLifecycleTransformer<T> private constructor(
+class BufferUntilOnLifecycleTransformer<T> private constructor(
     owner: LifecycleOwner,
     private val from: Lifecycle.Event,
     private val until: Lifecycle.Event
 ) :
     ObservableTransformer<T, T>,
     FlowableTransformer<T, T>,
-    MaybeTransformer<T, T> {
+    MaybeTransformer<T, T>,
+    CompletableTransformer {
 
     private val provider = AndroidLifecycle.createLifecycleProvider(owner)
 
     override fun apply(upstream: Observable<T>): ObservableSource<T> = upstream
-        .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
+        .compose<T>(BufferUntilTransformer.create(
+            provider.lifecycle()
+        ) { event ->
             val curr = convertEventAsInt(
                 event
             )
@@ -33,7 +36,9 @@ class FilterOnLifecycleTransformer<T> private constructor(
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
     override fun apply(upstream: Flowable<T>): Publisher<T> = upstream
-        .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
+        .compose<T>(BufferUntilTransformer.create(
+            provider.lifecycle()
+        ) { event ->
             val curr = convertEventAsInt(
                 event
             )
@@ -48,7 +53,26 @@ class FilterOnLifecycleTransformer<T> private constructor(
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
     override fun apply(upstream: Maybe<T>): MaybeSource<T> = upstream
-        .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
+        .compose<T>(BufferUntilTransformer.create(
+            provider.lifecycle()
+        ) { event ->
+            val curr = convertEventAsInt(
+                event
+            )
+            val f = convertEventAsInt(
+                from
+            )
+            val u = convertEventAsInt(
+                until
+            )
+            curr in f..(u - 1)
+        })
+        .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
+
+    override fun apply(upstream: Completable): CompletableSource = upstream
+        .compose(BufferUntilTransformer.create<T, Lifecycle.Event>(
+            provider.lifecycle()
+        ) { event ->
             val curr = convertEventAsInt(
                 event
             )
@@ -70,18 +94,18 @@ class FilterOnLifecycleTransformer<T> private constructor(
             from: Lifecycle.Event,
             until: Lifecycle.Event
         ):
-                FilterOnLifecycleTransformer<T> =
-            FilterOnLifecycleTransformer(owner, from, until)
+                BufferUntilOnLifecycleTransformer<T> =
+            BufferUntilOnLifecycleTransformer(owner, from, until)
 
         fun <T> createOnResumed(owner: LifecycleOwner):
-                FilterOnLifecycleTransformer<T> =
-            FilterOnLifecycleTransformer(
+                BufferUntilOnLifecycleTransformer<T> =
+            BufferUntilOnLifecycleTransformer(
                 owner, Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_PAUSE
             )
 
         fun <T> createOnStarted(owner: LifecycleOwner):
-                FilterOnLifecycleTransformer<T> =
-            FilterOnLifecycleTransformer(
+                BufferUntilOnLifecycleTransformer<T> =
+            BufferUntilOnLifecycleTransformer(
                 owner, Lifecycle.Event.ON_START, Lifecycle.Event.ON_STOP
             )
 

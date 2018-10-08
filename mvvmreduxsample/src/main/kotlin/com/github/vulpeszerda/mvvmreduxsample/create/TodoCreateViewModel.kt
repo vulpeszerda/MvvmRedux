@@ -1,9 +1,8 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
-import com.github.vulpeszerda.mvvmreduxsample.AbsReduxViewModel
+import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
-import com.github.vulpeszerda.mvvmreduxsample.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
 import com.github.vulpeszerda.mvvmreduxsample.model.Todo
 import io.reactivex.Observable
@@ -11,7 +10,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 class TodoCreateViewModel(private val database: TodoDatabase) :
-    AbsReduxViewModel<GlobalState<TodoCreateState>>() {
+    com.github.vulpeszerda.mvvmredux.AbsReduxViewModel<GlobalState<TodoCreateState>>() {
 
     override fun eventTransformer(
         events: Observable<ReduxEvent>,

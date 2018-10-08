@@ -1,13 +1,14 @@
 package com.github.vulpeszerda.mvvmreduxsample
 
+import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.create.TodoCreateActivity
 import com.github.vulpeszerda.mvvmreduxsample.detail.TodoDetailActivity
 import com.github.vulpeszerda.mvvmreduxsample.list.TodoListActivity
 
 open class BaseExtraHandler(
     tag: String = "BaseExtraHandler",
-    contextDelegate: ContextDelegate
-) : AbsReduxExtraHandler(tag, contextDelegate) {
+    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+) : com.github.vulpeszerda.mvvmredux.AbsReduxExtraHandler(tag, contextDelegate) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {
         when (extra) {

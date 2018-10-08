@@ -1,8 +1,7 @@
 package com.github.vulpeszerda.mvvmreduxsample.list
 
-import com.github.vulpeszerda.mvvmreduxsample.AbsReduxViewModel
+import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
-import com.github.vulpeszerda.mvvmreduxsample.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
 import com.github.vulpeszerda.mvvmreduxsample.model.Todo
 import io.reactivex.BackpressureStrategy
@@ -13,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
 class TodoListViewModel(private val database: TodoDatabase) :
-    AbsReduxViewModel<GlobalState<TodoListState>>() {
+    com.github.vulpeszerda.mvvmredux.AbsReduxViewModel<GlobalState<TodoListState>>() {
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 

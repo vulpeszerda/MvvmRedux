@@ -1,4 +1,4 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import androidx.annotation.CallSuper
 import androidx.lifecycle.Lifecycle
@@ -11,9 +11,9 @@ interface ReduxComponent : ReduxEventPublisher, LifecycleObserver {
     fun bindToLifecycle()
 
     open class Impl(
-        contextDelegate: ContextDelegate
+        contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
     ) : ReduxComponent,
-        ContextDelegate by contextDelegate,
+        com.github.vulpeszerda.mvvmredux.ContextDelegate by contextDelegate,
         ReduxEventPublisher by ReduxEventPublisher.Impl() {
 
         override fun bindToLifecycle() {

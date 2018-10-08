@@ -1,7 +1,7 @@
-package com.github.vulpeszerda.mvvmreduxsample
+package com.github.vulpeszerda.mvvmredux
 
 import androidx.lifecycle.Lifecycle
-import com.github.vulpeszerda.mvvmreduxsample.addon.bufferUntilOnResumed
+import com.github.vulpeszerda.mvvmredux.addon.bufferUntilOnResumed
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
-    contextDelegate: ContextDelegate
+    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
 ) : ReduxComponent.Impl(contextDelegate),
     ReduxExtraHandler {
 

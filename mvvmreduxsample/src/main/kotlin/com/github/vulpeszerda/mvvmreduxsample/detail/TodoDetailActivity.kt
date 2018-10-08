@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.github.vulpeszerda.mvvmredux.ReduxEventPublisher
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
 import com.github.vulpeszerda.mvvmreduxsample.R
-import com.github.vulpeszerda.mvvmreduxsample.ReduxEventPublisher
 import io.reactivex.Observable
 
 class TodoDetailActivity : AppCompatActivity() {

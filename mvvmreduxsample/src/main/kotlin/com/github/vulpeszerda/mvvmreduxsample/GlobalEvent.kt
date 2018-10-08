@@ -1,5 +1,7 @@
 package com.github.vulpeszerda.mvvmreduxsample
 
+import com.github.vulpeszerda.mvvmredux.ReduxEvent
+
 sealed class GlobalEvent : ReduxEvent {
     data class NavigateList(val requestCode: Int? = null) :
         GlobalEvent(), ReduxEvent.Extra

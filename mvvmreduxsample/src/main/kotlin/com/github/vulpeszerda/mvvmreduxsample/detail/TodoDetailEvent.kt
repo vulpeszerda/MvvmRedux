@@ -1,6 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.detail
 
-import com.github.vulpeszerda.mvvmreduxsample.ReduxEvent
+import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.model.Todo
 
 sealed class TodoDetailEvent : ReduxEvent {
