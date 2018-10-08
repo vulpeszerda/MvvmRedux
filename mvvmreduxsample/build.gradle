@@ -1,0 +1,123 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: "com.getkeepsafe.dexcount"
+
+android {
+    compileSdkVersion compileSdk
+    lintOptions {
+        quiet false
+        abortOnError true
+        checkReleaseBuilds true
+        lintConfig file("../lint.xml")
+    }
+    defaultConfig {
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
+        versionCode sampleVersionCode
+        versionName sampleVersionName
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId "com.github.vulpeszerda.mvvmreduxsample"
+
+        buildConfigField "String", "DATABASE_NAME", "\"todo_db\""
+        buildConfigField "int", "DATABASE_VERSION", "1"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    packagingOptions {
+        exclude "META-INF/DEPENDENCIES"
+        exclude "META-INF/LICENSE"
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE"
+        exclude "META-INF/NOTICE.txt"
+        exclude "META-INF/rxjava.properties"
+        exclude "META-INF/maven/com.google.guava/guava/pom.properties"
+        exclude "META-INF/maven/com.google.guava/guava/pom.xml"
+    }
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            multiDexKeepProguard file('proguard-rules.pro')
+        }
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
+        test.java.srcDirs += 'src/test/kotlin'
+        test.java.srcDirs += [file("$buildDir/generated/source/kapt/test")]
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        androidTest.java.srcDirs += [file("$buildDir/generated/source/kapt/androidTest")]
+    }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+kapt {
+    generateStubs = true
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':mvvmredux')
+
+    implementation "androidx.legacy:legacy-support-v4:$supportLib"
+    implementation "androidx.appcompat:appcompat:$supportLib"
+    implementation "com.google.android.material:material:$supportLib"
+    implementation "androidx.recyclerview:recyclerview:$supportLib"
+    implementation "androidx.cardview:cardview:$supportLib"
+    testImplementation "androidx.legacy:legacy-support-v4:$supportLib"
+    testImplementation "androidx.appcompat:appcompat:$supportLib"
+    testImplementation "com.google.android.material:material:$supportLib"
+    testImplementation "androidx.recyclerview:recyclerview:$supportLib"
+    testImplementation "androidx.cardview:cardview:$supportLib"
+    androidTestImplementation "androidx.legacy:legacy-support-v4:$supportLib"
+    androidTestImplementation "androidx.appcompat:appcompat:$supportLib"
+    androidTestImplementation "com.google.android.material:material:$supportLib"
+    androidTestImplementation "androidx.recyclerview:recyclerview:$supportLib"
+    androidTestImplementation "androidx.cardview:cardview:$supportLib"
+
+    implementation "io.reactivex.rxjava2:rxjava:$rxJava2"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin2"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid2"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxBinding2"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rxBinding2"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxBinding2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycle2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxLifecycle2"
+
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidArch"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidArch"
+    kapt "androidx.lifecycle:lifecycle-compiler:$androidArch"
+
+    /* Room */
+    implementation "androidx.room:room-runtime:$room"
+    kapt "androidx.room:room-compiler:$room"
+    testImplementation "androidx.room:room-testing:$room"
+    implementation "androidx.room:room-rxjava2:$room"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
+}
