@@ -19,7 +19,7 @@ android {
         versionName sampleVersionName
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        applicationId "com.vulpeszerda.mvvmredux.sample"
+        applicationId "com.github.vulpeszerda.mvvmredux.sample"
 
         buildConfigField "String", "DATABASE_NAME", "\"todo_db\""
         buildConfigField "int", "DATABASE_VERSION", "1"
@@ -78,21 +78,21 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api project(':mvvmredux')
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    testImplementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'androidx.appcompat:appcompat:1.0.0'
-    testImplementation 'com.google.android.material:material:1.0.0'
-    testImplementation 'androidx.recyclerview:recyclerview:1.0.0'
-    testImplementation 'androidx.cardview:cardview:1.0.0'
-    androidTestImplementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    androidTestImplementation 'androidx.appcompat:appcompat:1.0.0'
-    androidTestImplementation 'com.google.android.material:material:1.0.0'
-    androidTestImplementation 'androidx.recyclerview:recyclerview:1.0.0'
-    androidTestImplementation 'androidx.cardview:cardview:1.0.0'
+    implementation "androidx.legacy:legacy-support-v4:$supportLib"
+    implementation "androidx.appcompat:appcompat:$supportLib"
+    implementation "com.google.android.material:material:$supportLib"
+    implementation "androidx.recyclerview:recyclerview:$supportLib"
+    implementation "androidx.cardview:cardview:$supportLib"
+    testImplementation "androidx.legacy:legacy-support-v4:$supportLib"
+    testImplementation "androidx.appcompat:appcompat:$supportLib"
+    testImplementation "com.google.android.material:material:$supportLib"
+    testImplementation "androidx.recyclerview:recyclerview:$supportLib"
+    testImplementation "androidx.cardview:cardview:$supportLib"
+    androidTestImplementation "androidx.legacy:legacy-support-v4:$supportLib"
+    androidTestImplementation "androidx.appcompat:appcompat:$supportLib"
+    androidTestImplementation "com.google.android.material:material:$supportLib"
+    androidTestImplementation "androidx.recyclerview:recyclerview:$supportLib"
+    androidTestImplementation "androidx.cardview:cardview:$supportLib"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxJava2"
     implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin2"
@@ -106,17 +106,17 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycle2"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxLifecycle2"
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidArch"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidArch"
+    kapt "androidx.lifecycle:lifecycle-compiler:$androidArch"
 
     /* Room */
-    implementation 'androidx.room:room-runtime:2.0.0'
-    kapt 'androidx.room:room-compiler:2.0.0'
-    testImplementation 'androidx.room:room-testing:2.0.0'
-    implementation 'androidx.room:room-rxjava2:2.0.0'
+    implementation "androidx.room:room-runtime:$room"
+    kapt "androidx.room:room-compiler:$room"
+    testImplementation "androidx.room:room-testing:$room"
+    implementation "androidx.room:room-rxjava2:$room"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
