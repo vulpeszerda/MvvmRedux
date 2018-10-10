@@ -5,7 +5,6 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
-import com.github.vulpeszerda.mvvmredux.StateConsumer
 import com.github.vulpeszerda.mvvmreduxsample.BaseStateView
 import com.github.vulpeszerda.mvvmreduxsample.GlobalEvent
 import com.github.vulpeszerda.mvvmreduxsample.model.Todo
@@ -34,35 +33,27 @@ class TodoListStateView(
             .mergeWith(RxView.clicks(btn_clear).map { TodoListEvent.ShowClearConfirm() })
 
     init {
-        addConsumer(
-            StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev.subState.todos !== curr.subState.todos },
-                apply = { _, curr ->
-                    val currTodos = curr.subState.todos
-                    val diff = DiffUtil.calculateDiff(
-                        TodoDiffCallback(
-                            adapter.todos,
-                            currTodos
-                        )
-                    )
-                    adapter.todos.apply {
-                        clear()
-                        addAll(currTodos)
-                    }
-                    diff.dispatchUpdatesTo(adapter)
-                })
-        )
-        addConsumer(
-            StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev.subState.loading != curr.subState.loading },
-                apply = { _, curr ->
-                    if (curr.subState.loading) {
-                        showProgressDialog("Loading..")
-                    } else {
-                        hideProgressDialog()
-                    }
-                })
-        )
+        addConsumer({ it.subState.todos }) { _, curr ->
+            val currTodos = curr.subState.todos
+            val diff = DiffUtil.calculateDiff(
+                TodoDiffCallback(
+                    adapter.todos,
+                    currTodos
+                )
+            )
+            adapter.todos.apply {
+                clear()
+                addAll(currTodos)
+            }
+            diff.dispatchUpdatesTo(adapter)
+        }
+        addConsumer({ it.subState.loading }) { _, curr ->
+            if (curr.subState.loading) {
+                showProgressDialog("Loading..")
+            } else {
+                hideProgressDialog()
+            }
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

@@ -33,7 +33,7 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
             .fromCallable {
                 val todo = Todo.create(title, message, false)
                 database.todoDao().insert(todo).firstOrNull()
-                    ?: throw IllegalAccessException("Failed to create todo")
+                    ?: throw IllegalAccessException("Failed to createDiffCompletable todo")
             }
             .subscribeOn(Schedulers.io())
             .toObservable()

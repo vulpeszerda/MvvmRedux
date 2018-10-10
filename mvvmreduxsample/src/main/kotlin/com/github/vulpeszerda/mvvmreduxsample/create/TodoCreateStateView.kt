@@ -1,7 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
-import com.github.vulpeszerda.mvvmredux.StateConsumer
 import com.github.vulpeszerda.mvvmreduxsample.BaseStateView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -25,16 +24,12 @@ class TodoCreateStateView(
             })
 
     init {
-        addConsumer(
-            StateConsumer.createFromAction(
-                hasChange = { prev, curr -> prev.subState.loading != curr.subState.loading },
-                apply = { _, curr ->
-                    if (curr.subState.loading) {
-                        showProgressDialog("Loading")
-                    } else {
-                        hideProgressDialog()
-                    }
-                })
-        )
+        addConsumer({ it.subState.loading }) { _, curr ->
+            if (curr.subState.loading) {
+                showProgressDialog("Loading")
+            } else {
+                hideProgressDialog()
+            }
+        }
     }
 }
