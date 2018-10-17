@@ -2,13 +2,16 @@ package com.github.vulpeszerda.mvvmreduxsample
 
 import android.app.ProgressDialog
 import androidx.annotation.UiThread
-import com.github.vulpeszerda.mvvmredux.StateConsumer
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.github.vulpeszerda.mvvmredux.ContextDelegate
+import com.github.vulpeszerda.mvvmredux.ReduxComponent
+import com.github.vulpeszerda.mvvmredux.ReduxStateView
 
-open class BaseStateView<T>(
-    tag: String = "BaseStateView",
-    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
-) : com.github.vulpeszerda.mvvmredux.AbsReduxStateView<GlobalState<T>>(tag, contextDelegate, AndroidSchedulers.mainThread()) {
+open class BaseStateView(
+    tag: String,
+    contextDelegate: ContextDelegate
+) : ReduxComponent by ReduxComponent.Impl(contextDelegate),
+    ReduxStateView,
+    ContextDelegate by contextDelegate {
 
     private val progressDialog: ProgressDialog by lazy {
         ProgressDialog(context)
@@ -35,10 +38,4 @@ open class BaseStateView<T>(
         }
     }
 
-    override fun onStateConsumerError(
-        consumer: StateConsumer<GlobalState<T>>,
-        throwable: Throwable
-    ) {
-        throwable.printStackTrace()
-    }
 }

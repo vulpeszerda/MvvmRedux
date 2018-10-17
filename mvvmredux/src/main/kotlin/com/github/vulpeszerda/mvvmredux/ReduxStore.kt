@@ -1,39 +1,50 @@
 package com.github.vulpeszerda.mvvmredux
 
 import android.util.Log
-import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
 
 class ReduxStore<T>(
-    private val initialState: T,
-    private val reducer: (T, ReduxEvent.State) -> T,
-    private val reducerScheduler: Scheduler = Schedulers.newThread(),
-    private val eventTransformer: (Observable<ReduxEvent>, () -> T) -> Observable<ReduxEvent.State>,
     private val tag: String = TAG,
-    private val printLog: Boolean = false
+    initialState: T,
+    scheduler: Scheduler,
+    private val printLog: Boolean,
+    private val onStateUpdated: (T) -> Unit,
+    private val onError: (Throwable) -> Unit
 ) {
 
-    var latest: T = initialState
+    private var latest: T = initialState
+    private val worker = scheduler.createWorker()
 
-    fun toState(actions: Observable<ReduxEvent>): Observable<T> {
-        return actions
-            .compose { eventTransformer.invoke(it) { latest } }
-            .observeOn(reducerScheduler)
-            .concatMap { action ->
-                if (printLog) Log.d(tag, "action: $action")
+    fun getState(block: (T) -> Unit) {
+        worker.schedule {
+            try {
+                block(latest)
+            } catch (throwable: Throwable) {
+                onError(throwable)
+            }
+        }
+    }
+
+    fun setState(block: T.() -> T) {
+        worker.schedule {
+            try {
+                if (printLog) Log.d(tag, "action: $block")
                 val oldState = latest
                 var newState = oldState
-                newState = reducer.invoke(newState, action)
+                newState = block(newState)
                 if (printLog) Log.d(tag, "state: $newState")
-                return@concatMap if (oldState !== newState) {
+                if (oldState !== newState) {
                     latest = newState
-                    Observable.just(newState)
-                } else {
-                    Observable.empty()
+                    onStateUpdated(newState)
                 }
+            } catch (throwable: Throwable) {
+                onError(throwable)
             }
-            .startWith(initialState)
+        }
+    }
+
+    fun dispose() {
+        worker.dispose()
     }
 
     companion object {

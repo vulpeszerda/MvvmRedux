@@ -6,15 +6,14 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 
-interface ReduxComponent : ReduxEventPublisher, LifecycleObserver {
+interface ReduxComponent : LifecycleObserver {
 
     fun bindToLifecycle()
 
     open class Impl(
         contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
     ) : ReduxComponent,
-        com.github.vulpeszerda.mvvmredux.ContextDelegate by contextDelegate,
-        ReduxEventPublisher by ReduxEventPublisher.Impl() {
+        com.github.vulpeszerda.mvvmredux.ContextDelegate by contextDelegate {
 
         override fun bindToLifecycle() {
             owner.lifecycle.addObserver(this)

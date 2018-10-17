@@ -26,7 +26,10 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
     fun finishAffinity()
     fun recreate()
 
-    private class ActivityDelegate(override val activity: AppCompatActivity) : ContextDelegate {
+    val canUpdateView: Boolean
+        get () = available && containerView != null
+
+    class ActivityDelegate(override val activity: AppCompatActivity) : ContextDelegate {
 
         override val owner: LifecycleOwner
             get() = activity
@@ -122,7 +125,6 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
         override fun recreate() {
             activity?.recreate()
         }
-
     }
 
     companion object {

@@ -4,19 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.github.vulpeszerda.mvvmredux.ReduxEventPublisher
-import com.github.vulpeszerda.mvvmreduxsample.GlobalState
 import com.github.vulpeszerda.mvvmreduxsample.R
-import io.reactivex.Observable
 
 class TodoListActivity : AppCompatActivity() {
 
     private val component: TodoListComponent by lazy {
         TodoListComponent(this)
-    }
-
-    private val publisher: ReduxEventPublisher by lazy {
-        ReduxEventPublisher.Impl()
     }
 
     private var firstLoading = true
@@ -25,29 +18,13 @@ class TodoListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_list)
 
-        with(component) {
-            with(lifecycle) {
-                addObserver(stateView)
-                addObserver(extraHandler)
-            }
-
-            viewModel.initialize(
-                GlobalState(TodoListState()),
-                Observable.mergeArray(
-                    stateView.events,
-                    extraHandler.events,
-                    publisher.events
-                )
-            )
-
-            stateView.subscribe(viewModel.state)
-            extraHandler.subscribe(viewModel.extra)
-        }
+        lifecycle.addObserver(component.stateView)
+        lifecycle.addObserver(component.extraHandler)
     }
 
     override fun onStart() {
         super.onStart()
-        publisher.publishEvent(TodoListEvent.Refresh(!firstLoading))
+        component.viewModel.refresh()
     }
 
     override fun onStop() {

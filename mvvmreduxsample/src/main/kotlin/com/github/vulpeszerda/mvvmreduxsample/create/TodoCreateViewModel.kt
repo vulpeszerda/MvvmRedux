@@ -1,74 +1,58 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
-import com.github.vulpeszerda.mvvmredux.ReduxEvent
-import com.github.vulpeszerda.mvvmreduxsample.GlobalEvent
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.github.vulpeszerda.mvvmreduxsample.BaseViewModel
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
 import com.github.vulpeszerda.mvvmreduxsample.model.Todo
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class TodoCreateViewModel(private val database: TodoDatabase) :
-    com.github.vulpeszerda.mvvmredux.AbsReduxViewModel<GlobalState<TodoCreateState>>() {
+class TodoCreateViewModel(
+    initialState: GlobalState<TodoCreateState>,
+    private val getExtraHandler: () -> TodoCreateExtraHandler,
+    private val database: TodoDatabase
+) : BaseViewModel<TodoCreateState>("TodoCreateVM", initialState) {
 
-    override fun eventTransformer(
-        events: Observable<ReduxEvent>,
-        getState: () -> GlobalState<TodoCreateState>
-    ):
-            Observable<ReduxEvent> {
-        return super.eventTransformer(events, getState)
-            .filter { it is TodoCreateEvent.Save }
-            .flatMap({ event ->
-                if (event is TodoCreateEvent.Save) {
-                    save(event.title, event.message)
-                } else {
-                    Observable.just(event)
+    fun save(title: String, message: String) {
+        getSubState { state ->
+            if (state.loading) return@getSubState
+            Single
+                .fromCallable {
+                    val todo = Todo.create(title, message, false)
+                    database.todoDao().insert(todo).firstOrNull()
+                        ?: throw IllegalAccessException("Failed to createDiffCompletable todo")
                 }
-            }, 1)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe { setSubState { copy(loading = true) } }
+                .doFinally { setSubState { copy(loading = false) } }
+                .subscribe(
+                    { _ ->
+                        getExtraHandler().showFinishToast()
+                        getExtraHandler().navigateFinish()
+                    },
+                    { throwable -> getExtraHandler().error(throwable) })
+                .addToViewModel()
+        }
     }
 
-    private fun save(title: String, message: String): Observable<ReduxEvent> {
-        return Single
-            .fromCallable {
-                val todo = Todo.create(title, message, false)
-                database.todoDao().insert(todo).firstOrNull()
-                    ?: throw IllegalAccessException("Failed to createDiffCompletable todo")
-            }
-            .subscribeOn(Schedulers.io())
-            .toObservable()
-            .flatMap<ReduxEvent> {
-                Observable.fromArray(
-                    TodoCreateEvent.ShowFinishToast,
-                    GlobalEvent.NavigateFinish()
-                )
-            }
-            .onErrorReturn { GlobalEvent.Error(it, "save") }
-            .startWith(TodoCreateEvent.SetLoading(true))
-            .concatWith(
-                Observable.just(
-                    TodoCreateEvent.SetLoading(
-                        false
-                    )
-                )
-            )
-    }
+    companion object {
 
-    override fun reduceState(
-        state: GlobalState<TodoCreateState>,
-        event: ReduxEvent.State
-    ): GlobalState<TodoCreateState> {
-        val prevState = super.reduceState(state, event)
-        var newState = prevState
-        val prevSubState = prevState.subState
-        var newSubState = prevSubState
-        when (event) {
-            is TodoCreateEvent.SetLoading ->
-                newSubState = newSubState.copy(loading = event.loading)
-        }
-        if (newSubState !== prevSubState) {
-            newState = newState.copy(subState = newSubState)
-        }
-        return newState
+        @Suppress("UNCHECKED_CAST")
+        fun createFactory(
+            initialState: GlobalState<TodoCreateState>,
+            getExtraHandler: () -> TodoCreateExtraHandler,
+            database: TodoDatabase
+        ): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+
+                override fun <T : ViewModel?> create(modelClass: Class<T>): T = when {
+                    modelClass.isAssignableFrom(TodoCreateViewModel::class.java) ->
+                        TodoCreateViewModel(initialState, getExtraHandler, database) as T
+                    else -> throw IllegalArgumentException()
+                }
+
+            }
     }
 }
