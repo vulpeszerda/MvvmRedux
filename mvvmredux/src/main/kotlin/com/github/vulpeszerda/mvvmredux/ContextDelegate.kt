@@ -3,6 +3,7 @@ package com.github.vulpeszerda.mvvmredux
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,6 +19,7 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
     val context: Context?
     val activity: Activity?
     val fragmentManager: FragmentManager
+    val extras: Bundle?
     fun getContextOrThrow(): Context
     fun getActivityOrThrow(): Activity
     fun startActivity(intent: Intent, requestCode: Int? = null)
@@ -43,6 +45,9 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
 
         override val fragmentManager: FragmentManager
             get() = activity.supportFragmentManager
+
+        override val extras: Bundle?
+            get() = activity.intent?.extras
 
         override fun getActivityOrThrow(): Activity = activity
 
@@ -94,6 +99,9 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
 
         override val fragmentManager: FragmentManager
             get() = fragment.childFragmentManager
+
+        override val extras: Bundle?
+            get() = fragment.arguments
 
         override fun getActivityOrThrow(): Activity = activity!!
 
