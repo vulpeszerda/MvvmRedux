@@ -171,7 +171,7 @@ interface StateConsumer<in T> {
             apply: (T?, T) -> Unit
         ): StateConsumer<T> =
             createDiffCompletable(hasChange) { prev, curr ->
-                Completable.fromAction { apply.invoke(prev, curr) }
+                Completable.fromAction { apply(prev, curr) }
             }
     }
 }

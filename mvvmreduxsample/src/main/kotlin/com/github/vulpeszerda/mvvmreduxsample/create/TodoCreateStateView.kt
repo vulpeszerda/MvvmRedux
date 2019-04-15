@@ -18,8 +18,8 @@ class TodoCreateStateView(
             .filter { it.first != null && it.second != null }
             .map<TodoCreateEvent> { (title, message) ->
                 TodoCreateEvent.Save(
-                    title!!,
-                    message!!
+                    requireNotNull(title),
+                    requireNotNull(message)
                 )
             })
 

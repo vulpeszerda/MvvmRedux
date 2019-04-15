@@ -105,7 +105,7 @@ class TodoListViewModel(private val database: TodoDatabase) :
             Observable<ReduxEvent> {
         return Completable
             .fromAction {
-                val todo = getState.invoke().subState.todos.firstOrNull { it.uid == uid }
+                val todo = getState().subState.todos.firstOrNull { it.uid == uid }
                     ?: return@fromAction
                 database.todoDao().update(Todo().apply {
                     this.uid = todo.uid

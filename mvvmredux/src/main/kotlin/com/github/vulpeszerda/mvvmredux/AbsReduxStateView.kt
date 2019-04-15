@@ -1,7 +1,7 @@
 package com.github.vulpeszerda.mvvmredux
 
 import androidx.lifecycle.Lifecycle
-import com.github.vulpeszerda.mvvmredux.addon.filterOnResumed
+import com.github.vulpeszerda.mvvmredux.addon.filterOnStarted
 import com.trello.rxlifecycle2.android.lifecycle.kotlin.bindUntilEvent
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxStateView<T>(
     protected val tag: String,
-    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate,
+    contextDelegate: ContextDelegate,
     private val diffScheduler: Scheduler = Schedulers.newThread(),
     private val throttle: Long = 0
 ) : ReduxComponent.Impl(contextDelegate),
@@ -144,7 +144,7 @@ abstract class AbsReduxStateView<T>(
     protected fun addDiffConsumer(
         diff: (T, T) -> Boolean,
         apply: (T?, T) -> Unit
-    ) : StateConsumer<T> {
+    ): StateConsumer<T> {
         val consumer = StateConsumer.createDiff(diff, apply)
         addConsumer(consumer)
         return consumer
@@ -153,7 +153,7 @@ abstract class AbsReduxStateView<T>(
     protected fun addDiffCompletableConsumer(
         diff: (T, T) -> Boolean,
         apply: (T?, T) -> Completable
-    ) : StateConsumer<T> {
+    ): StateConsumer<T> {
         val consumer = StateConsumer.createDiffCompletable(diff, apply)
         addConsumer(consumer)
         return consumer
@@ -171,9 +171,10 @@ abstract class AbsReduxStateView<T>(
         }
     }
 
+
     override fun subscribe(source: Observable<T>): Disposable =
         (if (throttle > 0) source.throttleLast(throttle, TimeUnit.MILLISECONDS) else source)
-            .filterOnResumed(owner)
+            .filterOnStarted(owner)
             .observeOn(diffScheduler)
             .filter { available && containerView != null }
             .compose { stream ->
@@ -183,6 +184,7 @@ abstract class AbsReduxStateView<T>(
                     shared.compose(
                         StateConsumerTransformer(consumer) { throwable ->
                             onStateConsumerError(consumer, throwable)
+                            true
                         })
                 })
             }

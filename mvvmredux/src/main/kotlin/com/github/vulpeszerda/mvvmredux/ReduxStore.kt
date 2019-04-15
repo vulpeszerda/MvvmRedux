@@ -18,13 +18,13 @@ class ReduxStore<T>(
 
     fun toState(actions: Observable<ReduxEvent>): Observable<T> {
         return actions
-            .compose { eventTransformer.invoke(it) { latest } }
+            .compose { eventTransformer(it) { latest } }
             .observeOn(reducerScheduler)
             .concatMap { action ->
                 if (printLog) Log.d(tag, "action: $action")
                 val oldState = latest
                 var newState = oldState
-                newState = reducer.invoke(newState, action)
+                newState = reducer(newState, action)
                 if (printLog) Log.d(tag, "state: $newState")
                 return@concatMap if (oldState !== newState) {
                     latest = newState

@@ -22,7 +22,8 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
     val extras: Bundle?
     fun getContextOrThrow(): Context
     fun getActivityOrThrow(): Activity
-    fun startActivity(intent: Intent, requestCode: Int? = null)
+    fun startActivity(intent: Intent, requestCode: Int? = null, options: Bundle? = null)
+    fun startActivities(vararg intents: Intent, options: Bundle? = null)
     fun setResult(resultCode: Int, data: Intent? = null)
     fun finish()
     fun finishAffinity()
@@ -53,12 +54,16 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
 
         override fun getContextOrThrow(): Context = context
 
-        override fun startActivity(intent: Intent, requestCode: Int?) {
+        override fun startActivity(intent: Intent, requestCode: Int?, options: Bundle?) {
             if (requestCode != null) {
-                activity.startActivityForResult(intent, requestCode)
+                activity.startActivityForResult(intent, requestCode, options)
             } else {
-                activity.startActivity(intent)
+                activity.startActivity(intent, options)
             }
+        }
+
+        override fun startActivities(vararg intents: Intent, options: Bundle?) {
+            activity.startActivities(intents, options)
         }
 
         override fun setResult(resultCode: Int, data: Intent?) {
@@ -79,7 +84,7 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
     }
 
     @Suppress("MemberVisibilityCanBePrivate", "unused")
-    private class FragmentDelegate(private val fragment: Fragment) : ContextDelegate {
+    private class FragmentDelegate(val fragment: Fragment) : ContextDelegate {
 
         override val owner: LifecycleOwner
             get() = fragment
@@ -103,16 +108,22 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
         override val extras: Bundle?
             get() = fragment.arguments
 
-        override fun getActivityOrThrow(): Activity = activity!!
+        override fun getActivityOrThrow(): Activity = fragment.requireActivity()
 
-        override fun getContextOrThrow(): Context = context!!
+        override fun getContextOrThrow(): Context = fragment.requireContext()
 
-        override fun startActivity(intent: Intent, requestCode: Int?) {
+        override fun startActivity(intent: Intent, requestCode: Int?, options: Bundle?) {
             if (requestCode != null) {
-                fragment.startActivityForResult(intent, requestCode)
+                fragment.startActivityForResult(intent, requestCode, options)
             } else {
-                fragment.startActivity(intent)
+                fragment.startActivity(intent, options)
             }
+        }
+
+        override fun startActivities(vararg intents: Intent, options: Bundle?) {
+            val activity = fragment.activity
+                ?: throw IllegalStateException("Fragment $fragment not attached to Activity")
+            activity.startActivities(intents, options)
         }
 
         override fun setResult(resultCode: Int, data: Intent?) {

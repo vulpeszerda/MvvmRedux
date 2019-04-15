@@ -14,28 +14,28 @@ class BufferUntilTransformer<T, E> private constructor(
 
     override fun apply(upstream: Observable<T>): ObservableSource<T> =
         upstream.toFlowable(BackpressureStrategy.BUFFER)
-            .concatMap {
+            .concatMap { event ->
                 events.filter(predicate)
                     .take(1)
-                    .map { _ -> it }
+                    .map { event }
                     .toFlowable(BackpressureStrategy.LATEST)
             }
             .toObservable()
 
     override fun apply(upstream: Flowable<T>): Publisher<T> =
-        upstream.concatMap {
+        upstream.concatMap { event ->
             events.filter(predicate)
                 .take(1)
-                .map { _ -> it }
+                .map { event }
                 .toFlowable(BackpressureStrategy.LATEST)
         }
 
     override fun apply(upstream: Maybe<T>): MaybeSource<T> =
         upstream.toFlowable()
-            .concatMap {
+            .concatMap { event ->
                 events.filter(predicate)
                     .take(1)
-                    .map { _ -> it }
+                    .map { event }
                     .toFlowable(BackpressureStrategy.LATEST)
             }
             .firstElement()
