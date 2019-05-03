@@ -29,6 +29,7 @@ allprojects {
         minSdk = 16
 
         supportLib = "1.0.0"
+        appcompat = "1.0.2"
         constraintLayout = "2.0.0-alpha2"
 
         junit = "4.12"

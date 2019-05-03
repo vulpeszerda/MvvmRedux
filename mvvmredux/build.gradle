@@ -68,9 +68,9 @@ dependencies {
     testImplementation "junit:junit:$junit"
 
     implementation "androidx.legacy:legacy-support-v4:$supportLib"
-    implementation "androidx.appcompat:appcompat:$supportLib"
+    implementation "androidx.appcompat:appcompat:$appcompat"
     androidTestImplementation "androidx.legacy:legacy-support-v4:$supportLib"
-    androidTestImplementation "androidx.appcompat:appcompat:$supportLib"
+    androidTestImplementation "androidx.appcompat:appcompat:$appcompat"
 
     /* RxJava related */
     implementation "io.reactivex.rxjava2:rxjava:$rxJava2"

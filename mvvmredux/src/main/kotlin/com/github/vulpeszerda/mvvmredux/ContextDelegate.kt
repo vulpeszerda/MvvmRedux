@@ -3,6 +3,7 @@ package com.github.vulpeszerda.mvvmredux
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,18 +15,41 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.android.extensions.LayoutContainer
 
 interface ContextDelegate : LayoutContainer, LifecycleObserver {
+
     val owner: LifecycleOwner
+
     val available: Boolean
+
     val context: Context?
+
     val activity: Activity?
+
     val fragmentManager: FragmentManager
+
     val extras: Bundle?
+
     fun getContextOrThrow(): Context
+
     fun getActivityOrThrow(): Activity
+
     fun startActivity(intent: Intent, requestCode: Int? = null)
+
+    fun startIntentSenderForResult(
+        intentSender: IntentSender,
+        requestCode: Int,
+        fillInIntent: Intent? = null,
+        flagsMask: Int = 0,
+        flagsValues: Int = 0,
+        extraFlags: Int = 0,
+        options: Bundle? = null
+    )
+
     fun setResult(resultCode: Int, data: Intent? = null)
+
     fun finish()
+
     fun finishAffinity()
+
     fun recreate()
 
     private class ActivityDelegate(override val activity: AppCompatActivity) : ContextDelegate {
@@ -59,6 +83,26 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
             } else {
                 activity.startActivity(intent)
             }
+        }
+
+        override fun startIntentSenderForResult(
+            intentSender: IntentSender,
+            requestCode: Int,
+            fillInIntent: Intent?,
+            flagsMask: Int,
+            flagsValues: Int,
+            extraFlags: Int,
+            options: Bundle?
+        ) {
+            activity.startIntentSenderForResult(
+                intentSender,
+                requestCode,
+                fillInIntent,
+                flagsMask,
+                flagsValues,
+                extraFlags,
+                options
+            )
         }
 
         override fun setResult(resultCode: Int, data: Intent?) {
@@ -113,6 +157,26 @@ interface ContextDelegate : LayoutContainer, LifecycleObserver {
             } else {
                 fragment.startActivity(intent)
             }
+        }
+
+        override fun startIntentSenderForResult(
+            intentSender: IntentSender,
+            requestCode: Int,
+            fillInIntent: Intent?,
+            flagsMask: Int,
+            flagsValues: Int,
+            extraFlags: Int,
+            options: Bundle?
+        ) {
+            fragment.startIntentSenderForResult(
+                intentSender,
+                requestCode,
+                fillInIntent,
+                flagsMask,
+                flagsValues,
+                extraFlags,
+                options
+            )
         }
 
         override fun setResult(resultCode: Int, data: Intent?) {
