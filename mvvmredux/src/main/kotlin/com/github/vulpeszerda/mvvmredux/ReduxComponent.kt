@@ -11,9 +11,9 @@ interface ReduxComponent : ReduxEventPublisher, LifecycleObserver {
     fun bindToLifecycle()
 
     open class Impl(
-        contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+        contextDelegate: ContextDelegate
     ) : ReduxComponent,
-        com.github.vulpeszerda.mvvmredux.ContextDelegate by contextDelegate,
+        ContextDelegate by contextDelegate,
         ReduxEventPublisher by ReduxEventPublisher.Impl() {
 
         override fun bindToLifecycle() {

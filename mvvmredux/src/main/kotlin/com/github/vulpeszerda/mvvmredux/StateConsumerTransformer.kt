@@ -7,7 +7,7 @@ import io.reactivex.ObservableTransformer
 
 class StateConsumerTransformer<T>(
     private val consumer: StateConsumer<T>,
-    private val errorHandler: (Throwable) -> Unit
+    private val errorHandler: (Throwable) -> Boolean
 ) : ObservableTransformer<T, Unit> {
 
     private var prevState: T? = null
@@ -23,10 +23,7 @@ class StateConsumerTransformer<T>(
                 }
                 completable
                     .doOnComplete { prevState = currState }
-                    .onErrorComplete {
-                        errorHandler(it)
-                        true
-                    }
+                    .onErrorComplete { errorHandler(it) }
             }
             .toObservable<Unit>()
 }

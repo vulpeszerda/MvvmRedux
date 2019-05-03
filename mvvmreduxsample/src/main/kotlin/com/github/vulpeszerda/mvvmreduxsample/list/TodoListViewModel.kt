@@ -1,5 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.list
 
+import com.github.vulpeszerda.mvvmredux.AbsReduxViewModel
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
@@ -12,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
 class TodoListViewModel(private val database: TodoDatabase) :
-    com.github.vulpeszerda.mvvmredux.AbsReduxViewModel<GlobalState<TodoListState>>() {
+    AbsReduxViewModel<GlobalState<TodoListState>>() {
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 
@@ -105,7 +106,7 @@ class TodoListViewModel(private val database: TodoDatabase) :
             Observable<ReduxEvent> {
         return Completable
             .fromAction {
-                val todo = getState.invoke().subState.todos.firstOrNull { it.uid == uid }
+                val todo = getState().subState.todos.firstOrNull { it.uid == uid }
                     ?: return@fromAction
                 database.todoDao().update(Todo().apply {
                     this.uid = todo.uid

@@ -1,5 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
+import com.github.vulpeszerda.mvvmredux.AbsReduxViewModel
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
@@ -10,14 +11,13 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 class TodoCreateViewModel(private val database: TodoDatabase) :
-    com.github.vulpeszerda.mvvmredux.AbsReduxViewModel<GlobalState<TodoCreateState>>() {
+    AbsReduxViewModel<GlobalState<TodoCreateState>>() {
 
     override fun eventTransformer(
         events: Observable<ReduxEvent>,
         getState: () -> GlobalState<TodoCreateState>
-    ):
-            Observable<ReduxEvent> {
-        return super.eventTransformer(events, getState)
+    ): Observable<ReduxEvent> =
+        super.eventTransformer(events, getState)
             .filter { it is TodoCreateEvent.Save }
             .flatMap({ event ->
                 if (event is TodoCreateEvent.Save) {
@@ -26,10 +26,9 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
                     Observable.just(event)
                 }
             }, 1)
-    }
 
-    private fun save(title: String, message: String): Observable<ReduxEvent> {
-        return Single
+    private fun save(title: String, message: String): Observable<ReduxEvent> =
+        Single
             .fromCallable {
                 val todo = Todo.create(title, message, false)
                 database.todoDao().insert(todo).firstOrNull()
@@ -52,7 +51,6 @@ class TodoCreateViewModel(private val database: TodoDatabase) :
                     )
                 )
             )
-    }
 
     override fun reduceState(
         state: GlobalState<TodoCreateState>,

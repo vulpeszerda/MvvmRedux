@@ -2,11 +2,12 @@ package com.github.vulpeszerda.mvvmreduxsample.list
 
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.github.vulpeszerda.mvvmredux.ContextDelegate
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.BaseExtraHandler
 
 class TodoListExtraHandler(
-    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+    contextDelegate: ContextDelegate
 ) : BaseExtraHandler("TodoListExtraHandler", contextDelegate) {
 
     override fun onExtraEvent(extra: ReduxEvent.Extra) {

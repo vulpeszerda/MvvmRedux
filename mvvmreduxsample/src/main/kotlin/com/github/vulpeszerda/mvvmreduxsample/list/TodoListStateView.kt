@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.vulpeszerda.mvvmredux.ContextDelegate
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.BaseStateView
 import com.github.vulpeszerda.mvvmreduxsample.GlobalEvent
@@ -13,7 +14,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_list.*
 
 class TodoListStateView(
-    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+    contextDelegate: ContextDelegate
 ) : BaseStateView<TodoListState>("TodoListStateView", contextDelegate) {
 
     private val adapter: TodoListAdapter by lazy {

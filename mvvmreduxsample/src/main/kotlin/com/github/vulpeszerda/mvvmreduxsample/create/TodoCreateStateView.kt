@@ -1,5 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
+import com.github.vulpeszerda.mvvmredux.ContextDelegate
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.BaseStateView
 import com.jakewharton.rxbinding2.view.RxView
@@ -9,7 +10,7 @@ import kotlinx.android.synthetic.main.todo_create.message as viewMessage
 import kotlinx.android.synthetic.main.todo_create.title as viewTitle
 
 class TodoCreateStateView(
-    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+    contextDelegate: ContextDelegate
 ) : BaseStateView<TodoCreateState>("TodoCreateStateView", contextDelegate) {
 
     override val events: Observable<ReduxEvent>
@@ -18,8 +19,8 @@ class TodoCreateStateView(
             .filter { it.first != null && it.second != null }
             .map<TodoCreateEvent> { (title, message) ->
                 TodoCreateEvent.Save(
-                    title!!,
-                    message!!
+                    requireNotNull(title),
+                    requireNotNull(message)
                 )
             })
 

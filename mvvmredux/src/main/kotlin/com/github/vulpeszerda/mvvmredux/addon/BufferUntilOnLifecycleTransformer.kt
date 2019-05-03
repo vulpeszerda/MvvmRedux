@@ -22,16 +22,10 @@ class BufferUntilOnLifecycleTransformer<T> private constructor(
         .compose<T>(BufferUntilTransformer.create(
             provider.lifecycle()
         ) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
@@ -39,16 +33,10 @@ class BufferUntilOnLifecycleTransformer<T> private constructor(
         .compose<T>(BufferUntilTransformer.create(
             provider.lifecycle()
         ) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
@@ -56,16 +44,10 @@ class BufferUntilOnLifecycleTransformer<T> private constructor(
         .compose<T>(BufferUntilTransformer.create(
             provider.lifecycle()
         ) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
@@ -73,16 +55,10 @@ class BufferUntilOnLifecycleTransformer<T> private constructor(
         .compose(BufferUntilTransformer.create<T, Lifecycle.Event>(
             provider.lifecycle()
         ) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 

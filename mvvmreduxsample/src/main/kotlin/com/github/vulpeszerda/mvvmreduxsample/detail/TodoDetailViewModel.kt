@@ -1,5 +1,6 @@
 package com.github.vulpeszerda.mvvmreduxsample.detail
 
+import com.github.vulpeszerda.mvvmredux.AbsReduxViewModel
 import com.github.vulpeszerda.mvvmredux.ReduxEvent
 import com.github.vulpeszerda.mvvmreduxsample.GlobalState
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
@@ -11,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
 class TodoDetailViewModel(private val database: TodoDatabase) :
-    com.github.vulpeszerda.mvvmredux.AbsReduxViewModel<GlobalState<TodoDetailState>>() {
+    AbsReduxViewModel<GlobalState<TodoDetailState>>() {
 
     private val blockingActionSubject = PublishSubject.create<ReduxEvent>()
 

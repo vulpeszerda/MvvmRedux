@@ -1,11 +1,12 @@
 package com.github.vulpeszerda.mvvmreduxsample
 
+import com.github.vulpeszerda.mvvmredux.ContextDelegate
 import com.github.vulpeszerda.mvvmredux.ReduxExtraHandler
 import com.github.vulpeszerda.mvvmredux.ReduxStateView
 import com.github.vulpeszerda.mvvmredux.ReduxViewModel
 
 open class BaseComponent<T>(
-    protected val contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+    protected val contextDelegate: ContextDelegate
 ) {
 
     open val viewModel: ReduxViewModel<GlobalState<T>> by lazy {

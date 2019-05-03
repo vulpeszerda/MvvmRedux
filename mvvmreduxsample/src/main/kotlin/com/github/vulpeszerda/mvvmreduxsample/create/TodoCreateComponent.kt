@@ -1,13 +1,14 @@
 package com.github.vulpeszerda.mvvmreduxsample.create
 
 import androidx.lifecycle.ViewModelProvider
+import com.github.vulpeszerda.mvvmredux.ContextDelegate
 import com.github.vulpeszerda.mvvmreduxsample.BaseComponent
 import com.github.vulpeszerda.mvvmreduxsample.ViewModelFactory
 import com.github.vulpeszerda.mvvmreduxsample.database.TodoDatabase
 
 class TodoCreateComponent(
     activity: TodoCreateActivity
-) : BaseComponent<TodoCreateState>(com.github.vulpeszerda.mvvmredux.ContextDelegate.create(activity)) {
+) : BaseComponent<TodoCreateState>(ContextDelegate.create(activity)) {
 
 
     override val stateView: TodoCreateStateView by lazy {

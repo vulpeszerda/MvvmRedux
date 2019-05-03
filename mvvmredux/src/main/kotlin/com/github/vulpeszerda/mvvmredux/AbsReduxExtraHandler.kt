@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbsReduxExtraHandler(
     protected val tag: String,
-    contextDelegate: com.github.vulpeszerda.mvvmredux.ContextDelegate
+    contextDelegate: ContextDelegate
 ) : ReduxComponent.Impl(contextDelegate),
     ReduxExtraHandler {
 

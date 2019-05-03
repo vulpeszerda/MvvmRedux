@@ -19,46 +19,28 @@ class FilterOnLifecycleTransformer<T> private constructor(
 
     override fun apply(upstream: Observable<T>): ObservableSource<T> = upstream
         .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
     override fun apply(upstream: Flowable<T>): Publisher<T> = upstream
         .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
     override fun apply(upstream: Maybe<T>): MaybeSource<T> = upstream
         .compose<T>(FilterTransformer.create(provider.lifecycle()) { event ->
-            val curr = convertEventAsInt(
-                event
-            )
-            val f = convertEventAsInt(
-                from
-            )
-            val u = convertEventAsInt(
-                until
-            )
-            curr in f..(u - 1)
+            val curr = convertEventAsInt(event)
+            val f = convertEventAsInt(from)
+            val u = convertEventAsInt(until)
+            curr in f until u
         })
         .compose(provider.bindUntilEvent<T>(Lifecycle.Event.ON_DESTROY))
 
@@ -69,21 +51,14 @@ class FilterOnLifecycleTransformer<T> private constructor(
             owner: LifecycleOwner,
             from: Lifecycle.Event,
             until: Lifecycle.Event
-        ):
-                FilterOnLifecycleTransformer<T> =
+        ): FilterOnLifecycleTransformer<T> =
             FilterOnLifecycleTransformer(owner, from, until)
 
-        fun <T> createOnResumed(owner: LifecycleOwner):
-                FilterOnLifecycleTransformer<T> =
-            FilterOnLifecycleTransformer(
-                owner, Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_PAUSE
-            )
+        fun <T> createOnResumed(owner: LifecycleOwner): FilterOnLifecycleTransformer<T> =
+            FilterOnLifecycleTransformer(owner, Lifecycle.Event.ON_RESUME, Lifecycle.Event.ON_PAUSE)
 
-        fun <T> createOnStarted(owner: LifecycleOwner):
-                FilterOnLifecycleTransformer<T> =
-            FilterOnLifecycleTransformer(
-                owner, Lifecycle.Event.ON_START, Lifecycle.Event.ON_STOP
-            )
+        fun <T> createOnStarted(owner: LifecycleOwner): FilterOnLifecycleTransformer<T> =
+            FilterOnLifecycleTransformer(owner, Lifecycle.Event.ON_START, Lifecycle.Event.ON_STOP)
 
         private fun convertEventAsInt(event: Lifecycle.Event): Int = when (event) {
             Lifecycle.Event.ON_CREATE -> 0

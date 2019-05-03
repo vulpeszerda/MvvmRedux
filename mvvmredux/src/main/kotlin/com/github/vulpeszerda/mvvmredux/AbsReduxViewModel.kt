@@ -48,10 +48,13 @@ abstract class AbsReduxViewModel<T>(
                     }
                     .map { it as ReduxEvent.State }
             })
-        addDisposable(stateStore!!.toState(events)
-            .subscribe(stateSubject::onNext) {
-                ReduxFramework.onFatalError(it, tag)
-            })
+        addDisposable(
+            requireNotNull(stateStore)
+                .toState(events)
+                .subscribe(stateSubject::onNext) {
+                    ReduxFramework.onFatalError(it, tag)
+                }
+        )
     }
 
     protected open fun eventTransformer(events: Observable<ReduxEvent>, getState: () -> T):

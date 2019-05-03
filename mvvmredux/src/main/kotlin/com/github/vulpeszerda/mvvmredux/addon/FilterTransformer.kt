@@ -21,7 +21,7 @@ class FilterTransformer<T, E> private constructor(
             Observable.merge(
                 upstream
                     .filter { data ->
-                        lastEvent.let { it != null && predicate.invoke(it) }
+                        lastEvent.let { it != null && predicate(it) }
                             .apply {
                                 pendedData = if (!this) {
                                     DataWrapper(data)
@@ -58,7 +58,7 @@ class FilterTransformer<T, E> private constructor(
             Flowable.merge(
                 upstream
                     .filter { data ->
-                        lastEvent.let { it != null && predicate.invoke(it) }
+                        lastEvent.let { it != null && predicate(it) }
                             .apply {
                                 pendedData = if (!this) {
                                     DataWrapper(data)
@@ -98,7 +98,7 @@ class FilterTransformer<T, E> private constructor(
             Observable.merge(
                 upstream.toObservable()
                     .filter { data ->
-                        lastEvent.let { it != null && predicate.invoke(it) }
+                        lastEvent.let { it != null && predicate(it) }
                             .apply {
                                 pendedData = if (!this) {
                                     DataWrapper(data)
