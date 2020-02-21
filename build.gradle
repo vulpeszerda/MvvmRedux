@@ -28,7 +28,7 @@ allprojects {
         targetSdk = 29
         minSdk = 21
 
-        androidXappCompat = "1.0.2"
+        androidXappCompat = "1.1.0"
         supportLib = "1.0.0"
         appcompat = "1.0.2"
         constraintLayout = "2.0.0-alpha2"
