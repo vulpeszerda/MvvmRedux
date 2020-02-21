@@ -24,9 +24,9 @@ allprojects {
     project.ext {
         kotlin = kotlin
 
-        compileSdk = 28
-        targetSdk = 28
-        minSdk = 16
+        compileSdk = 29
+        targetSdk = 29
+        minSdk = 21
 
         androidXappCompat = "1.0.2"
         supportLib = "1.0.0"
