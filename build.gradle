@@ -29,8 +29,9 @@ allprojects {
         minSdk = 21
 
         androidXappCompat = "1.1.0"
+        androidXlifecycle = "2.2.0"
+        androidXarch = "2.0.0"
         supportLib = "1.0.0"
-        appcompat = "1.0.2"
         constraintLayout = "2.0.0-alpha2"
 
         junit = "4.12"
@@ -42,8 +43,6 @@ allprojects {
         rxBinding2 = "2.2.0"
         rxLifecycle2 = "2.2.2"
         rxPermission2 = "0.10.2"
-
-        androidArch = "2.0.0"
         room = "2.0.0"
 
         sampleVersionCode = 2

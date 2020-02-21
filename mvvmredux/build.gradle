@@ -82,8 +82,8 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycle2"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rxLifecycle2"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidArch"
-    kapt "androidx.lifecycle:lifecycle-compiler:$androidArch"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidXlifecycle"
+    kapt "androidx.lifecycle:lifecycle-compiler:$androidXarch"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin"

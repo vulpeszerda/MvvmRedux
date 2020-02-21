@@ -108,9 +108,9 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidArch"
-    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidArch"
-    kapt "androidx.lifecycle:lifecycle-compiler:$androidArch"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidXlifecycle"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidXarch"
+    kapt "androidx.lifecycle:lifecycle-compiler:$androidXarch"
 
     /* Room */
     implementation "androidx.room:room-runtime:$room"
